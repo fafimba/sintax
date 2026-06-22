@@ -77,15 +77,17 @@ export function LessonPlayer({
       <TopBar onBack={onBack} progress={i / total} />
 
       <div className="lesson-body">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={finished ? 'done' : `b${i}`}
-            className="beat-wrap"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.16 }}
-          >
+        {/* Sin AnimatePresence aquí: envolver beats con AnimatePresence mode="wait"
+            colgaba la salida cuando el beat era SentenceStage (AnimatePresence
+            anidado) y dejaba el siguiente paso en blanco. Fundido de entrada
+            con motion keyed, sin animación de salida. */}
+        <motion.div
+          key={finished ? 'done' : `b${i}`}
+          className="beat-wrap"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.2 }}
+        >
             {beat?.kind === 'intro' && <IntroView beat={beat} onNext={advance} />}
             {beat?.kind === 'show' && <ShowView beat={beat} onNext={advance} onIntroduce={introduce} />}
             {beat?.kind === 'scene' && <SceneView beat={beat} onNext={advance} onIntroduce={introduce} />}
@@ -107,8 +109,7 @@ export function LessonPlayer({
             )}
 
             {finished && <DoneView intro={introduced} onComplete={onComplete} onAgain={restart} />}
-          </motion.div>
-        </AnimatePresence>
+        </motion.div>
       </div>
 
       {teachingBeat &&
