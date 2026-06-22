@@ -66,3 +66,44 @@ export interface VozItem {
   cd: string // objeto (CD en activa, sujeto paciente en pasiva)
   verboPasiva: string // "ser" + participio concordado
 }
+
+// --- Camino guiado (lecciones) ---
+export type LessonRole = 'sujeto' | 'predicado' | 'verbo' | 'cd' | 'none'
+
+export interface LGroup {
+  id: string
+  text: string
+  role: LessonRole
+}
+
+export interface IntroBeat {
+  kind: 'intro'
+  title: string
+  body: string
+  cta?: string
+}
+
+// Exposición: muestra la oración y "revela" (colorea + etiqueta) algunos grupos.
+export interface ShowBeat {
+  kind: 'show'
+  groups: LGroup[]
+  reveal: string[] // ids de los grupos que se colorean en este beat
+  caption: string
+}
+
+// Mini-puzle: toca el grupo correcto.
+export interface TapBeat {
+  kind: 'tap'
+  groups: LGroup[]
+  target: string // id del grupo que hay que tocar
+  prompt: string
+  teach: string // se muestra al acertar
+}
+
+export type Beat = IntroBeat | ShowBeat | TapBeat
+
+export interface Lesson {
+  id: string
+  title: string
+  beats: Beat[]
+}

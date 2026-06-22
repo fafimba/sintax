@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 
 export type ActivityId = 'cd' | 'nucleo' | 'sujeto' | 'concordancia' | 'voz'
+export type HomeTarget = ActivityId | 'lesson'
 
 interface Card {
   id: string
@@ -18,6 +19,20 @@ interface Section {
 }
 
 const SECTIONS: Section[] = [
+  {
+    title: 'El camino',
+    subtitle: 'aprende paso a paso',
+    cards: [
+      {
+        id: 'lesson',
+        name: 'Capítulo 1 · Las piezas de la oración',
+        teaches: 'Sujeto, predicado, verbo y complemento directo',
+        tag: 'lección',
+        color: '#185FA5',
+        ready: true,
+      },
+    ],
+  },
   {
     title: 'Explora',
     subtitle: 'mueve algo y observa qué pasa',
@@ -102,7 +117,7 @@ const SECTIONS: Section[] = [
   },
 ]
 
-export function Home({ onPick }: { onPick: (id: ActivityId) => void }) {
+export function Home({ onPick }: { onPick: (id: HomeTarget) => void }) {
   let i = 0
   return (
     <div className="home">
@@ -125,7 +140,7 @@ export function Home({ onPick }: { onPick: (id: ActivityId) => void }) {
                   key={c.id}
                   type="button"
                   className={`home-card ${c.ready ? '' : 'home-card-soon'}`}
-                  onClick={() => c.ready && onPick(c.id as ActivityId)}
+                  onClick={() => c.ready && onPick(c.id as HomeTarget)}
                   disabled={!c.ready}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
