@@ -78,7 +78,7 @@ export function SujetoStage({ item, onNext }: { item: SujetoItem; onNext: () => 
               <div className="num-wrap" key={part.id}>
                 <motion.button
                   type="button"
-                  className={`box num-box ${isVerb ? 'is-verb shape-verb' : ''}`}
+                  className={`box num-box ${isVerb ? 'is-verb shape-verb' : ''} ${subjDone ? 'shape-sujeto' : ''}`}
                   onClick={() => tap(part)}
                   disabled={isVerb || phase === 'done'}
                   animate={{ ...style, scale: subjDone || verbDone ? [1, 1.08, 1] : 1 }}

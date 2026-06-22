@@ -97,7 +97,7 @@ export function SentenceStage({
                         SN
                       </span>
                       <div
-                        className="box"
+                        className="box shape-cd"
                         style={{
                           background: fn.cd.fill,
                           color: fn.cd.text,

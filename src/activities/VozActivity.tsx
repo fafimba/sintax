@@ -59,6 +59,14 @@ export function VozStage({ item }: { item: VozItem }) {
           {order.map((id, i) => {
             const d = pieceData(id, item, voz)
             const text = i === 0 ? cap(d.text) : d.text
+            const shapeClass =
+              d.label === 'Sujeto'
+                ? 'shape-sujeto'
+                : d.label === 'CD'
+                  ? 'shape-cd'
+                  : d.label === 'verbo'
+                    ? 'shape-verb'
+                    : ''
             return (
               <motion.div
                 key={id}
@@ -67,7 +75,7 @@ export function VozStage({ item }: { item: VozItem }) {
                 transition={{ type: 'spring', stiffness: 380, damping: 30 }}
               >
                 <motion.div
-                  className={`box ${id === 'vrb' ? 'shape-verb' : ''}`}
+                  className={`box ${shapeClass}`}
                   animate={{ backgroundColor: d.color.fill, color: d.color.text, borderColor: d.color.border }}
                   transition={{ duration: 0.3 }}
                 >

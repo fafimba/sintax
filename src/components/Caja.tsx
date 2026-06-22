@@ -34,7 +34,7 @@ export function Caja({
       </span>
       <motion.div
         ref={boxRef as never}
-        className="box"
+        className={`box ${state === 'reveal-cd' ? 'shape-cd' : ''}`}
         animate={{ backgroundColor: c.fill, color: c.text, borderColor: c.border }}
         transition={{ duration: 0.25 }}
       >
