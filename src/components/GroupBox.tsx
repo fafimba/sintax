@@ -9,6 +9,7 @@ export const ROLE_STYLE: Record<Colored, { fill: string; text: string; border: s
   predicado: { fill: elem.predicado.fill, text: elem.predicado.text, border: elem.predicado.border, label: 'Predicado' },
   verbo: { fill: elem.verbo.fill, text: elem.verbo.text, border: elem.verbo.border, label: 'Verbo' },
   cd: { fill: fn.cd.fill, text: fn.cd.text, border: fn.cd.border, label: 'CD' },
+  ci: { fill: fn.ci.fill, text: fn.ci.text, border: fn.ci.border, label: 'CI' },
 }
 
 // Forma por tipo de elemento (solo al revelarse).
@@ -17,6 +18,7 @@ const SHAPE: Record<Colored, string> = {
   predicado: 'shape-verb', // pico a la derecha: lado de la acción
   verbo: 'shape-verb', // pico a la derecha: la acción
   cd: 'shape-cd', // muesca a la izquierda: recibe la acción
+  ci: 'shape-ci', // muescas a ambos lados: destinatario (recibe y "a quién")
 }
 
 // display:

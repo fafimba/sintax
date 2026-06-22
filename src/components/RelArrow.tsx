@@ -17,12 +17,14 @@ export function RelArrow({
   toId,
   label,
   color = '#3b6d11',
+  lift = 0,
 }: {
   containerRef: React.RefObject<HTMLElement | null>
   fromId: string
   toId: string
   label?: string
   color?: string
+  lift?: number // separa flechas con el mismo origen: arco más alto
 }) {
   const reduced = useReducedMotion()
   const [geo, setGeo] = useState<Geo | null>(null)
@@ -44,7 +46,7 @@ export function RelArrow({
       const fy = fr.top - cr.top
       const tx = tr.left + tr.width / 2 - cr.left
       const ty = tr.top - cr.top
-      const apexY = Math.min(fy, ty) - 24
+      const apexY = Math.min(fy, ty) - 24 - lift
       const midx = (fx + tx) / 2
       const a = Math.atan2(ty - apexY, tx - midx)
       setGeo({
@@ -62,7 +64,7 @@ export function RelArrow({
       window.clearTimeout(t)
       window.removeEventListener('resize', measure)
     }
-  }, [containerRef, fromId, toId])
+  }, [containerRef, fromId, toId, lift])
 
   if (!geo) return null
   const len = 7

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import type { LessonRole } from '../types'
 import { ROLE_STYLE } from './GroupBox'
 
-const ROLE_KEYS = ['sujeto', 'predicado', 'verbo', 'cd'] as const
+const ROLE_KEYS = ['sujeto', 'predicado', 'verbo', 'cd', 'ci'] as const
 
 // Marca ligera para enunciados y explicaciones:
 //   *texto*  -> negrita (palabra clave)

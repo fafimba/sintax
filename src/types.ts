@@ -68,7 +68,7 @@ export interface VozItem {
 }
 
 // --- Camino guiado (lecciones) ---
-export type LessonRole = 'sujeto' | 'predicado' | 'verbo' | 'cd' | 'none'
+export type LessonRole = 'sujeto' | 'predicado' | 'verbo' | 'cd' | 'ci' | 'none'
 
 export interface LGroup {
   id: string
@@ -87,14 +87,23 @@ export interface IntroBeat {
   cta?: string
 }
 
+// 5º canal: flecha que CODIFICA una relación gramatical (p. ej. verbo -> CD =
+// "¿qué?"). Por defecto se colorea con la función del destino.
+export interface ArrowSpec {
+  from: string
+  to: string
+  label?: string
+  color?: string
+}
+
 // Exposición: muestra la oración y "revela" (colorea + etiqueta) algunos grupos.
 export interface ShowBeat {
   kind: 'show'
   groups: LGroup[]
   reveal: string[] // ids de los grupos que se colorean en este beat
   caption: string
-  // 5º canal: flecha que CODIFICA una relación (p. ej. verbo -> CD = "¿qué?").
-  arrow?: { from: string; to: string; label?: string }
+  // Una o varias flechas de relación (p. ej. verbo->CD y verbo->CI a la vez).
+  arrow?: ArrowSpec | ArrowSpec[]
 }
 
 // Mini-puzle: toca el grupo correcto.

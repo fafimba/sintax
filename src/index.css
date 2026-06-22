@@ -112,6 +112,22 @@ body {
   flex-wrap: wrap;
 }
 
+/* La frase encajada a una línea (sujeto + predicado juntos), escalada si hace
+   falta. El contenedor centra; la frase interna no envuelve. */
+.fitrow {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.fitrow > .sentence {
+  flex-wrap: nowrap;
+}
+/* Dentro del encaje, nada envuelve: así la escala mide el ancho real de una
+   línea y reduce el conjunto en bloque. */
+.fitrow .pred-kids {
+  flex-wrap: nowrap;
+}
+
 .box-wrap {
   display: flex;
   flex-direction: column;
@@ -779,6 +795,14 @@ body {
 .shape-cd {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 9px 50%);
   padding-left: 22px;
+  border: none;
+}
+
+/* CI: muescas a ambos lados (destinatario: recibe la acción y es su destino). */
+.shape-ci {
+  clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 50%, 100% 100%, 0 100%, 9px 50%);
+  padding-left: 22px;
+  padding-right: 22px;
   border: none;
 }
 

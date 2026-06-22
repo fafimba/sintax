@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Lesson, IntroBeat, ShowBeat, TapBeat, SceneBeat, LessonRole, LGroup } from '../types'
 import { ConstituentBox, ROLE_STYLE } from './GroupBox'
@@ -19,9 +19,10 @@ const PARENT: Record<Colored, Colored | null> = {
   predicado: null,
   verbo: 'predicado',
   cd: 'predicado',
+  ci: 'predicado',
 }
 const TOP_ORDER: Colored[] = ['sujeto', 'predicado']
-const CHILD_ORDER: Colored[] = ['verbo', 'cd']
+const CHILD_ORDER: Colored[] = ['verbo', 'cd', 'ci']
 
 function flattenGroups(groups: LGroup[]): LGroup[] {
   const out: LGroup[] = []
@@ -145,6 +146,35 @@ function Embed({ children, onNext }: { children: React.ReactNode; onNext: () => 
   )
 }
 
+// Encaja la frase en una sola línea en pantallas estrechas: si su ancho natural
+// supera el del contenedor, la escala. Así sujeto y predicado no se parten en
+// líneas distintas y los arcos de relación suben a espacio limpio.
+function FitRow({ className, children }: { className?: string; children: React.ReactNode }) {
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const innerRef = useRef<HTMLDivElement>(null)
+  const [scale, setScale] = useState(1)
+  useLayoutEffect(() => {
+    const fit = () => {
+      const wrap = wrapRef.current
+      const inner = innerRef.current
+      if (!wrap || !inner) return
+      const avail = wrap.clientWidth
+      const natural = inner.scrollWidth
+      setScale(natural > avail && natural > 0 ? Math.max(0.62, avail / natural) : 1)
+    }
+    fit()
+    window.addEventListener('resize', fit)
+    return () => window.removeEventListener('resize', fit)
+  }, [children])
+  return (
+    <div ref={wrapRef} className="fitrow">
+      <div ref={innerRef} className={className} style={{ transform: `scale(${scale})`, transformOrigin: 'center top' }}>
+        {children}
+      </div>
+    </div>
+  )
+}
+
 function Legend({ intro }: { intro: Set<Colored> }) {
   const shownTop = TOP_ORDER.filter(
     (t) => intro.has(t) || CHILD_ORDER.some((c) => PARENT[c] === t && intro.has(c)),
@@ -242,30 +272,41 @@ function ShowView({
   onIntroduce: (r: Colored[]) => void
 }) {
   const areaRef = useRef<HTMLDivElement>(null)
+  const flat = flattenGroups(beat.groups)
   useEffect(() => {
-    const flat = flattenGroups(beat.groups)
     const containerRoles = beat.groups
       .filter((g) => g.children?.length)
       .map((g) => g.role)
       .filter((r): r is Colored => r !== 'none')
     onIntroduce([...rolesOf(beat.reveal, flat), ...containerRoles])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [beat, onIntroduce])
+  // Una o varias flechas. Cada una se tiñe con la función de su destino.
+  const arrows = beat.arrow ? (Array.isArray(beat.arrow) ? beat.arrow : [beat.arrow]) : []
+  const arrowColor = (a: { to: string; color?: string }) => {
+    if (a.color) return a.color
+    const role = flat.find((g) => g.id === a.to)?.role
+    return role && role !== 'none' ? ROLE_STYLE[role as Colored].border : '#3b6d11'
+  }
   return (
     <motion.div className="lesson-stage" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
       <div className="sentence-area" ref={areaRef} style={{ position: 'relative' }}>
-        <div className="sentence wrap topalign">
+        <FitRow className="sentence topalign">
           {beat.groups.map((g) => (
             <ConstituentBox key={g.id} group={g} reveal={beat.reveal} separated />
           ))}
-        </div>
-        {beat.arrow && (
+        </FitRow>
+        {arrows.map((a, idx) => (
           <RelArrow
+            key={`${a.from}-${a.to}-${idx}`}
             containerRef={areaRef}
-            fromId={beat.arrow.from}
-            toId={beat.arrow.to}
-            label={beat.arrow.label}
+            fromId={a.from}
+            toId={a.to}
+            label={a.label}
+            color={arrowColor(a)}
+            lift={idx * 22}
           />
-        )}
+        ))}
       </div>
       <p className="caption">
         <RichText text={beat.caption} />

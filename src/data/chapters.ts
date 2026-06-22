@@ -125,9 +125,90 @@ const LESSON4: Lesson = {
   ],
 }
 
+// Cap 5: el complemento indirecto. Dos flechas contrastadas (verbo->CD "¿qué?"
+// y verbo->CI "¿a quién?") hacen el trabajo que haría un párrafo. La regla
+// le/les va al final como prueba (distingue del CD = lo/la).
+const LESSON5: Lesson = {
+  id: 'cap5',
+  title: 'El complemento indirecto',
+  beats: [
+    {
+      kind: 'intro',
+      title: 'El complemento indirecto',
+      body: 'La acción produce algo… y va a parar a *alguien*. ¿A quién?',
+      cta: 'Empezar',
+    },
+    {
+      kind: 'show',
+      groups: [
+        { id: 's', text: 'Ana', role: 'sujeto' },
+        {
+          id: 'pred',
+          text: 'dio un libro a su hermano',
+          role: 'predicado',
+          children: [
+            { id: 'v', text: 'dio', role: 'verbo' },
+            { id: 'c', text: 'un libro', role: 'cd' },
+            { id: 'i', text: 'a su hermano', role: 'ci' },
+          ],
+        },
+      ],
+      reveal: ['s', 'v', 'c', 'i'],
+      caption: 'Lo que se da es el [cd]. A quién llega, el [ci].',
+      arrow: [
+        { from: 'v', to: 'c', label: '¿qué?' },
+        { from: 'v', to: 'i', label: '¿a quién?' },
+      ],
+    },
+    {
+      kind: 'tap',
+      groups: [
+        { id: 's', text: 'El cartero', role: 'sujeto' },
+        { id: 'v', text: 'entregó', role: 'verbo' },
+        { id: 'c', text: 'una carta', role: 'cd' },
+        { id: 'i', text: 'a la vecina', role: 'ci' },
+      ],
+      target: 'i',
+      prompt: 'Toca el [ci].',
+      teach: 'Sí: «a la vecina» es a *quién* llega la carta.',
+    },
+    {
+      kind: 'tap',
+      groups: [
+        { id: 's', text: 'El cartero', role: 'sujeto' },
+        { id: 'v', text: 'entregó', role: 'verbo' },
+        { id: 'c', text: 'una carta', role: 'cd' },
+        { id: 'i', text: 'a la vecina', role: 'ci' },
+      ],
+      target: 'c',
+      prompt: 'En la misma frase: toca el [cd].',
+      teach: 'Eso es: *qué* entregó.',
+    },
+    {
+      kind: 'show',
+      groups: [
+        { id: 's', text: 'Ana', role: 'sujeto' },
+        {
+          id: 'pred',
+          text: 'le dio un libro',
+          role: 'predicado',
+          children: [
+            { id: 'i', text: 'le', role: 'ci' },
+            { id: 'v', text: 'dio', role: 'verbo' },
+            { id: 'c', text: 'un libro', role: 'cd' },
+          ],
+        },
+      ],
+      reveal: ['s', 'v', 'c', 'i'],
+      caption: 'Prueba: el [ci] se cambia por *le* / *les*.',
+    },
+  ],
+}
+
 export const CHAPTERS: Chapter[] = [
   { id: 'cap1', num: 1, title: 'Las piezas de la oración', subtitle: 'Sujeto, predicado, verbo y CD', lesson: LESSON1 },
   { id: 'cap2', num: 2, title: 'La concordancia', subtitle: 'El sujeto manda sobre el verbo', lesson: LESSON2 },
   { id: 'cap3', num: 3, title: 'El complemento directo', subtitle: 'Reconócelo con el pronombre', lesson: LESSON3 },
   { id: 'cap4', num: 4, title: 'Una oración dentro de otra', subtitle: 'La subordinación: cajas dentro de cajas', lesson: LESSON4 },
+  { id: 'cap5', num: 5, title: 'El complemento indirecto', subtitle: 'A quién llega la acción: le / les', lesson: LESSON5 },
 ]
