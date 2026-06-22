@@ -1106,3 +1106,19 @@ body {
 .tappable {
   cursor: pointer;
 }
+
+/* Accesibilidad: "Reducir movimiento" del sistema. Framer Motion ya desactiva
+   sus animaciones de transform/layout (ver MotionConfig en main.tsx); aquí
+   apagamos las animaciones puramente CSS. */
+@media (prefers-reduced-motion: reduce) {
+  /* El punto del capítulo actual deja de latir, pero conserva un halo fijo
+     para seguir señalando "estás aquí". */
+  .map-open .map-dot {
+    animation: none;
+    box-shadow: 0 0 0 4px rgba(24, 95, 165, 0.25);
+  }
+  /* Sin micro-escala al pulsar el botón. */
+  .btn:active {
+    transform: none;
+  }
+}

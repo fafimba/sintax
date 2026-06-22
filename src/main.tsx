@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { MotionConfig } from 'framer-motion'
 import App from './App'
 import './index.css'
 
@@ -35,8 +36,14 @@ class ErrorBoundary extends React.Component<
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <App />
-    </ErrorBoundary>
+    {/* reducedMotion="user": respeta "Reducir movimiento" del sistema. Framer
+        desactiva animaciones de transform y layout (deslizar, escalar, temblar)
+        y mantiene las de opacidad/color, que no marean. El estado final —y el
+        significado que codifica— se conserva. */}
+    <MotionConfig reducedMotion="user">
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    </MotionConfig>
   </React.StrictMode>,
 )
