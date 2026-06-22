@@ -142,9 +142,10 @@ export interface FronteraItem {
 }
 
 // Beats que incrustan las mecánicas ya existentes dentro del camino.
+// La frontera se juega en RONDA: varias frases seguidas (con progreso).
 export interface ChallengeFronteraBeat {
   kind: 'challengeFrontera'
-  item: FronteraItem
+  items: FronteraItem[]
 }
 export interface ChallengeCdBeat {
   kind: 'challengeCd'

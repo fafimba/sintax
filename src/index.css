@@ -894,6 +894,25 @@ body {
   border-left: 2px solid #c4c2b8;
   border-right: 2px solid #c4c2b8;
 }
+.frontera-dots {
+  display: flex;
+  gap: 7px;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+.fdot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #dcdad0;
+  transition: background-color 0.3s ease;
+}
+.fdot.done {
+  background: #639922;
+}
+.fdot.current {
+  background: #185fa5;
+}
 .frontera-controls {
   display: flex;
   align-items: center;

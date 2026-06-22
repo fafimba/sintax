@@ -11,11 +11,38 @@ type Phase = 'idle' | 'wrong' | 'solved'
 const SUJ_SOFT = '#EAF2FB'
 const PRED_SOFT = '#FBEDE7'
 
-// Mecánica "frontera": el SLIDER va aparte (banda propia bajo la frase) y, al
-// moverlo, PINTA las palabras (sujeto azul | predicado coral). Al soltar / pulsar
-// Comprobar se valida contra `boundary` (= nº de palabras del sujeto). Es el
-// paso 1 reutilizable de todo análisis.
-export function FronteraStage({ item, onNext }: { item: FronteraItem; onNext: () => void }) {
+// Ronda de "frontera": varias frases seguidas, con progreso en puntos.
+export function FronteraStage({ items, onNext }: { items: FronteraItem[]; onNext: () => void }) {
+  const [idx, setIdx] = useState(0)
+  const next = useCallback(() => {
+    setIdx((n) => {
+      if (n < items.length - 1) return n + 1
+      onNext()
+      return n
+    })
+  }, [items.length, onNext])
+
+  return (
+    <motion.div className="lesson-stage" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+      <p className="prompt tap-prompt">
+        ¿Dónde acaba el <b style={{ color: fn.sujeto.border }}>sujeto</b> y empieza el{' '}
+        <b style={{ color: elem.predicado.border }}>predicado</b>?
+      </p>
+      {items.length > 1 && (
+        <div className="frontera-dots">
+          {items.map((_, i) => (
+            <span key={i} className={`fdot ${i < idx ? 'done' : i === idx ? 'current' : ''}`} />
+          ))}
+        </div>
+      )}
+      <FronteraOne key={idx} item={items[idx]} onSolved={next} />
+    </motion.div>
+  )
+}
+
+// Una sola frase: el slider va APARTE (banda propia bajo la frase) y, al moverlo,
+// PINTA las palabras. Al soltar / pulsar Comprobar se valida contra `boundary`.
+function FronteraOne({ item, onSolved }: { item: FronteraItem; onSolved: () => void }) {
   const { words, boundary, sujetoPro } = item
   const N = words.length
   const unitRef = useRef<HTMLDivElement>(null)
@@ -74,7 +101,7 @@ export function FronteraStage({ item, onNext }: { item: FronteraItem; onNext: ()
     applyPos(k)
     if (k === boundary) {
       setPhase('solved')
-      window.setTimeout(onNext, 1900)
+      window.setTimeout(onSolved, 1500)
     } else {
       setPhase('wrong')
       window.setTimeout(() => setPhase('idle'), 650)
@@ -114,12 +141,7 @@ export function FronteraStage({ item, onNext }: { item: FronteraItem; onNext: ()
   const ready = gaps.length > 0
 
   return (
-    <motion.div className="lesson-stage" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-      <p className="prompt tap-prompt">
-        ¿Dónde acaba el <b style={{ color: fn.sujeto.border }}>sujeto</b> y empieza el{' '}
-        <b style={{ color: elem.predicado.border }}>predicado</b>?
-      </p>
-
+    <>
       <div className="sentence-area">
         <div className="frontera-unit" ref={unitRef}>
           <div className="frontera-row">
@@ -198,6 +220,6 @@ export function FronteraStage({ item, onNext }: { item: FronteraItem; onNext: ()
           </button>
         </div>
       )}
-    </motion.div>
+    </>
   )
 }

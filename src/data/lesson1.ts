@@ -1,4 +1,5 @@
 import type { Lesson } from '../types'
+import { FRONTERA } from './frontera'
 
 // Capítulo 1. La apertura (sujeto/predicado) es UNA escena continua: la frase
 // no desaparece entre pasos; se separa y se colorea pieza a pieza.
@@ -56,7 +57,7 @@ export const LESSON1: Lesson = {
     },
     {
       kind: 'challengeFrontera',
-      item: { words: ['El', 'cartero', 'entregó', 'la', 'carta'], boundary: 2, sujetoPro: 'él' },
+      items: FRONTERA.slice(0, 3),
     },
     {
       kind: 'show',

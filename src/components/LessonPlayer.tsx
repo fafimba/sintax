@@ -107,7 +107,7 @@ export function LessonPlayer({
             {beat?.kind === 'scene' && <SceneView beat={beat} onNext={advance} onIntroduce={introduce} />}
             {beat?.kind === 'tap' && <TapView beat={beat} onSolved={advance} onIntroduce={introduce} />}
 
-            {beat?.kind === 'challengeFrontera' && <FronteraStage item={beat.item} onNext={advance} />}
+            {beat?.kind === 'challengeFrontera' && <FronteraStage items={beat.items} onNext={advance} />}
             {beat?.kind === 'challengeCd' && <SentenceStage sentence={beat.sentence} onNext={advance} />}
             {beat?.kind === 'challengeNucleo' && <NucleoStage item={beat.item} onNext={advance} />}
             {beat?.kind === 'challengeSujeto' && <SujetoStage item={beat.item} onNext={advance} />}
