@@ -838,6 +838,16 @@ body {
   white-space: nowrap;
 }
 
+/* Constituyente tocable (mini-puzle): toda la zona es el objetivo. */
+.pred-tappable {
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.pred-tappable:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
 /* Palabras dentro de un corchete-constituyente (hoja de cláusula). */
 .bracket-words {
   font-size: 21px;

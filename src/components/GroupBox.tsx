@@ -84,30 +84,77 @@ export function ConstituentBox({
   group,
   reveal,
   separated,
+  onTap,
+  solvedId,
+  wrongId,
 }: {
   group: LGroup
   reveal: string[]
   separated: boolean
+  onTap?: (id: string) => void // modo "tocar" (mini-puzle)
+  solvedId?: string | null
+  wrongId?: string | null
 }) {
   const isClause = group.role === 'sujeto' || group.role === 'predicado'
   const hasKids = !!group.children?.length
+  const tapMode = !!onTap
 
-  // Hoja de función -> ficha de siempre.
+  // Hoja de función -> ficha.
   if (!hasKids && !isClause) {
-    const display = reveal.includes(group.id) ? 'colored' : group.role === 'none' ? 'plain' : separated ? 'box' : 'flush'
-    return <GroupBox group={group} display={display} />
+    const solved = solvedId === group.id
+    const display = tapMode
+      ? solved
+        ? 'colored'
+        : group.role === 'none'
+          ? 'plain'
+          : 'box'
+      : reveal.includes(group.id)
+        ? 'colored'
+        : group.role === 'none'
+          ? 'plain'
+          : separated
+            ? 'box'
+            : 'flush'
+    return (
+      <GroupBox
+        group={group}
+        display={display}
+        onTap={tapMode && group.role !== 'none' ? () => onTap!(group.id) : undefined}
+        shake={wrongId === group.id}
+      />
+    )
   }
 
   // Constituyente con corchete. Color = función del constituyente (sin color nuevo).
   const st = ROLE_STYLE[group.role as Colored]
-  const open = hasRevealed(group, reveal)
+  const solved = solvedId === group.id
+  // En modo tocar el corchete se ve siempre (neutro) como pista de "esto es un
+  // constituyente"; se colorea + etiqueta al acertar.
+  const open = tapMode ? true : hasRevealed(group, reveal)
+  const colored = tapMode ? solved : open
+  const border = colored ? st.border : '#c9c7bd'
+  const shake = wrongId === group.id
 
   return (
-    <div className="pred-zone" style={{ ['--pred-border' as string]: st.border }}>
+    <motion.div
+      className={`pred-zone ${tapMode && !solved ? 'pred-tappable' : ''}`}
+      style={{ ['--pred-border' as string]: border }}
+      onClick={tapMode && !solved ? () => onTap!(group.id) : undefined}
+      animate={shake ? { x: [0, -6, 6, -4, 4, 0] } : { x: 0 }}
+      transition={{ duration: shake ? 0.4 : 0.2 }}
+    >
       <motion.div className="pred-kids" layout animate={{ gap: open ? 12 : 6 }} transition={{ duration: 0.4 }}>
         {hasKids ? (
           group.children!.map((child) => (
-            <ConstituentBox key={child.id} group={child} reveal={reveal} separated={separated} />
+            <ConstituentBox
+              key={child.id}
+              group={child}
+              reveal={reveal}
+              separated={separated}
+              onTap={onTap}
+              solvedId={solvedId}
+              wrongId={wrongId}
+            />
           ))
         ) : (
           <span className="bracket-words">{group.text}</span>
@@ -121,13 +168,13 @@ export function ConstituentBox({
             initial={{ opacity: 0, scaleX: 0.6 }}
             animate={{ opacity: 1, scaleX: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 420, damping: 26, delay: 0.12 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 26, delay: tapMode ? 0 : 0.12 }}
             style={{ transformOrigin: 'center' }}
           />
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {open && (
+        {colored && (
           <motion.span
             key="label"
             className="pred-label"
@@ -135,12 +182,12 @@ export function ConstituentBox({
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: tapMode ? 0 : 0.2 }}
           >
             {st.label}
           </motion.span>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   )
 }

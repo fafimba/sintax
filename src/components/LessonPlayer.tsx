@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Lesson, IntroBeat, ShowBeat, TapBeat, SceneBeat, LessonRole, LGroup } from '../types'
-import { GroupBox, ConstituentBox, ROLE_STYLE } from './GroupBox'
+import { ConstituentBox, ROLE_STYLE } from './GroupBox'
 import { RichText } from './RichText'
 import { TopBar } from './TopBar'
 import { CheckIcon } from './icons'
@@ -346,13 +346,18 @@ function TapView({
         <RichText text={beat.prompt} />
       </p>
       <div className="sentence-area">
-        <div className="sentence wrap">
-          {beat.groups.map((g) => {
-            const isSolvedTarget = solved && g.id === beat.target
-            const display = isSolvedTarget ? 'colored' : g.role === 'none' ? 'plain' : 'box'
-            const onTap = !solved && g.role !== 'none' ? () => tap(g.id) : undefined
-            return <GroupBox key={g.id} group={g} display={display} onTap={onTap} shake={wrongId === g.id} />
-          })}
+        <div className="sentence wrap topalign">
+          {beat.groups.map((g) => (
+            <ConstituentBox
+              key={g.id}
+              group={g}
+              reveal={[]}
+              separated
+              onTap={tap}
+              solvedId={solved ? beat.target : null}
+              wrongId={wrongId}
+            />
+          ))}
         </div>
       </div>
       <div className="tap-feedback">
