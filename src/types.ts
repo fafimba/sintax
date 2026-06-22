@@ -43,3 +43,26 @@ export interface SujetoItem {
   id: string
   parts: SujetoPart[]
 }
+
+// --- Explorable: "Laboratorio de concordancia" (solo número) ---
+export interface NumForm {
+  s: string
+  p: string
+}
+export interface ConcItem {
+  id: string
+  art?: NumForm // artículo/determinante del sujeto
+  nucleo: NumForm // núcleo del sujeto
+  adj?: NumForm // adyacente adjetivo (opcional)
+  verbo: NumForm
+  cola: string // complemento que NO depende del sujeto (no cambia)
+}
+
+// --- Explorable: "Interruptor activa <-> pasiva" ---
+export interface VozItem {
+  id: string
+  sujeto: string // sujeto agente (en activa)
+  verboActiva: string
+  cd: string // objeto (CD en activa, sujeto paciente en pasiva)
+  verboPasiva: string // "ser" + participio concordado
+}

@@ -3,6 +3,8 @@ import { Home, type ActivityId } from './components/Home'
 import { CDActivity } from './activities/CDActivity'
 import { NucleoActivity } from './activities/NucleoActivity'
 import { SujetoActivity } from './activities/SujetoActivity'
+import { ConcordanciaActivity } from './activities/ConcordanciaActivity'
+import { VozActivity } from './activities/VozActivity'
 
 type View = 'home' | ActivityId
 
@@ -13,6 +15,8 @@ export default function App() {
   return (
     <div className="screen">
       {view === 'home' && <Home onPick={setView} />}
+      {view === 'concordancia' && <ConcordanciaActivity onBack={back} />}
+      {view === 'voz' && <VozActivity onBack={back} />}
       {view === 'nucleo' && <NucleoActivity onBack={back} />}
       {view === 'sujeto' && <SujetoActivity onBack={back} />}
       {view === 'cd' && <CDActivity onBack={back} />}

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 
-export type ActivityId = 'cd' | 'nucleo' | 'sujeto'
+export type ActivityId = 'cd' | 'nucleo' | 'sujeto' | 'concordancia' | 'voz'
 
 interface Card {
   id: string
@@ -11,87 +11,140 @@ interface Card {
   ready: boolean
 }
 
-const CARDS: Card[] = [
+interface Section {
+  title: string
+  subtitle: string
+  cards: Card[]
+}
+
+const SECTIONS: Section[] = [
   {
-    id: 'nucleo',
-    name: 'Borra hasta el núcleo',
-    teaches: 'La palabra obligatoria del sintagma',
-    tag: 'tocar',
-    color: '#888780',
-    ready: true,
+    title: 'Explora',
+    subtitle: 'mueve algo y observa qué pasa',
+    cards: [
+      {
+        id: 'concordancia',
+        name: 'Laboratorio de concordancia',
+        teaches: 'Cambia el número y mira quién obedece',
+        tag: 'explora',
+        color: '#185FA5',
+        ready: true,
+      },
+      {
+        id: 'voz',
+        name: 'Activa ↔ pasiva',
+        teaches: 'La misma frase, otro sujeto',
+        tag: 'explora',
+        color: '#534AB7',
+        ready: true,
+      },
+    ],
   },
   {
-    id: 'sujeto',
-    name: 'Encuentra el sujeto',
-    teaches: 'Concordancia: arrastra al verbo',
-    tag: 'interruptor',
-    color: '#185FA5',
-    ready: true,
+    title: 'Practica',
+    subtitle: 'retos para afianzar',
+    cards: [
+      {
+        id: 'nucleo',
+        name: 'Borra hasta el núcleo',
+        teaches: 'La palabra obligatoria del sintagma',
+        tag: 'reto',
+        color: '#888780',
+        ready: true,
+      },
+      {
+        id: 'sujeto',
+        name: 'Encuentra el sujeto',
+        teaches: 'Concordancia con el verbo',
+        tag: 'reto',
+        color: '#185FA5',
+        ready: true,
+      },
+      {
+        id: 'cd',
+        name: 'Encuentra el complemento directo',
+        teaches: 'Sustituye por «lo» / «la»',
+        tag: 'reto',
+        color: '#3B6D11',
+        ready: true,
+      },
+    ],
   },
   {
-    id: 'cd',
-    name: 'Encuentra el complemento directo',
-    teaches: 'Sustituye por «lo» / «la»',
-    tag: 'arrastrar',
-    color: '#3B6D11',
-    ready: true,
-  },
-  {
-    id: 'rodear',
-    name: 'Rodea el sintagma',
-    teaches: 'Qué palabras forman una unidad',
-    tag: 'pronto',
-    color: '#534AB7',
-    ready: false,
-  },
-  {
-    id: 'arbol',
-    name: 'Construye el árbol',
-    teaches: 'La estructura jerárquica de la oración',
-    tag: 'pronto',
-    color: '#0F6E56',
-    ready: false,
-  },
-  {
-    id: 'compuesta',
-    name: 'Parte la oración compuesta',
-    teaches: 'Cuenta los verbos, corta por el nexo',
-    tag: 'pronto',
-    color: '#854F0B',
-    ready: false,
+    title: 'Pronto',
+    subtitle: '',
+    cards: [
+      {
+        id: 'valencia',
+        name: 'El verbo-motor',
+        teaches: 'Cuántos huecos pide cada verbo',
+        tag: 'pronto',
+        color: '#993C1D',
+        ready: false,
+      },
+      {
+        id: 'orden',
+        name: 'Reordena y observa',
+        teaches: 'Mover cambia el énfasis, no la función',
+        tag: 'pronto',
+        color: '#0F6E56',
+        ready: false,
+      },
+      {
+        id: 'recursividad',
+        name: 'Zoom recursivo',
+        teaches: 'Una oración dentro de una palabra',
+        tag: 'pronto',
+        color: '#854F0B',
+        ready: false,
+      },
+    ],
   },
 ]
 
 export function Home({ onPick }: { onPick: (id: ActivityId) => void }) {
+  let i = 0
   return (
     <div className="home">
       <div className="home-head">
         <h1>Sintax</h1>
-        <p>Aprende sintaxis tocando la oración. Elige una mecánica.</p>
+        <p>Aprende sintaxis tocando la oración.</p>
       </div>
-      <div className="home-list">
-        {CARDS.map((c, i) => (
-          <motion.button
-            key={c.id}
-            type="button"
-            className={`home-card ${c.ready ? '' : 'home-card-soon'}`}
-            onClick={() => c.ready && onPick(c.id as ActivityId)}
-            disabled={!c.ready}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05, duration: 0.3 }}
-            whileHover={c.ready ? { scale: 1.015 } : undefined}
-            whileTap={c.ready ? { scale: 0.985 } : undefined}
-          >
-            <span className="home-dot" style={{ background: c.color }} />
-            <span className="home-text">
-              <span className="home-name">{c.name}</span>
-              <span className="home-teaches">{c.teaches}</span>
-            </span>
-            <span className={`home-tag ${c.ready ? '' : 'home-tag-soon'}`}>{c.tag}</span>
-          </motion.button>
-        ))}
-      </div>
+
+      {SECTIONS.map((section) => (
+        <div className="home-section" key={section.title}>
+          <div className="home-section-head">
+            <span className="home-section-title">{section.title}</span>
+            {section.subtitle && <span className="home-section-sub">{section.subtitle}</span>}
+          </div>
+          <div className="home-list">
+            {section.cards.map((c) => {
+              const delay = i++ * 0.04
+              return (
+                <motion.button
+                  key={c.id}
+                  type="button"
+                  className={`home-card ${c.ready ? '' : 'home-card-soon'}`}
+                  onClick={() => c.ready && onPick(c.id as ActivityId)}
+                  disabled={!c.ready}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay, duration: 0.3 }}
+                  whileHover={c.ready ? { scale: 1.015 } : undefined}
+                  whileTap={c.ready ? { scale: 0.985 } : undefined}
+                >
+                  <span className="home-dot" style={{ background: c.color }} />
+                  <span className="home-text">
+                    <span className="home-name">{c.name}</span>
+                    <span className="home-teaches">{c.teaches}</span>
+                  </span>
+                  <span className={`home-tag ${c.ready ? '' : 'home-tag-soon'}`}>{c.tag}</span>
+                </motion.button>
+              )
+            })}
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
