@@ -46,7 +46,11 @@ export function GroupBox({
   const colored = display === 'colored' && group.role !== 'none'
   const flush = display === 'flush'
   const st = colored ? ROLE_STYLE[group.role as Colored] : null
-  const shapeClass = colored ? SHAPE[group.role as Colored] : ''
+  const shapeClass = colored
+    ? group.role === 'verbo' && group.copula
+      ? 'shape-copula'
+      : SHAPE[group.role as Colored]
+    : ''
 
   const bg = st ? st.fill : flush ? 'rgba(255,255,255,0)' : '#ffffff'
   const fg = st ? st.text : '#2c2c2a'
@@ -132,6 +136,13 @@ export function ConstituentBox({
     )
   }
 
+  // Subordinada: un CD/CI que CONTIENE una cláusula. Mientras su estructura
+  // interna no se revela, se ve como UNA ficha; al revelarse, se "abre" (zoom).
+  const isSub = hasKids && !isClause
+  const innerRevealed = !!group.children?.some((c) => c.role !== 'none' && hasRevealed(c, reveal))
+  const collapsed = isSub && !tapMode && !innerRevealed
+  const collapsedDisplay = reveal.includes(group.id) ? 'colored' : separated ? 'box' : 'flush'
+
   // Constituyente con corchete. Color = función del constituyente (sin color nuevo).
   const st = ROLE_STYLE[group.role as Colored]
   const solved = solvedId === group.id
@@ -142,7 +153,7 @@ export function ConstituentBox({
   const border = colored ? st.border : '#c9c7bd'
   const shake = wrongId === group.id
 
-  return (
+  const bracketZone = (
     <motion.div
       data-gid={group.id}
       className={`pred-zone ${tapMode && !solved ? 'pred-tappable' : ''}`}
@@ -197,5 +208,30 @@ export function ConstituentBox({
         )}
       </AnimatePresence>
     </motion.div>
+  )
+
+  // Constituyente normal (sujeto/predicado): tal cual.
+  if (!isSub) return bracketZone
+
+  // Subordinada: cruza de ficha (plegada) a corchete (abierta) con un zoom.
+  // popLayout saca la ficha saliente del flujo para que el desplegado ocupe su
+  // sitio sin saltos. Bajo reduced-motion, Framer ignora la escala (queda fundido).
+  return (
+    <AnimatePresence mode="popLayout" initial={false}>
+      {collapsed ? (
+        <motion.div key="sub-collapsed" exit={{ opacity: 0, scale: 0.92 }} transition={{ duration: 0.18 }}>
+          <GroupBox group={group} display={collapsedDisplay} />
+        </motion.div>
+      ) : (
+        <motion.div
+          key="sub-expanded"
+          initial={{ opacity: 0, scale: 0.78 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: 'spring', stiffness: 240, damping: 20 }}
+        >
+          {bracketZone}
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 }

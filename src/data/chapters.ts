@@ -227,7 +227,7 @@ const LESSON6: Lesson = {
           text: 'es azul',
           role: 'predicado',
           children: [
-            { id: 'v', text: 'es', role: 'verbo' },
+            { id: 'v', text: 'es', role: 'verbo', copula: true },
             { id: 'a', text: 'azul', role: 'atributo' },
           ],
         },
@@ -240,7 +240,7 @@ const LESSON6: Lesson = {
       kind: 'tap',
       groups: [
         { id: 's', text: 'La sopa', role: 'sujeto' },
-        { id: 'v', text: 'está', role: 'verbo' },
+        { id: 'v', text: 'está', role: 'verbo', copula: true },
         { id: 'a', text: 'caliente', role: 'atributo' },
       ],
       target: 'a',
@@ -257,7 +257,7 @@ const LESSON6: Lesson = {
           role: 'predicado',
           children: [
             { id: 'a', text: 'lo', role: 'atributo' },
-            { id: 'v', text: 'es', role: 'verbo' },
+            { id: 'v', text: 'es', role: 'verbo', copula: true },
           ],
         },
       ],

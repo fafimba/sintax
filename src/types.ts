@@ -78,6 +78,9 @@ export interface LGroup {
   // no pinta ficha propia, sino sus hijos + un corchete que los abraza.
   // Recursivo (para subordinadas en el futuro).
   children?: LGroup[]
+  // Verbo copulativo (ser/estar/parecer): es un PUENTE, no una acción. Pierde
+  // el pico de "play" y adopta forma neutra de enlace.
+  copula?: boolean
 }
 
 export interface IntroBeat {

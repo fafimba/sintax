@@ -822,6 +822,13 @@ body {
   border: none;
 }
 
+/* Verbo copulativo (ser/estar/parecer): sin el pico de acción. Caja redondeada
+   = puente/enlace, no motor. El significado lo lleva el arco sujeto->atributo. */
+.shape-copula {
+  border-radius: 13px;
+  border: none;
+}
+
 /* Chip de color dentro de enunciados/explicaciones. */
 .rt-chip {
   display: inline-block;
