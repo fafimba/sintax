@@ -1,3 +1,4 @@
+import { forwardRef } from 'react'
 import { motion } from 'framer-motion'
 import type { Segment } from '../types'
 import { fn, neutral, errorColor } from '../theme'
@@ -8,20 +9,22 @@ const ROLE_LABEL: Record<string, string> = { cd: 'CD' }
 
 // Primitiva reutilizable: un constituyente como caja.
 // Nace neutra; se tiñe de verde + etiqueta "CD" al revelarse; rojo al fallar.
-export function Caja({
-  seg,
-  state,
-  boxRef,
-}: {
-  seg: Segment
-  state: State
-  boxRef?: (el: HTMLElement | null) => void
-}) {
+// forwardRef: AnimatePresence (mode="popLayout") necesita una ref en cada hijo
+// directo para medirlo al animar la salida; sin ella, el layout se rompe.
+export const Caja = forwardRef<
+  HTMLDivElement,
+  {
+    seg: Segment
+    state: State
+    boxRef?: (el: HTMLElement | null) => void
+  }
+>(function Caja({ seg, state, boxRef }, ref) {
   const c = state === 'error' ? errorColor : state === 'reveal-cd' ? fn.cd : neutral
   const showFn = state === 'reveal-cd'
 
   return (
     <motion.div
+      ref={ref}
       layout
       className="box-wrap"
       initial={false}
@@ -45,4 +48,4 @@ export function Caja({
       </span>
     </motion.div>
   )
-}
+})

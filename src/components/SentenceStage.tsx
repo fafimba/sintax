@@ -90,7 +90,7 @@ export function SentenceStage({
           transition={phase === 'error' ? { duration: 0.35 } : { duration: 0.2 }}
         >
           <motion.div className="sentence" layout>
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence>
               {items.map((it) => {
                 if (it.kind === 'pronoun') {
                   return (
