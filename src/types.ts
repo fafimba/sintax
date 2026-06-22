@@ -131,7 +131,21 @@ export interface SceneBeat {
   steps: SceneStep[]
 }
 
+// Mecánica "frontera": coloca el corte SUJETO|PREDICADO. El divisor salta de
+// hueco en hueco; al soltarlo debe quedar en `boundary` (= nº de palabras del
+// sujeto). Es el paso 1 reutilizable de todo análisis. Precondición de autoría:
+// sujeto explícito, antepuesto y contiguo (0 < boundary < words.length).
+export interface FronteraItem {
+  words: string[]
+  boundary: number
+  sujetoPro: string // pronombre del sujeto para el feedback (él/ella/ellos/ellas)
+}
+
 // Beats que incrustan las mecánicas ya existentes dentro del camino.
+export interface ChallengeFronteraBeat {
+  kind: 'challengeFrontera'
+  item: FronteraItem
+}
 export interface ChallengeCdBeat {
   kind: 'challengeCd'
   sentence: Sentence
@@ -158,6 +172,7 @@ export type Beat =
   | ShowBeat
   | TapBeat
   | SceneBeat
+  | ChallengeFronteraBeat
   | ChallengeCdBeat
   | ChallengeNucleoBeat
   | ChallengeSujetoBeat

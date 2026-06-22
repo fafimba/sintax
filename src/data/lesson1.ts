@@ -55,6 +55,10 @@ export const LESSON1: Lesson = {
       teach: 'Eso es: lo que se *dice* del sujeto.',
     },
     {
+      kind: 'challengeFrontera',
+      item: { words: ['El', 'cartero', 'entregó', 'la', 'carta'], boundary: 2, sujetoPro: 'él' },
+    },
+    {
       kind: 'show',
       groups: [
         { id: 's', text: 'El niño', role: 'sujeto' },

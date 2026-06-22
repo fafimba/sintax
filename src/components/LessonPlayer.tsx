@@ -7,6 +7,7 @@ import { RichText } from './RichText'
 import { TopBar } from './TopBar'
 import { CheckIcon } from './icons'
 import { SentenceStage } from './SentenceStage'
+import { FronteraStage } from '../activities/FronteraActivity'
 import { NucleoStage } from '../activities/NucleoActivity'
 import { SujetoStage } from '../activities/SujetoActivity'
 import { ConcordanciaStage } from '../activities/ConcordanciaActivity'
@@ -106,6 +107,7 @@ export function LessonPlayer({
             {beat?.kind === 'scene' && <SceneView beat={beat} onNext={advance} onIntroduce={introduce} />}
             {beat?.kind === 'tap' && <TapView beat={beat} onSolved={advance} onIntroduce={introduce} />}
 
+            {beat?.kind === 'challengeFrontera' && <FronteraStage item={beat.item} onNext={advance} />}
             {beat?.kind === 'challengeCd' && <SentenceStage sentence={beat.sentence} onNext={advance} />}
             {beat?.kind === 'challengeNucleo' && <NucleoStage item={beat.item} onNext={advance} />}
             {beat?.kind === 'challengeSujeto' && <SujetoStage item={beat.item} onNext={advance} />}
