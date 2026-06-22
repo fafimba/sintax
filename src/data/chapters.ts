@@ -13,7 +13,7 @@ const LESSON2: Lesson = {
     {
       kind: 'intro',
       title: 'La concordancia',
-      body: 'El sujeto manda sobre el verbo: si el sujeto cambia, el verbo le sigue. Vamos a moverlo y verlo.',
+      body: 'Mueve una pieza… y mira qué se mueve con ella.',
       cta: 'Empezar',
     },
     {
@@ -28,7 +28,7 @@ const LESSON2: Lesson = {
         },
       ],
       reveal: ['s', 'v'],
-      caption: 'Ya conoces el [sujeto] y el [verbo]. Fíjate ahora en cómo se relacionan.',
+      caption: 'El [sujeto] y el [verbo]. ¿Quién manda sobre quién?',
     },
     { kind: 'exploreConcordancia', item: CONCORDANCIA[0] },
     { kind: 'challengeSujeto', item: SUJETOS[0] },
@@ -43,7 +43,7 @@ const LESSON3: Lesson = {
     {
       kind: 'intro',
       title: 'El complemento directo',
-      body: 'Lo que recibe la acción del verbo. Y un truco infalible para reconocerlo: el pronombre.',
+      body: 'Una pieza recibe la acción del verbo. Vamos a cazarla.',
       cta: 'Empezar',
     },
     {
@@ -61,7 +61,7 @@ const LESSON3: Lesson = {
         },
       ],
       reveal: ['s', 'v', 'c'],
-      caption: '«un libro» es el [cd]: vive dentro del [predicado], junto al verbo. ¿Cómo lo reconocemos sin dudar?',
+      caption: '¿Cómo reconocemos el [cd] sin dudar?',
     },
     { kind: 'challengeCd', sentence: SENTENCES[0] },
     { kind: 'exploreVoz', item: VOZ[0] },
