@@ -96,7 +96,8 @@ export const LESSON1: Lesson = {
         },
       ],
       reveal: ['s', 'v', 'c'],
-      caption: 'Algo nuevo: «un libro» es el [cd] — lo que *recibe* la acción.',
+      caption: 'Algo nuevo: «un libro» es el [cd].',
+      arrow: { from: 'v', to: 'c', label: '¿qué?' },
     },
     {
       kind: 'tap',

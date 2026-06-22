@@ -93,6 +93,8 @@ export interface ShowBeat {
   groups: LGroup[]
   reveal: string[] // ids de los grupos que se colorean en este beat
   caption: string
+  // 5º canal: flecha que CODIFICA una relación (p. ej. verbo -> CD = "¿qué?").
+  arrow?: { from: string; to: string; label?: string }
 }
 
 // Mini-puzle: toca el grupo correcto.

@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Lesson, IntroBeat, ShowBeat, TapBeat, SceneBeat, LessonRole, LGroup } from '../types'
 import { ConstituentBox, ROLE_STYLE } from './GroupBox'
+import { RelArrow } from './RelArrow'
 import { RichText } from './RichText'
 import { TopBar } from './TopBar'
 import { CheckIcon } from './icons'
@@ -240,6 +241,7 @@ function ShowView({
   onNext: () => void
   onIntroduce: (r: Colored[]) => void
 }) {
+  const areaRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const flat = flattenGroups(beat.groups)
     const containerRoles = beat.groups
@@ -250,12 +252,20 @@ function ShowView({
   }, [beat, onIntroduce])
   return (
     <motion.div className="lesson-stage" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-      <div className="sentence-area">
+      <div className="sentence-area" ref={areaRef} style={{ position: 'relative' }}>
         <div className="sentence wrap topalign">
           {beat.groups.map((g) => (
             <ConstituentBox key={g.id} group={g} reveal={beat.reveal} separated />
           ))}
         </div>
+        {beat.arrow && (
+          <RelArrow
+            containerRef={areaRef}
+            fromId={beat.arrow.from}
+            toId={beat.arrow.to}
+            label={beat.arrow.label}
+          />
+        )}
       </div>
       <p className="caption">
         <RichText text={beat.caption} />

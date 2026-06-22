@@ -47,6 +47,7 @@ export function GroupBox({
   const bd = st ? st.border : flush ? 'rgba(0,0,0,0)' : '#d3d1c7'
 
   const inner = {
+    'data-gid': group.id,
     className: `box lbox ${onTap ? 'tappable' : ''} ${shapeClass}`,
     onClick: onTap,
     animate: { backgroundColor: bg, color: fg, borderColor: bd, x: shake ? [0, -6, 6, -4, 4, 0] : 0 },

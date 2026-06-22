@@ -62,6 +62,7 @@ const LESSON3: Lesson = {
       ],
       reveal: ['s', 'v', 'c'],
       caption: '¿Cómo reconocemos el [cd] sin dudar?',
+      arrow: { from: 'v', to: 'c', label: '¿qué?' },
     },
     { kind: 'challengeCd', sentence: SENTENCES[0] },
     { kind: 'exploreVoz', item: VOZ[0] },
