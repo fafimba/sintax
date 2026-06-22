@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import type { LGroup, LessonRole } from '../types'
 import { fn, elem } from '../theme'
 
@@ -68,5 +68,81 @@ export function GroupBox({
         {st ? st.label : ''}
       </span>
     </motion.div>
+  )
+}
+
+// Decide ficha (hoja) vs. contenedor con corchete (constituyente padre).
+export function ConstituentBox({
+  group,
+  reveal,
+  separated,
+  onTap,
+  wrongId,
+}: {
+  group: LGroup
+  reveal: string[]
+  separated: boolean
+  onTap?: (id: string) => void
+  wrongId?: string | null
+}) {
+  if (!group.children?.length) {
+    const display = reveal.includes(group.id) ? 'colored' : group.role === 'none' ? 'plain' : separated ? 'box' : 'flush'
+    return (
+      <GroupBox
+        group={group}
+        display={display}
+        onTap={onTap ? () => onTap(group.id) : undefined}
+        shake={wrongId === group.id}
+      />
+    )
+  }
+
+  // Contenedor: corchete inferior (color de la función del propio constituyente,
+  // nunca un color nuevo) que abraza a los hijos.
+  const st = ROLE_STYLE[group.role as Colored]
+  const open = separated
+  return (
+    <div className="pred-zone" style={{ ['--pred-border' as string]: st.border }}>
+      <motion.div className="pred-kids" layout animate={{ gap: open ? 12 : 6 }} transition={{ duration: 0.45 }}>
+        {group.children.map((child) => (
+          <ConstituentBox
+            key={child.id}
+            group={child}
+            reveal={reveal}
+            separated={separated}
+            onTap={onTap}
+            wrongId={wrongId}
+          />
+        ))}
+      </motion.div>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="bracket"
+            className="pred-bracket"
+            initial={{ opacity: 0, scaleX: 0.6 }}
+            animate={{ opacity: 1, scaleX: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 26, delay: 0.15 }}
+            style={{ transformOrigin: 'center' }}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {open && (
+          <motion.span
+            key="label"
+            className="pred-label"
+            style={{ color: st.border }}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.25 }}
+          >
+            {st.label}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </div>
   )
 }

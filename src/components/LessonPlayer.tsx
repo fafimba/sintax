@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import type { Lesson, IntroBeat, ShowBeat, TapBeat, SceneBeat, LessonRole } from '../types'
-import { GroupBox, ROLE_STYLE } from './GroupBox'
+import type { Lesson, IntroBeat, ShowBeat, TapBeat, SceneBeat, LessonRole, LGroup } from '../types'
+import { GroupBox, ConstituentBox, ROLE_STYLE } from './GroupBox'
 import { RichText } from './RichText'
 import { TopBar } from './TopBar'
 import { CheckIcon } from './icons'
@@ -21,6 +21,15 @@ const PARENT: Record<Colored, Colored | null> = {
 }
 const TOP_ORDER: Colored[] = ['sujeto', 'predicado']
 const CHILD_ORDER: Colored[] = ['verbo', 'cd']
+
+function flattenGroups(groups: LGroup[]): LGroup[] {
+  const out: LGroup[] = []
+  for (const g of groups) {
+    out.push(g)
+    if (g.children) out.push(...flattenGroups(g.children))
+  }
+  return out
+}
 
 function rolesOf(ids: string[], groups: { id: string; role: LessonRole }[]): Colored[] {
   return ids
@@ -172,16 +181,20 @@ function ShowView({
   onIntroduce: (r: Colored[]) => void
 }) {
   useEffect(() => {
-    onIntroduce(rolesOf(beat.reveal, beat.groups))
+    const flat = flattenGroups(beat.groups)
+    const containerRoles = beat.groups
+      .filter((g) => g.children?.length)
+      .map((g) => g.role)
+      .filter((r): r is Colored => r !== 'none')
+    onIntroduce([...rolesOf(beat.reveal, flat), ...containerRoles])
   }, [beat, onIntroduce])
   return (
     <motion.div className="lesson-stage" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
       <div className="sentence-area">
-        <div className="sentence wrap">
-          {beat.groups.map((g) => {
-            const display = beat.reveal.includes(g.id) ? 'colored' : g.role === 'none' ? 'plain' : 'box'
-            return <GroupBox key={g.id} group={g} display={display} />
-          })}
+        <div className="sentence wrap topalign">
+          {beat.groups.map((g) => (
+            <ConstituentBox key={g.id} group={g} reveal={beat.reveal} separated />
+          ))}
         </div>
       </div>
       <p className="caption">

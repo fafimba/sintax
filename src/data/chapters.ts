@@ -45,11 +45,18 @@ const LESSON3: Lesson = {
       kind: 'show',
       groups: [
         { id: 's', text: 'Ana', role: 'sujeto' },
-        { id: 'v', text: 'compró', role: 'verbo' },
-        { id: 'c', text: 'un libro', role: 'cd' },
+        {
+          id: 'pred',
+          text: 'compró un libro',
+          role: 'predicado',
+          children: [
+            { id: 'v', text: 'compró', role: 'verbo' },
+            { id: 'c', text: 'un libro', role: 'cd' },
+          ],
+        },
       ],
       reveal: ['s', 'v', 'c'],
-      caption: '«un libro» es el complemento directo. ¿Cómo lo reconocemos sin dudar? Pruébalo.',
+      caption: '«un libro» es el [cd]: vive dentro del [predicado], junto al verbo. ¿Cómo lo reconocemos sin dudar?',
     },
     { kind: 'challengeCd', sentence: SENTENCES[0] },
     { kind: 'exploreVoz', item: VOZ[0] },

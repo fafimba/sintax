@@ -74,6 +74,10 @@ export interface LGroup {
   id: string
   text: string
   role: LessonRole
+  // Si tiene hijos, es un CONSTITUYENTE CONTENEDOR (p. ej. el predicado):
+  // no pinta ficha propia, sino sus hijos + un corchete que los abraza.
+  // Recursivo (para subordinadas en el futuro).
+  children?: LGroup[]
 }
 
 export interface IntroBeat {

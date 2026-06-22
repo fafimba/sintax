@@ -78,11 +78,18 @@ export const LESSON1: Lesson = {
       kind: 'show',
       groups: [
         { id: 's', text: 'Ana', role: 'sujeto' },
-        { id: 'v', text: 'compró', role: 'verbo' },
-        { id: 'c', text: 'un libro', role: 'cd' },
+        {
+          id: 'pred',
+          text: 'compró un libro',
+          role: 'predicado',
+          children: [
+            { id: 'v', text: 'compró', role: 'verbo' },
+            { id: 'c', text: 'un libro', role: 'cd' },
+          ],
+        },
       ],
       reveal: ['s', 'v', 'c'],
-      caption: 'Y algo nuevo: «un libro» es el [cd], lo que *recibe* la acción.',
+      caption: 'Y algo nuevo: «un libro» es el [cd], lo que *recibe* la acción. Vive dentro del [predicado].',
     },
     {
       kind: 'tap',
