@@ -7,20 +7,21 @@ import { RichText } from '../components/RichText'
 
 type Phase = 'idle' | 'wrong' | 'solved'
 
-// Tintes muy suaves para previsualizar el corte mientras se mueve.
+// Tintes suaves para previsualizar el corte mientras se mueve el slider.
 const SUJ_SOFT = '#EAF2FB'
 const PRED_SOFT = '#FBEDE7'
 
-// Mecánica "frontera": coloca el corte SUJETO|PREDICADO. El divisor SALTA de
-// hueco en hueco; al soltarlo se comprueba. Tap para colocar, arrastrar para
-// deslizar, y flechas + Comprobar como vía sin arrastre (accesibilidad).
+// Mecánica "frontera": el SLIDER va aparte (banda propia bajo la frase) y, al
+// moverlo, PINTA las palabras (sujeto azul | predicado coral). Al soltar / pulsar
+// Comprobar se valida contra `boundary` (= nº de palabras del sujeto). Es el
+// paso 1 reutilizable de todo análisis.
 export function FronteraStage({ item, onNext }: { item: FronteraItem; onNext: () => void }) {
   const { words, boundary, sujetoPro } = item
   const N = words.length
-  const rowRef = useRef<HTMLDivElement>(null)
+  const unitRef = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
   const wordRefs = useRef<(HTMLElement | null)[]>([])
-  const [gaps, setGaps] = useState<number[]>([]) // x-centro por hueco 1..N-1
-  // Empieza en un hueco que NO es la solución.
+  const [gaps, setGaps] = useState<number[]>([]) // x-centro de cada hueco 1..N-1, relativo a la unidad
   const [pos, setPos] = useState<number>(() => (boundary === 1 ? Math.min(2, N - 1) : 1))
   const posRef = useRef(pos)
   const [phase, setPhase] = useState<Phase>('idle')
@@ -28,14 +29,14 @@ export function FronteraStage({ item, onNext }: { item: FronteraItem; onNext: ()
 
   useLayoutEffect(() => {
     const measure = () => {
-      const row = rowRef.current
-      if (!row) return
-      const r0 = row.getBoundingClientRect()
+      const unit = unitRef.current
+      if (!unit) return
+      const u = unit.getBoundingClientRect()
       const xs: number[] = []
       for (let k = 1; k < N; k++) {
         const a = wordRefs.current[k - 1]?.getBoundingClientRect()
         const b = wordRefs.current[k]?.getBoundingClientRect()
-        if (a && b) xs[k] = (a.right + b.left) / 2 - r0.left
+        if (a && b) xs[k] = (a.right + b.left) / 2 - u.left
       }
       setGaps(xs)
     }
@@ -70,27 +71,27 @@ export function FronteraStage({ item, onNext }: { item: FronteraItem; onNext: ()
   }
 
   const evaluate = (k: number) => {
+    applyPos(k)
     if (k === boundary) {
-      applyPos(k)
       setPhase('solved')
       window.setTimeout(onNext, 1900)
     } else {
-      applyPos(k)
       setPhase('wrong')
       window.setTimeout(() => setPhase('idle'), 650)
     }
   }
 
   const fromClientX = (clientX: number) => {
-    const row = rowRef.current
-    if (!row) return
-    applyPos(nearest(clientX - row.getBoundingClientRect().left))
+    const track = trackRef.current
+    if (!track) return
+    applyPos(nearest(clientX - track.getBoundingClientRect().left))
   }
 
   const onDown = (e: React.PointerEvent) => {
     if (phase === 'solved') return
     dragging.current = true
     e.currentTarget.setPointerCapture(e.pointerId)
+    setPhase('idle')
     fromClientX(e.clientX)
   }
   const onMove = (e: React.PointerEvent) => {
@@ -109,7 +110,7 @@ export function FronteraStage({ item, onNext }: { item: FronteraItem; onNext: ()
     setPhase('idle')
   }
 
-  const dividerX = gaps[pos] ?? 0
+  const thumbX = gaps[pos] ?? 0
   const ready = gaps.length > 0
 
   return (
@@ -120,51 +121,58 @@ export function FronteraStage({ item, onNext }: { item: FronteraItem; onNext: ()
       </p>
 
       <div className="sentence-area">
-        <div
-          className={`frontera-row ${phase}`}
-          ref={rowRef}
-          onPointerDown={onDown}
-          onPointerMove={onMove}
-          onPointerUp={onUp}
-          onPointerCancel={onUp}
-        >
-          {words.map((w, i) => {
-            const inSujeto = i < pos
-            const bg =
-              phase === 'solved'
-                ? inSujeto
-                  ? fn.sujeto.fill
-                  : elem.predicado.fill
-                : inSujeto
-                  ? SUJ_SOFT
-                  : PRED_SOFT
-            const color = phase === 'solved' ? (inSujeto ? fn.sujeto.text : elem.predicado.text) : '#2c2c2a'
-            return (
-              <span
-                key={i}
-                ref={(el) => (wordRefs.current[i] = el)}
-                className="frontera-word"
-                style={{ backgroundColor: bg, color }}
-              >
-                {w}
-              </span>
-            )
-          })}
+        <div className="frontera-unit" ref={unitRef}>
+          <div className="frontera-row">
+            {words.map((w, i) => {
+              const inSujeto = i < pos
+              const bg =
+                phase === 'solved'
+                  ? inSujeto
+                    ? fn.sujeto.fill
+                    : elem.predicado.fill
+                  : inSujeto
+                    ? SUJ_SOFT
+                    : PRED_SOFT
+              const color =
+                phase === 'solved' ? (inSujeto ? fn.sujeto.text : elem.predicado.text) : '#2c2c2a'
+              return (
+                <span
+                  key={i}
+                  ref={(el) => (wordRefs.current[i] = el)}
+                  className="frontera-word"
+                  style={{ backgroundColor: bg, color }}
+                >
+                  {w}
+                </span>
+              )
+            })}
+          </div>
 
-          {ready && (
-            <motion.div
-              className={`frontera-divider ${phase}`}
-              role="slider"
-              aria-valuemin={1}
-              aria-valuemax={N - 1}
-              aria-valuenow={pos}
-              aria-valuetext={`corte tras «${words[pos - 1]}»`}
-              animate={{ x: dividerX - 1.5 }}
-              transition={{ type: 'spring', stiffness: 600, damping: 34 }}
-            >
-              <span className="frontera-knob" />
-            </motion.div>
-          )}
+          {/* Slider aparte: banda propia, alineada bajo los huecos de la frase. */}
+          <div
+            className={`frontera-track ${phase}`}
+            ref={trackRef}
+            role="slider"
+            aria-valuemin={1}
+            aria-valuemax={N - 1}
+            aria-valuenow={pos}
+            aria-valuetext={`corte tras «${words[pos - 1]}»`}
+            onPointerDown={onDown}
+            onPointerMove={onMove}
+            onPointerUp={onUp}
+            onPointerCancel={onUp}
+          >
+            <div className="frontera-rail" />
+            {ready && (
+              <motion.div
+                className="frontera-thumb"
+                animate={{ x: thumbX - 13 }}
+                transition={{ type: 'spring', stiffness: 600, damping: 34 }}
+              >
+                <span className="frontera-thumb-grip" />
+              </motion.div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -182,7 +190,7 @@ export function FronteraStage({ item, onNext }: { item: FronteraItem; onNext: ()
           <button className="nudge-btn" onClick={() => nudge(-1)} aria-label="mover el corte a la izquierda">
             ‹
           </button>
-          <button className="btn frontera-check" onClick={() => evaluate(pos)}>
+          <button className="btn frontera-check" onClick={() => evaluate(posRef.current)}>
             Comprobar
           </button>
           <button className="nudge-btn" onClick={() => nudge(1)} aria-label="mover el corte a la derecha">

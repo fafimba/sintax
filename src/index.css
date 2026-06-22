@@ -829,20 +829,18 @@ body {
   border: none;
 }
 
-/* Mecánica "frontera": coloca el corte sujeto|predicado con un divisor que
-   salta de hueco en hueco. La fila captura el puntero; las palabras no. */
+/* Mecánica "frontera": el slider va APARTE (banda propia bajo la frase) y, al
+   moverlo, PINTA las palabras. La unidad envuelve frase + pista para que el
+   thumb quede alineado bajo los huecos. */
+.frontera-unit {
+  display: inline-block;
+}
 .frontera-row {
-  position: relative;
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  justify-content: center;
   gap: 3px;
-  min-height: 58px;
-  padding: 8px 16px;
-  touch-action: none;
-  cursor: ew-resize;
-  user-select: none;
+  min-height: 48px;
 }
 .frontera-word {
   font-size: 19px;
@@ -850,41 +848,51 @@ body {
   border-radius: 8px;
   white-space: nowrap;
   transition: background-color 0.25s ease, color 0.25s ease;
-  pointer-events: none;
 }
-.frontera-divider {
+.frontera-track {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  margin-top: 8px;
+  touch-action: none;
+  cursor: pointer;
+}
+.frontera-rail {
   position: absolute;
-  top: 4px;
-  bottom: 4px;
   left: 0;
-  width: 3px;
-  border-radius: 3px;
-  background: #9a988e;
-  pointer-events: none;
-}
-.frontera-divider.solved {
-  background: #3b6d11;
-}
-.frontera-divider.wrong {
-  background: #e24b4a;
-}
-.frontera-knob {
-  position: absolute;
-  left: 50%;
+  right: 0;
   top: 50%;
-  width: 22px;
-  height: 22px;
-  transform: translate(-50%, -50%);
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 4px;
+  background: #e3e1d8;
+}
+.frontera-thumb {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -13px;
+  width: 26px;
+  height: 26px;
   border-radius: 999px;
   background: #ffffff;
   border: 2.5px solid #9a988e;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.frontera-divider.solved .frontera-knob {
+.frontera-track.solved .frontera-thumb {
   border-color: #3b6d11;
 }
-.frontera-divider.wrong .frontera-knob {
+.frontera-track.wrong .frontera-thumb {
   border-color: #e24b4a;
+}
+.frontera-thumb-grip {
+  width: 8px;
+  height: 11px;
+  border-left: 2px solid #c4c2b8;
+  border-right: 2px solid #c4c2b8;
 }
 .frontera-controls {
   display: flex;
