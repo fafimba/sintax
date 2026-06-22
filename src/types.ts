@@ -131,6 +131,15 @@ export interface SceneBeat {
   steps: SceneStep[]
 }
 
+// Explorable "crecimiento": añade/quita palabras a cada mitad y ve crecer o
+// encoger el sujeto y el predicado. El núcleo (base) no se quita; los adyacentes
+// se suman/restan. La FUNCIÓN (color, etiqueta, pronombre del sujeto) no cambia
+// con el tamaño: ese es el invariante que enseña.
+export interface CrecimientoItem {
+  sujeto: { base: string; adjuncts: string[]; pro: string }
+  predicado: { base: string; adjuncts: string[] }
+}
+
 // Mecánica "frontera": coloca el corte SUJETO|PREDICADO. El divisor salta de
 // hueco en hueco; al soltarlo debe quedar en `boundary` (= nº de palabras del
 // sujeto). Es el paso 1 reutilizable de todo análisis. Precondición de autoría:
@@ -159,6 +168,10 @@ export interface ChallengeSujetoBeat {
   kind: 'challengeSujeto'
   item: SujetoItem
 }
+export interface ExploreCrecimientoBeat {
+  kind: 'exploreCrecimiento'
+  item: CrecimientoItem
+}
 export interface ExploreConcordanciaBeat {
   kind: 'exploreConcordancia'
   item: ConcItem
@@ -174,6 +187,7 @@ export type Beat =
   | TapBeat
   | SceneBeat
   | ChallengeFronteraBeat
+  | ExploreCrecimientoBeat
   | ChallengeCdBeat
   | ChallengeNucleoBeat
   | ChallengeSujetoBeat

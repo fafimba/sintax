@@ -944,6 +944,58 @@ body {
   min-height: 32px;
 }
 
+/* Explorable "crecimiento": dos mitades que crecen/encogen sin perder función. */
+.creci-sentence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 12px 18px;
+  min-height: 96px;
+  margin: 4px 0;
+}
+.creci-kids {
+  flex-wrap: nowrap;
+}
+.creci-word {
+  font-size: 19px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+.creci-tag {
+  opacity: 0.72;
+  font-weight: 500;
+}
+.creci-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 22px;
+  margin-top: 16px;
+}
+.creci-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.creci-step-label {
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 60px;
+  text-align: right;
+}
+.nudge-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.creci-note {
+  text-align: center;
+  color: #84827a;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
 /* Chip de color dentro de enunciados/explicaciones. */
 .rt-chip {
   display: inline-block;

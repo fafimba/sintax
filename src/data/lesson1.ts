@@ -1,17 +1,18 @@
 import type { Lesson } from '../types'
 import { FRONTERA } from './frontera'
+import { CRECIMIENTO } from './crecimiento'
 
 // Capítulo 1. La apertura (sujeto/predicado) es UNA escena continua: la frase
 // no desaparece entre pasos; se separa y se colorea pieza a pieza.
 // Marca de texto: *negrita* y [rol] = chip de color del elemento.
 export const LESSON1: Lesson = {
   id: 'cap1',
-  title: 'Las piezas de la oración',
+  title: 'Las dos mitades',
   beats: [
     {
       kind: 'intro',
-      title: 'Las piezas de la oración',
-      body: 'Vamos a destripar una oración, pieza a pieza. Empezamos por sus *dos mitades*.',
+      title: 'Las dos mitades',
+      body: 'Toda oración se parte en *dos mitades*: el sujeto y el predicado. Vamos a verlas.',
       cta: 'Empezar',
     },
     {
@@ -56,64 +57,12 @@ export const LESSON1: Lesson = {
       teach: 'Eso es: lo que se *dice* del sujeto.',
     },
     {
+      kind: 'exploreCrecimiento',
+      item: CRECIMIENTO[0],
+    },
+    {
       kind: 'challengeFrontera',
       items: FRONTERA.slice(0, 3),
-    },
-    {
-      kind: 'show',
-      groups: [
-        { id: 's', text: 'El niño', role: 'sujeto' },
-        {
-          id: 'pred',
-          text: 'come pan',
-          role: 'predicado',
-          children: [
-            { id: 'v', text: 'come', role: 'verbo' },
-            { id: 'o', text: 'pan', role: 'none' },
-          ],
-        },
-      ],
-      reveal: ['s', 'v'],
-      caption: 'Dentro del predicado manda una palabra: el [verbo], el *motor* de la oración.',
-    },
-    {
-      kind: 'tap',
-      groups: [
-        { id: 's', text: 'Los pájaros', role: 'sujeto' },
-        { id: 'v', text: 'vuelan', role: 'verbo' },
-      ],
-      target: 'v',
-      prompt: 'Toca el [verbo].',
-      teach: 'Justo: el *motor* de la oración.',
-    },
-    {
-      kind: 'show',
-      groups: [
-        { id: 's', text: 'Ana', role: 'sujeto' },
-        {
-          id: 'pred',
-          text: 'compró un libro',
-          role: 'predicado',
-          children: [
-            { id: 'v', text: 'compró', role: 'verbo' },
-            { id: 'c', text: 'un libro', role: 'cd' },
-          ],
-        },
-      ],
-      reveal: ['s', 'v', 'c'],
-      caption: 'Algo nuevo: «un libro» es el [cd].',
-      arrow: { from: 'v', to: 'c', label: '¿qué?' },
-    },
-    {
-      kind: 'tap',
-      groups: [
-        { id: 's', text: 'El gato', role: 'sujeto' },
-        { id: 'v', text: 'bebe', role: 'verbo' },
-        { id: 'c', text: 'leche', role: 'cd' },
-      ],
-      target: 'c',
-      prompt: 'Toca el [cd].',
-      teach: 'Eso es: lo que *recibe* la acción del verbo.',
     },
   ],
 }

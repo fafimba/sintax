@@ -11,6 +11,7 @@ import { FronteraStage } from '../activities/FronteraActivity'
 import { NucleoStage } from '../activities/NucleoActivity'
 import { SujetoStage } from '../activities/SujetoActivity'
 import { ConcordanciaStage } from '../activities/ConcordanciaActivity'
+import { CrecimientoStage } from '../activities/CrecimientoActivity'
 import { VozStage } from '../activities/VozActivity'
 
 type Colored = Exclude<LessonRole, 'none'>
@@ -112,6 +113,11 @@ export function LessonPlayer({
             {beat?.kind === 'challengeNucleo' && <NucleoStage item={beat.item} onNext={advance} />}
             {beat?.kind === 'challengeSujeto' && <SujetoStage item={beat.item} onNext={advance} />}
 
+            {beat?.kind === 'exploreCrecimiento' && (
+              <Embed onNext={advance}>
+                <CrecimientoStage item={beat.item} />
+              </Embed>
+            )}
             {beat?.kind === 'exploreConcordancia' && (
               <Embed onNext={advance}>
                 <ConcordanciaStage item={beat.item} />

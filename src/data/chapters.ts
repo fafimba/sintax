@@ -5,16 +5,44 @@ import { SUJETOS } from './sujetos'
 import { SENTENCES } from './sentences'
 import { VOZ } from './voz'
 
-// Cap 2: integra el explorable de concordancia + el reto de encontrar el sujeto.
+// Cap 2: el verbo (núcleo del predicado) + el explorable de concordancia + el
+// reto de encontrar el sujeto.
 const LESSON2: Lesson = {
   id: 'cap2',
-  title: 'La concordancia',
+  title: 'El verbo y la concordancia',
   beats: [
     {
       kind: 'intro',
-      title: 'La concordancia',
-      body: 'Mueve una pieza… y mira qué se mueve con ella.',
+      title: 'El verbo y la concordancia',
+      body: 'El *motor* del predicado es el verbo. Y manda más de lo que parece.',
       cta: 'Empezar',
+    },
+    {
+      kind: 'show',
+      groups: [
+        { id: 's', text: 'El niño', role: 'sujeto' },
+        {
+          id: 'pred',
+          text: 'come pan',
+          role: 'predicado',
+          children: [
+            { id: 'v', text: 'come', role: 'verbo' },
+            { id: 'o', text: 'pan', role: 'none' },
+          ],
+        },
+      ],
+      reveal: ['s', 'v'],
+      caption: 'Dentro del predicado manda una palabra: el [verbo], el *motor* de la oración.',
+    },
+    {
+      kind: 'tap',
+      groups: [
+        { id: 's', text: 'Los pájaros', role: 'sujeto' },
+        { id: 'v', text: 'vuelan', role: 'verbo' },
+      ],
+      target: 'v',
+      prompt: 'Toca el [verbo].',
+      teach: 'Justo: el *motor* de la oración.',
     },
     {
       kind: 'show',
@@ -348,8 +376,8 @@ const LESSON7: Lesson = {
 }
 
 export const CHAPTERS: Chapter[] = [
-  { id: 'cap1', num: 1, title: 'Las piezas de la oración', subtitle: 'Sujeto, predicado, verbo y CD', lesson: LESSON1 },
-  { id: 'cap2', num: 2, title: 'La concordancia', subtitle: 'El sujeto manda sobre el verbo', lesson: LESSON2 },
+  { id: 'cap1', num: 1, title: 'Las dos mitades', subtitle: 'Sujeto y predicado', lesson: LESSON1 },
+  { id: 'cap2', num: 2, title: 'El verbo y la concordancia', subtitle: 'El motor del predicado; el sujeto manda', lesson: LESSON2 },
   { id: 'cap3', num: 3, title: 'El complemento directo', subtitle: 'Reconócelo con el pronombre', lesson: LESSON3 },
   { id: 'cap4', num: 4, title: 'Una oración dentro de otra', subtitle: 'La subordinación: cajas dentro de cajas', lesson: LESSON4 },
   { id: 'cap5', num: 5, title: 'El complemento indirecto', subtitle: 'A quién llega la acción: le / les', lesson: LESSON5 },
