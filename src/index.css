@@ -702,12 +702,33 @@ body {
 
 .legend {
   display: flex;
-  gap: 8px;
+  gap: 22px;
   justify-content: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   padding: 12px 0 2px;
   margin-top: 10px;
   border-top: 0.5px solid rgba(0, 0, 0, 0.06);
+}
+
+.legend-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.legend-childrow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding-left: 8px;
+}
+
+.legend-branch {
+  color: #bbb9b0;
+  font-size: 13px;
+  line-height: 1;
 }
 
 .legend-chip {
@@ -716,6 +737,160 @@ body {
   padding: 4px 11px;
   border-radius: 999px;
   border: 1px solid;
+}
+
+.legend-chip-sm {
+  font-size: 11px;
+  padding: 3px 9px;
+}
+
+.lesson-embed {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Mapa del camino --- */
+.map {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 8px 2px 4px;
+  flex: 1;
+}
+
+.map-head h1 {
+  font-size: 26px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.map-head p {
+  font-size: 15px;
+  color: #888780;
+  margin: 6px 0 0;
+}
+
+.map-path {
+  display: flex;
+  flex-direction: column;
+}
+
+.map-node {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  position: relative;
+}
+
+.map-rail {
+  width: 48px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.map-node:not(:last-child) .map-rail::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 34px;
+  bottom: -16px;
+  width: 3px;
+  background: #eceae2;
+  z-index: 0;
+}
+
+.map-done .map-rail::after {
+  background: #c0dd97;
+}
+
+.map-dot {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: inherit;
+  position: relative;
+  z-index: 1;
+}
+
+.map-num {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.map-done .map-dot {
+  background: #639922;
+  color: #ffffff;
+}
+
+.map-open .map-dot {
+  background: #185fa5;
+  color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(24, 95, 165, 0.16);
+}
+
+.map-locked .map-dot {
+  background: #eceae2;
+  color: #a8a69c;
+  cursor: default;
+}
+
+.map-info {
+  background: none;
+  border: none;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+  flex: 1;
+}
+
+.map-locked .map-info {
+  cursor: default;
+}
+
+.map-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #2c2c2a;
+}
+
+.map-locked .map-title {
+  color: #a8a69c;
+}
+
+.map-sub {
+  font-size: 13px;
+  color: #888780;
+}
+
+.map-open .map-sub {
+  color: #185fa5;
+  font-weight: 500;
+}
+
+.map-free {
+  margin-top: auto;
+  align-self: center;
+  background: none;
+  border: none;
+  color: #888780;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px;
 }
 
 .lplain {

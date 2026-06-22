@@ -100,10 +100,48 @@ export interface TapBeat {
   teach: string // se muestra al acertar
 }
 
-export type Beat = IntroBeat | ShowBeat | TapBeat
+// Beats que incrustan las mecánicas ya existentes dentro del camino.
+export interface ChallengeCdBeat {
+  kind: 'challengeCd'
+  sentence: Sentence
+}
+export interface ChallengeNucleoBeat {
+  kind: 'challengeNucleo'
+  item: NucleoItem
+}
+export interface ChallengeSujetoBeat {
+  kind: 'challengeSujeto'
+  item: SujetoItem
+}
+export interface ExploreConcordanciaBeat {
+  kind: 'exploreConcordancia'
+  item: ConcItem
+}
+export interface ExploreVozBeat {
+  kind: 'exploreVoz'
+  item: VozItem
+}
+
+export type Beat =
+  | IntroBeat
+  | ShowBeat
+  | TapBeat
+  | ChallengeCdBeat
+  | ChallengeNucleoBeat
+  | ChallengeSujetoBeat
+  | ExploreConcordanciaBeat
+  | ExploreVozBeat
 
 export interface Lesson {
   id: string
   title: string
   beats: Beat[]
+}
+
+export interface Chapter {
+  id: string
+  num: number
+  title: string
+  subtitle: string
+  lesson: Lesson
 }

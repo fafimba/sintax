@@ -25,9 +25,9 @@ const SECTIONS: Section[] = [
     cards: [
       {
         id: 'lesson',
-        name: 'Capítulo 1 · Las piezas de la oración',
-        teaches: 'Sujeto, predicado, verbo y complemento directo',
-        tag: 'lección',
+        name: 'Volver al mapa de capítulos',
+        teaches: 'El recorrido guiado, de lo básico a lo avanzado',
+        tag: 'camino',
         color: '#185FA5',
         ready: true,
       },

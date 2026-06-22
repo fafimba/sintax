@@ -38,7 +38,7 @@ function pieceData(id: string, item: VozItem, voz: Voz): PieceData {
   }
 }
 
-function VozStage({ item }: { item: VozItem }) {
+export function VozStage({ item }: { item: VozItem }) {
   const [voz, setVoz] = useState<Voz>('activa')
   const [seen, setSeen] = useState(false)
 

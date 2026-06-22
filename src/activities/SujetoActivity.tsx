@@ -11,7 +11,7 @@ import { fn, neutral } from '../theme'
 type Num = 's' | 'p'
 type Phase = 'idle' | 'wrong' | 'done'
 
-function SujetoStage({ item, onNext }: { item: SujetoItem; onNext: () => void }) {
+export function SujetoStage({ item, onNext }: { item: SujetoItem; onNext: () => void }) {
   const subject = item.parts.find((p) => p.kind === 'sujeto')!
   const [subjNum, setSubjNum] = useState<Num>('s')
   const [distNum, setDistNum] = useState<Num>('s')

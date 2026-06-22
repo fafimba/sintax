@@ -9,7 +9,7 @@ import { fn, neutral, errorColor } from '../theme'
 
 type Phase = 'idle' | 'done'
 
-function NucleoStage({ item, onNext }: { item: NucleoItem; onNext: () => void }) {
+export function NucleoStage({ item, onNext }: { item: NucleoItem; onNext: () => void }) {
   const nucleus = item.chips.find((c) => c.isNucleus)!
   const [present, setPresent] = useState<string[]>(item.chips.map((c) => c.id))
   const [shakeId, setShakeId] = useState<string | null>(null)

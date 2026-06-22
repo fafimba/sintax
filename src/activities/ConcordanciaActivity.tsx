@@ -30,7 +30,7 @@ function AgreeWord({ text, pulse, tinted }: { text: string; pulse: number; tinte
   )
 }
 
-function ConcordanciaStage({ item }: { item: ConcItem }) {
+export function ConcordanciaStage({ item }: { item: ConcItem }) {
   const [num, setNum] = useState<Num>('s')
   const [pulse, setPulse] = useState(0)
   const toggles = pulse
