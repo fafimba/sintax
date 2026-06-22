@@ -41,13 +41,22 @@ export function LessonPlayer({
   lesson,
   onBack,
   onComplete,
+  initialBeat = 0,
+  onBeat,
 }: {
   lesson: Lesson
   onBack: () => void
   onComplete: () => void
+  initialBeat?: number
+  onBeat?: (i: number) => void
 }) {
-  const [i, setI] = useState(0)
+  const [i, setI] = useState(initialBeat)
   const [introduced, setIntroduced] = useState<Set<Colored>>(() => new Set())
+
+  // Reporta el paso actual para poder reanudar al volver a abrir la app.
+  useEffect(() => {
+    onBeat?.(i)
+  }, [i, onBeat])
   const total = lesson.beats.length
   const finished = i >= total
   const advance = () => setI((n) => n + 1)

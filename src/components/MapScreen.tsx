@@ -9,13 +9,11 @@ export function MapScreen({
   completed,
   justCompleted,
   onPlay,
-  onFree,
 }: {
   chapters: Chapter[]
   completed: string[]
   justCompleted?: string | null
   onPlay: (id: string) => void
-  onFree: () => void
 }) {
   return (
     <div className="map">
@@ -73,10 +71,6 @@ export function MapScreen({
           )
         })}
       </div>
-
-      <button className="map-free" onClick={onFree}>
-        Práctica libre →
-      </button>
     </div>
   )
 }
