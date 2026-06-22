@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import type { LGroup, LessonRole } from '../types'
-import { fn, elem } from '../theme'
+import { fn, elem, clase, claseHidden, fnBrace, fnLabel } from '../theme'
 
 type Colored = Exclude<LessonRole, 'none'>
 
@@ -233,5 +233,96 @@ export function ConstituentBox({
         </motion.div>
       )}
     </AnimatePresence>
+  )
+}
+
+// --- Modelo de DOS NIVELES ---
+// La PALABRA se colorea por su CLASE (sustantivo, verbo, adjetivo, adverbio;
+// gramaticales en gris). La FUNCIÓN se marca con un CORCHETE neutro + rótulo
+// (todas menos el verbo y el pegamento, que van sin corchete). El color y el
+// corchete son canales distintos: clase ≠ función, sin pisarse.
+export function TwoLevelBox({
+  group,
+  reveal,
+  separated,
+  onTap,
+  solvedId,
+  wrongId,
+}: {
+  group: LGroup
+  reveal: string[]
+  separated: boolean
+  onTap?: (id: string) => void
+  solvedId?: string | null
+  wrongId?: string | null
+}) {
+  const tapMode = !!onTap
+  const hasKids = !!group.children?.length
+  const bracketed = group.role !== 'verbo' && group.role !== 'none'
+  const solved = solvedId === group.id
+  const active = tapMode ? solved : hasRevealed(group, reveal)
+  const shake = wrongId === group.id
+
+  const inner = hasKids
+    ? group.children!.map((c) => (
+        <TwoLevelBox
+          key={c.id}
+          group={c}
+          reveal={reveal}
+          separated={separated}
+          onTap={onTap}
+          solvedId={solvedId}
+          wrongId={wrongId}
+        />
+      ))
+    : (group.words ?? []).map((w, i) => (
+        <span key={i} className="tl-word" style={{ color: active ? clase[w.clase] : claseHidden }}>
+          {w.text}
+        </span>
+      ))
+
+  // Verbo / pegamento: sin corchete (basta el color de la palabra).
+  if (!bracketed) return <span className="tl-bare">{inner}</span>
+
+  // Función con corchete neutro + rótulo.
+  const st = ROLE_STYLE[group.role as Colored]
+  const showBracket = tapMode || active
+  return (
+    <motion.div
+      className={`pred-zone ${tapMode && !solved ? 'pred-tappable' : ''}`}
+      style={{ ['--pred-border' as string]: active ? fnBrace : '#c9c7bd' }}
+      onClick={tapMode && !solved ? () => onTap!(group.id) : undefined}
+      animate={shake ? { x: [0, -6, 6, -4, 4, 0] } : { x: 0 }}
+      transition={{ duration: shake ? 0.4 : 0.2 }}
+    >
+      <div className="pred-kids tl-kids">{inner}</div>
+      <AnimatePresence>
+        {showBracket && (
+          <motion.div
+            key="bracket"
+            className="pred-bracket"
+            initial={{ opacity: 0, scaleX: 0.6 }}
+            animate={{ opacity: 1, scaleX: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 26 }}
+            style={{ transformOrigin: 'center' }}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {active && (
+          <motion.span
+            key="label"
+            className="pred-label"
+            style={{ color: fnLabel }}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+          >
+            {st.label}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </motion.div>
   )
 }

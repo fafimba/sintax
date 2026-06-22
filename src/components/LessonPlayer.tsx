@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Lesson, IntroBeat, ShowBeat, TapBeat, SceneBeat, LessonRole, LGroup } from '../types'
-import { ConstituentBox, ROLE_STYLE } from './GroupBox'
+import { ConstituentBox, TwoLevelBox, ROLE_STYLE } from './GroupBox'
 import { RelArrow } from './RelArrow'
 import { RichText } from './RichText'
 import { TopBar } from './TopBar'
@@ -36,6 +36,14 @@ function flattenGroups(groups: LGroup[]): LGroup[] {
     if (g.children) out.push(...flattenGroups(g.children))
   }
   return out
+}
+
+// ¿El beat usa el modelo de dos niveles (palabras con clase)? Elige el renderer.
+function usesWords(g: LGroup): boolean {
+  return !!g.words?.length || !!g.children?.some(usesWords)
+}
+function pickBox(groups: LGroup[]) {
+  return groups.some(usesWords) ? TwoLevelBox : ConstituentBox
 }
 
 function rolesOf(ids: string[], groups: { id: string; role: LessonRole }[]): Colored[] {
@@ -254,9 +262,10 @@ function ShowView({
     <motion.div className="lesson-stage" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
       <div className="sentence-area" ref={areaRef} style={{ position: 'relative' }}>
         <FitRow className="sentence topalign">
-          {beat.groups.map((g) => (
-            <ConstituentBox key={g.id} group={g} reveal={beat.reveal} separated />
-          ))}
+          {beat.groups.map((g) => {
+            const Box = pickBox(beat.groups)
+            return <Box key={g.id} group={g} reveal={beat.reveal} separated />
+          })}
         </FitRow>
         {arrows.map((a, idx) => (
           <RelArrow
@@ -311,9 +320,10 @@ function SceneView({
           animate={{ gap: s.separated ? 16 : 7 }}
           transition={{ duration: 0.45 }}
         >
-          {beat.groups.map((g) => (
-            <ConstituentBox key={g.id} group={g} reveal={s.reveal} separated={!!s.separated} />
-          ))}
+          {beat.groups.map((g) => {
+            const Box = pickBox(beat.groups)
+            return <Box key={g.id} group={g} reveal={s.reveal} separated={!!s.separated} />
+          })}
         </motion.div>
       </div>
       <div className="caption-slot">
@@ -370,17 +380,20 @@ function TapView({
       </p>
       <div className="sentence-area">
         <div className="sentence wrap topalign">
-          {beat.groups.map((g) => (
-            <ConstituentBox
-              key={g.id}
-              group={g}
-              reveal={[]}
-              separated
-              onTap={tap}
-              solvedId={solved ? beat.target : null}
-              wrongId={wrongId}
-            />
-          ))}
+          {beat.groups.map((g) => {
+            const Box = pickBox(beat.groups)
+            return (
+              <Box
+                key={g.id}
+                group={g}
+                reveal={[]}
+                separated
+                onTap={tap}
+                solvedId={solved ? beat.target : null}
+                wrongId={wrongId}
+              />
+            )
+          })}
         </div>
       </div>
       <div className="tap-feedback">

@@ -18,8 +18,15 @@ export const LESSON1: Lesson = {
     {
       kind: 'scene',
       groups: [
-        { id: 's', text: 'El gato', role: 'sujeto' },
-        { id: 'p', text: 'duerme', role: 'predicado' },
+        {
+          id: 's',
+          role: 'sujeto',
+          words: [
+            { text: 'El', clase: 'determinante' },
+            { text: 'gato', clase: 'sustantivo' },
+          ],
+        },
+        { id: 'p', role: 'predicado', words: [{ text: 'duerme', clase: 'verbo' }] },
       ],
       steps: [
         { reveal: [], caption: 'Esta es una oración. Por dentro tiene una estructura.' },
@@ -39,8 +46,15 @@ export const LESSON1: Lesson = {
     {
       kind: 'tap',
       groups: [
-        { id: 's', text: 'La niña', role: 'sujeto' },
-        { id: 'p', text: 'canta', role: 'predicado' },
+        {
+          id: 's',
+          role: 'sujeto',
+          words: [
+            { text: 'La', clase: 'determinante' },
+            { text: 'niña', clase: 'sustantivo' },
+          ],
+        },
+        { id: 'p', role: 'predicado', words: [{ text: 'canta', clase: 'verbo' }] },
       ],
       target: 's',
       prompt: 'Ahora tú. Toca el [sujeto].',
@@ -49,8 +63,23 @@ export const LESSON1: Lesson = {
     {
       kind: 'tap',
       groups: [
-        { id: 's', text: 'El perro', role: 'sujeto' },
-        { id: 'p', text: 'ladra muy fuerte', role: 'predicado' },
+        {
+          id: 's',
+          role: 'sujeto',
+          words: [
+            { text: 'El', clase: 'determinante' },
+            { text: 'perro', clase: 'sustantivo' },
+          ],
+        },
+        {
+          id: 'p',
+          role: 'predicado',
+          words: [
+            { text: 'ladra', clase: 'verbo' },
+            { text: 'muy', clase: 'adverbio' },
+            { text: 'fuerte', clase: 'adverbio' },
+          ],
+        },
       ],
       target: 'p',
       prompt: 'Toca el [predicado].',

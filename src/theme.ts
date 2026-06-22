@@ -12,6 +12,25 @@ export const fn = {
   atributo: { fill: '#9FE1CB', text: '#04342C', border: '#0F6E56' },
 } as const
 
+// Modelo de dos niveles: COLOR = CLASE de palabra. Las 4 clases de contenido
+// tienen color propio; las gramaticales ("pegamento") van en gris.
+export const clase = {
+  sustantivo: '#1F6FB2',
+  verbo: '#C0392B',
+  adjetivo: '#2E8B4F',
+  adverbio: '#C77A0A',
+  determinante: '#8A877C',
+  preposicion: '#8A877C',
+  conjuncion: '#8A877C',
+  pronombre: '#8A877C',
+} as const
+
+// Gris de palabra aún no revelada (antes de teñirse por su clase).
+export const claseHidden = '#bfbdb3'
+// Corchete/etiqueta de función: neutros (la función la dice el rótulo, no el color).
+export const fnBrace = '#a8a69c'
+export const fnLabel = '#6b6a62'
+
 export const neutral = { fill: '#F1EFE8', text: '#5F5E5A', border: '#C9C7BD' }
 export const errorColor = { fill: '#FCEBEB', text: '#A32D2D', border: '#E24B4A' }
 export const ok = '#3B6D11'

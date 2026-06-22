@@ -70,13 +70,34 @@ export interface VozItem {
 // --- Camino guiado (lecciones) ---
 export type LessonRole = 'sujeto' | 'predicado' | 'verbo' | 'cd' | 'ci' | 'atributo' | 'cc' | 'none'
 
+// Modelo de DOS NIVELES: la PALABRA se colorea por su CLASE; la FUNCIÓN se marca
+// con el corchete. Clases de contenido (color propio): sustantivo, verbo,
+// adjetivo, adverbio. Gramaticales / "pegamento" (gris): determinante,
+// preposición, conjunción, pronombre.
+export type Clase =
+  | 'sustantivo'
+  | 'verbo'
+  | 'adjetivo'
+  | 'adverbio'
+  | 'determinante'
+  | 'preposicion'
+  | 'conjuncion'
+  | 'pronombre'
+
+export interface LWord {
+  text: string
+  clase: Clase
+}
+
 export interface LGroup {
   id: string
-  text: string
+  text?: string // modelo antiguo (ficha por función). Migrando -> usar `words`.
   role: LessonRole
+  // Hoja con palabras coloreadas por CLASE (modelo de dos niveles). Si el grupo
+  // es una función con cuerpo léxico (sujeto, CD...), va envuelto en corchete.
+  words?: LWord[]
   // Si tiene hijos, es un CONSTITUYENTE CONTENEDOR (p. ej. el predicado):
   // no pinta ficha propia, sino sus hijos + un corchete que los abraza.
-  // Recursivo (para subordinadas en el futuro).
   children?: LGroup[]
   // Verbo copulativo (ser/estar/parecer): es un PUENTE, no una acción. Pierde
   // el pico de "play" y adopta forma neutra de enlace.
