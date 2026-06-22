@@ -10,6 +10,8 @@ export const ROLE_STYLE: Record<Colored, { fill: string; text: string; border: s
   verbo: { fill: elem.verbo.fill, text: elem.verbo.text, border: elem.verbo.border, label: 'Verbo' },
   cd: { fill: fn.cd.fill, text: fn.cd.text, border: fn.cd.border, label: 'CD' },
   ci: { fill: fn.ci.fill, text: fn.ci.text, border: fn.ci.border, label: 'CI' },
+  atributo: { fill: fn.atributo.fill, text: fn.atributo.text, border: fn.atributo.border, label: 'Atributo' },
+  cc: { fill: fn.cc.fill, text: fn.cc.text, border: fn.cc.border, label: 'CC' },
 }
 
 // Forma por tipo de elemento (solo al revelarse).
@@ -19,6 +21,8 @@ const SHAPE: Record<Colored, string> = {
   verbo: 'shape-verb', // pico a la derecha: la acción
   cd: 'shape-cd', // muesca a la izquierda: recibe la acción
   ci: 'shape-ci', // muescas a ambos lados: destinatario (recibe y "a quién")
+  atributo: 'shape-atributo', // cinta con picos: una cualidad que "etiqueta" al sujeto
+  cc: 'shape-cc', // romboide: circunstancia que acompaña (móvil, periférica)
 }
 
 // display:
@@ -140,6 +144,7 @@ export function ConstituentBox({
 
   return (
     <motion.div
+      data-gid={group.id}
       className={`pred-zone ${tapMode && !solved ? 'pred-tappable' : ''}`}
       style={{ ['--pred-border' as string]: border }}
       onClick={tapMode && !solved ? () => onTap!(group.id) : undefined}

@@ -20,9 +20,11 @@ const PARENT: Record<Colored, Colored | null> = {
   verbo: 'predicado',
   cd: 'predicado',
   ci: 'predicado',
+  atributo: 'predicado',
+  cc: 'predicado',
 }
 const TOP_ORDER: Colored[] = ['sujeto', 'predicado']
-const CHILD_ORDER: Colored[] = ['verbo', 'cd', 'ci']
+const CHILD_ORDER: Colored[] = ['verbo', 'cd', 'ci', 'atributo', 'cc']
 
 function flattenGroups(groups: LGroup[]): LGroup[] {
   const out: LGroup[] = []

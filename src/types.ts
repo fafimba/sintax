@@ -68,7 +68,7 @@ export interface VozItem {
 }
 
 // --- Camino guiado (lecciones) ---
-export type LessonRole = 'sujeto' | 'predicado' | 'verbo' | 'cd' | 'ci' | 'none'
+export type LessonRole = 'sujeto' | 'predicado' | 'verbo' | 'cd' | 'ci' | 'atributo' | 'cc' | 'none'
 
 export interface LGroup {
   id: string

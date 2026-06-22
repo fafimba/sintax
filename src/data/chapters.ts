@@ -205,10 +205,154 @@ const LESSON5: Lesson = {
   ],
 }
 
+// Cap 6: el atributo. Con ser/estar/parecer el verbo es un PUENTE; el atributo
+// describe al sujeto. Por eso la flecha va sujeto->atributo "¿cómo es?" (no
+// verbo->X como en CD/CI). Regla: se sustituye por "lo".
+const LESSON6: Lesson = {
+  id: 'cap6',
+  title: 'El atributo',
+  beats: [
+    {
+      kind: 'intro',
+      title: 'El atributo',
+      body: 'Con *ser*, *estar* o *parecer* el verbo no es acción: es un *puente*. ¿Qué hay al otro lado?',
+      cta: 'Empezar',
+    },
+    {
+      kind: 'show',
+      groups: [
+        { id: 's', text: 'El cielo', role: 'sujeto' },
+        {
+          id: 'pred',
+          text: 'es azul',
+          role: 'predicado',
+          children: [
+            { id: 'v', text: 'es', role: 'verbo' },
+            { id: 'a', text: 'azul', role: 'atributo' },
+          ],
+        },
+      ],
+      reveal: ['s', 'v', 'a'],
+      caption: '«azul» es el [atributo]: dice *cómo es* el sujeto.',
+      arrow: { from: 's', to: 'a', label: '¿cómo es?' },
+    },
+    {
+      kind: 'tap',
+      groups: [
+        { id: 's', text: 'La sopa', role: 'sujeto' },
+        { id: 'v', text: 'está', role: 'verbo' },
+        { id: 'a', text: 'caliente', role: 'atributo' },
+      ],
+      target: 'a',
+      prompt: 'Toca el [atributo].',
+      teach: 'Sí: «caliente» dice *cómo está* la sopa.',
+    },
+    {
+      kind: 'show',
+      groups: [
+        { id: 's', text: 'El cielo', role: 'sujeto' },
+        {
+          id: 'pred',
+          text: 'lo es',
+          role: 'predicado',
+          children: [
+            { id: 'a', text: 'lo', role: 'atributo' },
+            { id: 'v', text: 'es', role: 'verbo' },
+          ],
+        },
+      ],
+      reveal: ['s', 'v', 'a'],
+      caption: 'Prueba: el [atributo] se cambia por *lo*. El cielo *lo* es.',
+    },
+  ],
+}
+
+// Cap 7: el complemento circunstancial. No tiene pronombre fijo; lo que lo
+// define es la VARIEDAD de circunstancias (cuándo/dónde/cómo). Periférico, no
+// "opcional": mismo peso visual. Puede haber varios -> dos flechas.
+const LESSON7: Lesson = {
+  id: 'cap7',
+  title: 'El complemento circunstancial',
+  beats: [
+    {
+      kind: 'intro',
+      title: 'El complemento circunstancial',
+      body: 'Cuándo, dónde, cómo, por qué… las *circunstancias* que rodean a la acción.',
+      cta: 'Empezar',
+    },
+    {
+      kind: 'show',
+      groups: [
+        { id: 's', text: 'Ana', role: 'sujeto' },
+        {
+          id: 'pred',
+          text: 'cantó en el teatro',
+          role: 'predicado',
+          children: [
+            { id: 'v', text: 'cantó', role: 'verbo' },
+            { id: 'l', text: 'en el teatro', role: 'cc' },
+          ],
+        },
+      ],
+      reveal: ['s', 'v', 'l'],
+      caption: '«en el teatro» es un [cc]: dice *dónde*.',
+      arrow: { from: 'v', to: 'l', label: '¿dónde?' },
+    },
+    {
+      kind: 'show',
+      groups: [
+        { id: 's', text: 'Ana', role: 'sujeto' },
+        {
+          id: 'pred',
+          text: 'cantó ayer en el teatro',
+          role: 'predicado',
+          children: [
+            { id: 'v', text: 'cantó', role: 'verbo' },
+            { id: 't', text: 'ayer', role: 'cc' },
+            { id: 'l', text: 'en el teatro', role: 'cc' },
+          ],
+        },
+      ],
+      reveal: ['s', 'v', 't', 'l'],
+      caption: 'Puede haber *varios*: cada uno, una circunstancia.',
+      arrow: [
+        { from: 'v', to: 't', label: '¿cuándo?' },
+        { from: 'v', to: 'l', label: '¿dónde?' },
+      ],
+    },
+    {
+      kind: 'tap',
+      groups: [
+        { id: 's', text: 'Ana', role: 'sujeto' },
+        { id: 'v', text: 'compró', role: 'verbo' },
+        { id: 'c', text: 'pan', role: 'cd' },
+        { id: 'cc', text: 'ayer', role: 'cc' },
+      ],
+      target: 'cc',
+      prompt: 'Toca el [cc].',
+      teach: 'Eso: «ayer» dice *cuándo*.',
+    },
+    {
+      kind: 'tap',
+      groups: [
+        { id: 's', text: 'Ana', role: 'sujeto' },
+        { id: 'v', text: 'compró', role: 'verbo' },
+        { id: 'c', text: 'pan', role: 'cd' },
+        { id: 'cc', text: 'ayer', role: 'cc' },
+      ],
+      target: 'c',
+      prompt: 'En la misma frase: toca el [cd].',
+      teach: 'Eso: *qué* compró.',
+    },
+  ],
+}
+
 export const CHAPTERS: Chapter[] = [
   { id: 'cap1', num: 1, title: 'Las piezas de la oración', subtitle: 'Sujeto, predicado, verbo y CD', lesson: LESSON1 },
   { id: 'cap2', num: 2, title: 'La concordancia', subtitle: 'El sujeto manda sobre el verbo', lesson: LESSON2 },
   { id: 'cap3', num: 3, title: 'El complemento directo', subtitle: 'Reconócelo con el pronombre', lesson: LESSON3 },
   { id: 'cap4', num: 4, title: 'Una oración dentro de otra', subtitle: 'La subordinación: cajas dentro de cajas', lesson: LESSON4 },
   { id: 'cap5', num: 5, title: 'El complemento indirecto', subtitle: 'A quién llega la acción: le / les', lesson: LESSON5 },
+  { id: 'cap6', num: 6, title: 'El atributo', subtitle: 'Ser, estar, parecer: cómo es el sujeto', lesson: LESSON6 },
+  { id: 'cap7', num: 7, title: 'El complemento circunstancial', subtitle: 'Cuándo, dónde, cómo: las circunstancias', lesson: LESSON7 },
 ]

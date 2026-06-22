@@ -806,6 +806,22 @@ body {
   border: none;
 }
 
+/* Atributo: cinta con picos a ambos lados (una cualidad que "etiqueta" al sujeto). */
+.shape-atributo {
+  clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 10px 100%, 0 50%);
+  padding-left: 18px;
+  padding-right: 18px;
+  border: none;
+}
+
+/* CC: romboide (circunstancia que acompaña; sesgo = movible, periférica). */
+.shape-cc {
+  clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
+  padding-left: 18px;
+  padding-right: 18px;
+  border: none;
+}
+
 /* Chip de color dentro de enunciados/explicaciones. */
 .rt-chip {
   display: inline-block;
