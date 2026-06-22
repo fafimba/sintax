@@ -996,6 +996,42 @@ body {
   margin-top: 12px;
 }
 
+/* Explorable "swap": cambia la palabra, no la función. */
+.swap-sentence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  min-height: 120px;
+  margin: 6px 0;
+}
+.swap-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.swap-refresh {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1.5px solid #d7d5cb;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8a887e;
+  cursor: pointer;
+}
+.swap-refresh:hover {
+  background: #f4f3ee;
+  color: #5f5e5a;
+}
+.swap-spacer {
+  height: 28px;
+}
+
 /* Chip de color dentro de enunciados/explicaciones. */
 .rt-chip {
   display: inline-block;

@@ -12,6 +12,7 @@ import { NucleoStage } from '../activities/NucleoActivity'
 import { SujetoStage } from '../activities/SujetoActivity'
 import { ConcordanciaStage } from '../activities/ConcordanciaActivity'
 import { CrecimientoStage } from '../activities/CrecimientoActivity'
+import { SwapStage } from '../activities/SwapActivity'
 import { VozStage } from '../activities/VozActivity'
 
 type Colored = Exclude<LessonRole, 'none'>
@@ -116,6 +117,11 @@ export function LessonPlayer({
             {beat?.kind === 'exploreCrecimiento' && (
               <Embed onNext={advance}>
                 <CrecimientoStage item={beat.item} />
+              </Embed>
+            )}
+            {beat?.kind === 'exploreSwap' && (
+              <Embed onNext={advance}>
+                <SwapStage item={beat.item} />
               </Embed>
             )}
             {beat?.kind === 'exploreConcordancia' && (

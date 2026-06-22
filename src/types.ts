@@ -131,6 +131,20 @@ export interface SceneBeat {
   steps: SceneStep[]
 }
 
+// Explorable "swap": cada hueco tiene alternativas PRE-VALIDADAS a mano que
+// encajan en su sitio (un verbo por otro verbo que admite el mismo CD, un sujeto
+// por otro del mismo número/persona...). Ninguna alternativa cruza una
+// concordancia -> todas las combinaciones son gramaticales. alts[0] = inicial;
+// si alts tiene una sola, el hueco es fijo (sin icono de cambio). El invariante:
+// cambia la palabra, NO el color/función.
+export interface SwapSlot {
+  role: LessonRole
+  alts: string[]
+}
+export interface SwapItem {
+  slots: SwapSlot[]
+}
+
 // Explorable "crecimiento": añade/quita palabras a cada mitad y ve crecer o
 // encoger el sujeto y el predicado. El núcleo (base) no se quita; los adyacentes
 // se suman/restan. La FUNCIÓN (color, etiqueta, pronombre del sujeto) no cambia
@@ -172,6 +186,10 @@ export interface ExploreCrecimientoBeat {
   kind: 'exploreCrecimiento'
   item: CrecimientoItem
 }
+export interface ExploreSwapBeat {
+  kind: 'exploreSwap'
+  item: SwapItem
+}
 export interface ExploreConcordanciaBeat {
   kind: 'exploreConcordancia'
   item: ConcItem
@@ -188,6 +206,7 @@ export type Beat =
   | SceneBeat
   | ChallengeFronteraBeat
   | ExploreCrecimientoBeat
+  | ExploreSwapBeat
   | ChallengeCdBeat
   | ChallengeNucleoBeat
   | ChallengeSujetoBeat

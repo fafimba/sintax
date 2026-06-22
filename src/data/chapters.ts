@@ -4,6 +4,7 @@ import { CONCORDANCIA } from './concordancia'
 import { SUJETOS } from './sujetos'
 import { SENTENCES } from './sentences'
 import { VOZ } from './voz'
+import { SWAP } from './swap'
 
 // Cap 2: el verbo (núcleo del predicado) + el explorable de concordancia + el
 // reto de encontrar el sujeto.
@@ -93,6 +94,7 @@ const LESSON3: Lesson = {
       arrow: { from: 'v', to: 'c', label: '¿qué?' },
     },
     { kind: 'challengeCd', sentence: SENTENCES[0] },
+    { kind: 'exploreSwap', item: SWAP[0] },
     { kind: 'exploreVoz', item: VOZ[0] },
   ],
 }
