@@ -47,7 +47,12 @@ function SujetoStage({ item, onNext }: { item: SujetoItem; onNext: () => void })
   }
 
   return (
-    <div className="stage">
+    <motion.div
+      className="stage"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+    >
       <p className="prompt">¿Cuál es el sujeto?</p>
       <p className="subprompt">Cambia el número de un grupo. El sujeto arrastra al verbo: cambia con él.</p>
 
@@ -122,7 +127,7 @@ function SujetoStage({ item, onNext }: { item: SujetoItem; onNext: () => void })
           </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   )
 }
 

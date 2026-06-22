@@ -66,7 +66,12 @@ export function SentenceStage({
   const trayVisible = phase === 'idle' || phase === 'error'
 
   return (
-    <div className="stage">
+    <motion.div
+      className="stage"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+    >
       <p className="prompt">{sentence.prompt}</p>
       <p className="subprompt">Arrastra el pronombre y suéltalo sobre el complemento directo.</p>
 
@@ -160,7 +165,7 @@ export function SentenceStage({
           </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   )
 }
 

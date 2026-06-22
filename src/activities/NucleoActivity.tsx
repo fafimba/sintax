@@ -37,7 +37,12 @@ function NucleoStage({ item, onNext }: { item: NucleoItem; onNext: () => void })
   const nucleusShaking = shakeId === nucleus.id
 
   return (
-    <div className="stage">
+    <motion.div
+      className="stage"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+    >
       <p className="prompt">Quita lo que sobra. ¿Qué palabra no se puede borrar?</p>
       <p className="subprompt">Toca las palabras para eliminarlas. El núcleo es lo único que queda en pie.</p>
 
@@ -113,7 +118,7 @@ function NucleoStage({ item, onNext }: { item: NucleoItem; onNext: () => void })
           </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   )
 }
 
