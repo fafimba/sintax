@@ -67,6 +67,10 @@ export function LessonPlayer({
   const beat = finished ? null : lesson.beats[i]
   const teachingBeat =
     beat?.kind === 'intro' || beat?.kind === 'show' || beat?.kind === 'scene' || beat?.kind === 'tap'
+  const nestedGroups =
+    beat && (beat.kind === 'show' || beat.kind === 'scene' || beat.kind === 'tap') && beat.groups.some((g) => g.children?.length)
+      ? beat.groups
+      : null
 
   return (
     <>
@@ -107,7 +111,12 @@ export function LessonPlayer({
         </AnimatePresence>
       </div>
 
-      {teachingBeat && introduced.size > 0 && <Legend intro={introduced} />}
+      {teachingBeat &&
+        (nestedGroups ? (
+          <StructureLegend groups={nestedGroups} />
+        ) : introduced.size > 0 ? (
+          <Legend intro={introduced} />
+        ) : null)}
     </>
   )
 }
@@ -154,6 +163,49 @@ function Legend({ intro }: { intro: Set<Colored> }) {
         )
       })}
     </div>
+  )
+}
+
+// Leyenda-árbol: refleja la estructura anidada de la frase (subordinación).
+function StructureLegend({ groups }: { groups: LGroup[] }) {
+  return (
+    <div className="legend struct">
+      <span className="struct-root">Oración</span>
+      {groups.map((g) => (
+        <StructNode key={g.id} group={g} depth={1} />
+      ))}
+    </div>
+  )
+}
+
+function StructNode({ group, depth }: { group: LGroup; depth: number }) {
+  const isContainer = !!group.children?.length
+  const st = group.role !== 'none' ? ROLE_STYLE[group.role as Colored] : null
+  const subord = isContainer && group.role !== 'predicado'
+  return (
+    <>
+      <div className="struct-row" style={{ paddingLeft: 4 + depth * 14 }}>
+        <span className="struct-branch">↳</span>
+        {st ? (
+          <span
+            className="legend-chip legend-chip-sm"
+            style={{ background: st.fill, color: st.text, borderColor: st.border }}
+          >
+            {st.label}
+          </span>
+        ) : (
+          <span className="struct-nexo">{group.text}</span>
+        )}
+        {subord ? (
+          <span className="struct-note">oración subordinada</span>
+        ) : !isContainer && st ? (
+          <span className="struct-text">{group.text}</span>
+        ) : null}
+      </div>
+      {group.children?.map((c) => (
+        <StructNode key={c.id} group={c} depth={depth + 1} />
+      ))}
+    </>
   )
 }
 
@@ -233,11 +285,14 @@ function SceneView({
   return (
     <motion.div className="lesson-stage" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
       <div className="sentence-area">
-        <motion.div className="sentence" animate={{ gap: s.separated ? 16 : 7 }} transition={{ duration: 0.45 }}>
-          {beat.groups.map((g) => {
-            const display = s.reveal.includes(g.id) ? 'colored' : s.separated ? 'box' : 'flush'
-            return <GroupBox key={g.id} group={g} display={display} />
-          })}
+        <motion.div
+          className="sentence topalign"
+          animate={{ gap: s.separated ? 16 : 7 }}
+          transition={{ duration: 0.45 }}
+        >
+          {beat.groups.map((g) => (
+            <ConstituentBox key={g.id} group={g} reveal={s.reveal} separated={!!s.separated} />
+          ))}
         </motion.div>
       </div>
       <div className="caption-slot">
