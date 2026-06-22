@@ -81,12 +81,6 @@ export function LessonPlayer({
   }, [])
 
   const beat = finished ? null : lesson.beats[i]
-  const teachingBeat =
-    beat?.kind === 'intro' || beat?.kind === 'show' || beat?.kind === 'scene' || beat?.kind === 'tap'
-  const nestedGroups =
-    beat && (beat.kind === 'show' || beat.kind === 'scene' || beat.kind === 'tap') && beat.groups.some((g) => g.children?.length)
-      ? beat.groups
-      : null
 
   return (
     <>
@@ -138,13 +132,6 @@ export function LessonPlayer({
             {finished && <DoneView intro={introduced} onComplete={onComplete} onAgain={restart} />}
         </motion.div>
       </div>
-
-      {teachingBeat &&
-        (nestedGroups ? (
-          <SkeletonLegend groups={nestedGroups} />
-        ) : introduced.size > 0 ? (
-          <Legend intro={introduced} />
-        ) : null)}
     </>
   )
 }
@@ -219,47 +206,6 @@ function Legend({ intro }: { intro: Set<Colored> }) {
           </div>
         )
       })}
-    </div>
-  )
-}
-
-// Leyenda-esqueleto: la MISMA estructura de llaves que la frase, pero abstracta
-// (nombres de función, sin las palabras). Refleja la subordinación con llaves
-// anidadas.
-function SkeletonLegend({ groups }: { groups: LGroup[] }) {
-  return (
-    <div className="legend skel">
-      {groups.map((g) => (
-        <SkelNode key={g.id} group={g} />
-      ))}
-    </div>
-  )
-}
-
-function SkelNode({ group }: { group: LGroup }) {
-  if (group.role === 'none') return null
-  const isContainer = !!group.children?.length
-  const st = ROLE_STYLE[group.role as Colored]
-  const chip = (
-    <span
-      className="legend-chip legend-chip-sm"
-      style={{ background: st.fill, color: st.text, borderColor: st.border }}
-    >
-      {st.label}
-    </span>
-  )
-  if (!isContainer) return chip
-  return (
-    <div className="skel-zone" style={{ ['--pred-border' as string]: st.border }}>
-      <div className="skel-kids">
-        {group.children!.filter((c) => c.role !== 'none').map((c) => (
-          <SkelNode key={c.id} group={c} />
-        ))}
-      </div>
-      <div className="skel-bracket" />
-      <span className="skel-label" style={{ color: st.border }}>
-        {st.label}
-      </span>
     </div>
   )
 }
