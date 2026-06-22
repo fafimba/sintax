@@ -26,10 +26,12 @@ export default function App() {
   const [completed, setCompleted] = useState<string[]>(loadCompleted)
   const [view, setView] = useState<View>('map')
   const [chapterId, setChapterId] = useState<string>(CHAPTERS[0].id)
+  const [justCompleted, setJustCompleted] = useState<string | null>(null)
 
   const chapter = CHAPTERS.find((c) => c.id === chapterId) ?? CHAPTERS[0]
 
   const playChapter = (id: string) => {
+    setJustCompleted(null)
     setChapterId(id)
     setView('chapter')
   }
@@ -44,6 +46,7 @@ export default function App() {
       }
       return next
     })
+    setJustCompleted(id)
     setView('map')
   }
 
@@ -53,6 +56,7 @@ export default function App() {
         <MapScreen
           chapters={CHAPTERS}
           completed={completed}
+          justCompleted={justCompleted}
           onPlay={playChapter}
           onFree={() => setView('menu')}
         />

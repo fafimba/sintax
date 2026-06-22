@@ -7,11 +7,13 @@ type NodeState = 'done' | 'open' | 'locked'
 export function MapScreen({
   chapters,
   completed,
+  justCompleted,
   onPlay,
   onFree,
 }: {
   chapters: Chapter[]
   completed: string[]
+  justCompleted?: string | null
   onPlay: (id: string) => void
   onFree: () => void
 }) {
@@ -28,8 +30,16 @@ export function MapScreen({
           const prevDone = idx === 0 || completed.includes(chapters[idx - 1].id)
           const state: NodeState = isDone ? 'done' : prevDone ? 'open' : 'locked'
           const locked = state === 'locked'
+          const celebrate = ch.id === justCompleted
+
           return (
-            <div className={`map-node map-${state}`} key={ch.id}>
+            <motion.div
+              className={`map-node map-${state}`}
+              key={ch.id}
+              initial={{ opacity: 0, x: -12 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: idx * 0.09, duration: 0.32 }}
+            >
               <div className="map-rail" aria-hidden="true">
                 <motion.button
                   type="button"
@@ -40,7 +50,14 @@ export function MapScreen({
                   whileTap={!locked ? { scale: 0.94 } : undefined}
                 >
                   {state === 'done' ? (
-                    <CheckIcon color="#ffffff" size={22} />
+                    <motion.span
+                      initial={celebrate ? { scale: 0 } : false}
+                      animate={celebrate ? { scale: [0, 1.3, 1] } : { scale: 1 }}
+                      transition={{ type: 'spring', stiffness: 360, damping: 16, delay: 0.2 }}
+                      style={{ display: 'flex' }}
+                    >
+                      <CheckIcon color="#ffffff" size={22} />
+                    </motion.span>
                   ) : state === 'locked' ? (
                     <LockIcon size={18} />
                   ) : (
@@ -52,7 +69,7 @@ export function MapScreen({
                 <span className="map-title">{ch.title}</span>
                 <span className="map-sub">{state === 'open' ? 'Empezar' : ch.subtitle}</span>
               </button>
-            </div>
+            </motion.div>
           )
         })}
       </div>

@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import type { Lesson, IntroBeat, ShowBeat, TapBeat, LessonRole } from '../types'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import type { Lesson, IntroBeat, ShowBeat, TapBeat, SplitBeat, LessonRole } from '../types'
 import { GroupBox, ROLE_STYLE } from './GroupBox'
 import { TopBar } from './TopBar'
 import { CheckIcon } from './icons'
@@ -61,26 +61,38 @@ export function LessonPlayer({
       <TopBar onBack={onBack} progress={i / total} />
 
       <div className="lesson-body">
-        {beat?.kind === 'intro' && <IntroView key={i} beat={beat} onNext={advance} />}
-        {beat?.kind === 'show' && <ShowView key={i} beat={beat} onNext={advance} />}
-        {beat?.kind === 'tap' && <TapView key={i} beat={beat} onSolved={advance} />}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={finished ? 'done' : `b${i}`}
+            className="beat-wrap"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.16 }}
+          >
+            {beat?.kind === 'intro' && <IntroView beat={beat} onNext={advance} />}
+            {beat?.kind === 'show' && <ShowView beat={beat} onNext={advance} />}
+            {beat?.kind === 'split' && <SplitView beat={beat} onNext={advance} />}
+            {beat?.kind === 'tap' && <TapView beat={beat} onSolved={advance} />}
 
-        {beat?.kind === 'challengeCd' && <SentenceStage key={i} sentence={beat.sentence} onNext={advance} />}
-        {beat?.kind === 'challengeNucleo' && <NucleoStage key={i} item={beat.item} onNext={advance} />}
-        {beat?.kind === 'challengeSujeto' && <SujetoStage key={i} item={beat.item} onNext={advance} />}
+            {beat?.kind === 'challengeCd' && <SentenceStage sentence={beat.sentence} onNext={advance} />}
+            {beat?.kind === 'challengeNucleo' && <NucleoStage item={beat.item} onNext={advance} />}
+            {beat?.kind === 'challengeSujeto' && <SujetoStage item={beat.item} onNext={advance} />}
 
-        {beat?.kind === 'exploreConcordancia' && (
-          <Embed key={i} onNext={advance}>
-            <ConcordanciaStage item={beat.item} />
-          </Embed>
-        )}
-        {beat?.kind === 'exploreVoz' && (
-          <Embed key={i} onNext={advance}>
-            <VozStage item={beat.item} />
-          </Embed>
-        )}
+            {beat?.kind === 'exploreConcordancia' && (
+              <Embed onNext={advance}>
+                <ConcordanciaStage item={beat.item} />
+              </Embed>
+            )}
+            {beat?.kind === 'exploreVoz' && (
+              <Embed onNext={advance}>
+                <VozStage item={beat.item} />
+              </Embed>
+            )}
 
-        {finished && <DoneView intro={intro} onComplete={onComplete} onAgain={() => setI(0)} />}
+            {finished && <DoneView intro={intro} onComplete={onComplete} onAgain={() => setI(0)} />}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {showLegend && intro.size > 0 && <Legend intro={intro} />}
@@ -162,6 +174,46 @@ function ShowView({ beat, onNext }: { beat: ShowBeat; onNext: () => void }) {
         <button className="btn" onClick={onNext}>
           Continuar
         </button>
+      </div>
+    </motion.div>
+  )
+}
+
+function SplitView({ beat, onNext }: { beat: SplitBeat; onNext: () => void }) {
+  const [split, setSplit] = useState(false)
+  useEffect(() => {
+    const t = window.setTimeout(() => setSplit(true), 550)
+    return () => window.clearTimeout(t)
+  }, [])
+  return (
+    <motion.div className="lesson-stage" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+      <div className="sentence-area">
+        <motion.div
+          className="sentence"
+          animate={{ gap: split ? 18 : 8 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+        >
+          {beat.parts.map((p) => (
+            <motion.div
+              key={p.id}
+              layout
+              className="box split-box"
+              animate={{
+                borderColor: split ? '#d3d1c7' : 'rgba(0,0,0,0)',
+                y: split ? [0, -5, 0] : 0,
+              }}
+              transition={{ duration: 0.5 }}
+            >
+              {p.text}
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+      <p className="caption">{beat.caption}</p>
+      <div className="lesson-cta">
+        <motion.button className="btn" onClick={onNext} initial={{ opacity: 0 }} animate={{ opacity: split ? 1 : 0.35 }}>
+          Continuar
+        </motion.button>
       </div>
     </motion.div>
   )

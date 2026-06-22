@@ -20,12 +20,11 @@ export const LESSON1: Lesson = {
       caption: 'Esta es una oración. Por dentro tiene una estructura. Vamos a verla.',
     },
     {
-      kind: 'show',
-      groups: [
+      kind: 'split',
+      parts: [
         { id: 's', text: 'El gato', role: 'sujeto' },
         { id: 'p', text: 'duerme', role: 'predicado' },
       ],
-      reveal: [],
       caption: 'Lo primero: toda oración se parte en dos mitades.',
     },
     {

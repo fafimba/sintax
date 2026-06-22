@@ -100,6 +100,13 @@ export interface TapBeat {
   teach: string // se muestra al acertar
 }
 
+// El "corte": la oración se parte en dos cajas con animación.
+export interface SplitBeat {
+  kind: 'split'
+  parts: LGroup[] // las dos mitades (sin colorear todavía)
+  caption: string
+}
+
 // Beats que incrustan las mecánicas ya existentes dentro del camino.
 export interface ChallengeCdBeat {
   kind: 'challengeCd'
@@ -126,6 +133,7 @@ export type Beat =
   | IntroBeat
   | ShowBeat
   | TapBeat
+  | SplitBeat
   | ChallengeCdBeat
   | ChallengeNucleoBeat
   | ChallengeSujetoBeat
