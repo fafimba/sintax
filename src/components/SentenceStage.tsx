@@ -29,14 +29,23 @@ export function SentenceStage({
     [],
   )
 
-  const handleDrop = (info: PanInfo) => {
+  const handleDrop = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (phase === 'revealing' || phase === 'done') return
-    const x = info.point.x - window.scrollX
-    const y = info.point.y - window.scrollY
+    // Coordenadas de viewport del puntero (robusto con scroll); fallback a info.point.
+    let x: number
+    let y: number
+    if ('clientX' in event && typeof event.clientX === 'number') {
+      x = event.clientX
+      y = event.clientY
+    } else {
+      x = info.point.x - window.scrollX
+      y = info.point.y - window.scrollY
+    }
+    const pad = 12 // tolerancia: soltar cerca también cuenta
     let hit: string | null = null
     boxRefs.current.forEach((el, id) => {
       const r = el.getBoundingClientRect()
-      if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) hit = id
+      if (x >= r.left - pad && x <= r.right + pad && y >= r.top - pad && y <= r.bottom + pad) hit = id
     })
     if (!hit) return
 

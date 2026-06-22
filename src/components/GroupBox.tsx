@@ -71,49 +71,47 @@ export function GroupBox({
   )
 }
 
-// Decide ficha (hoja) vs. contenedor con corchete (constituyente padre).
+function hasRevealed(group: LGroup, reveal: string[]): boolean {
+  if (reveal.includes(group.id)) return true
+  return !!group.children?.some((c) => hasRevealed(c, reveal))
+}
+
+// Estandarización del estilo:
+//   Constituyentes de cláusula (Sujeto, Predicado, subordinadas) -> CORCHETE.
+//   Hojas de función (Verbo, CD, nexo) -> ficha con forma/color.
+// El corchete aparece cuando el constituyente (o algún hijo) se ha revelado.
 export function ConstituentBox({
   group,
   reveal,
   separated,
-  onTap,
-  wrongId,
 }: {
   group: LGroup
   reveal: string[]
   separated: boolean
-  onTap?: (id: string) => void
-  wrongId?: string | null
 }) {
-  if (!group.children?.length) {
+  const isClause = group.role === 'sujeto' || group.role === 'predicado'
+  const hasKids = !!group.children?.length
+
+  // Hoja de función -> ficha de siempre.
+  if (!hasKids && !isClause) {
     const display = reveal.includes(group.id) ? 'colored' : group.role === 'none' ? 'plain' : separated ? 'box' : 'flush'
-    return (
-      <GroupBox
-        group={group}
-        display={display}
-        onTap={onTap ? () => onTap(group.id) : undefined}
-        shake={wrongId === group.id}
-      />
-    )
+    return <GroupBox group={group} display={display} />
   }
 
-  // Contenedor: corchete inferior (color de la función del propio constituyente,
-  // nunca un color nuevo) que abraza a los hijos.
+  // Constituyente con corchete. Color = función del constituyente (sin color nuevo).
   const st = ROLE_STYLE[group.role as Colored]
-  const open = separated
+  const open = hasRevealed(group, reveal)
+
   return (
     <div className="pred-zone" style={{ ['--pred-border' as string]: st.border }}>
-      <motion.div className="pred-kids" layout animate={{ gap: open ? 12 : 6 }} transition={{ duration: 0.45 }}>
-        {group.children.map((child) => (
-          <ConstituentBox
-            key={child.id}
-            group={child}
-            reveal={reveal}
-            separated={separated}
-            onTap={onTap}
-            wrongId={wrongId}
-          />
-        ))}
+      <motion.div className="pred-kids" layout animate={{ gap: open ? 12 : 6 }} transition={{ duration: 0.4 }}>
+        {hasKids ? (
+          group.children!.map((child) => (
+            <ConstituentBox key={child.id} group={child} reveal={reveal} separated={separated} />
+          ))
+        ) : (
+          <span className="bracket-words">{group.text}</span>
+        )}
       </motion.div>
       <AnimatePresence>
         {open && (
@@ -123,7 +121,7 @@ export function ConstituentBox({
             initial={{ opacity: 0, scaleX: 0.6 }}
             animate={{ opacity: 1, scaleX: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 420, damping: 26, delay: 0.15 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 26, delay: 0.12 }}
             style={{ transformOrigin: 'center' }}
           />
         )}
@@ -137,7 +135,7 @@ export function ConstituentBox({
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ delay: 0.25 }}
+            transition={{ delay: 0.2 }}
           >
             {st.label}
           </motion.span>

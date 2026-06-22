@@ -7,7 +7,7 @@ export function PronounChip({
   onDrop,
 }: {
   text: string
-  onDrop: (info: PanInfo) => void
+  onDrop: (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => void
 }) {
   return (
     <motion.button
@@ -20,7 +20,7 @@ export function PronounChip({
       whileTap={{ scale: 1.05 }}
       whileDrag={{ scale: 1.16, cursor: 'grabbing' }}
       transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-      onDragEnd={(_, info) => onDrop(info)}
+      onDragEnd={(e, info) => onDrop(e, info)}
     >
       {text}
     </motion.button>

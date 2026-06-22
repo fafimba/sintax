@@ -20,10 +20,15 @@ const LESSON2: Lesson = {
       kind: 'show',
       groups: [
         { id: 's', text: 'El perro', role: 'sujeto' },
-        { id: 'v', text: 'ladra', role: 'verbo' },
+        {
+          id: 'pred',
+          text: 'ladra',
+          role: 'predicado',
+          children: [{ id: 'v', text: 'ladra', role: 'verbo' }],
+        },
       ],
       reveal: ['s', 'v'],
-      caption: 'Ya conoces el sujeto y el verbo. Fíjate ahora en cómo se relacionan.',
+      caption: 'Ya conoces el [sujeto] y el [verbo]. Fíjate ahora en cómo se relacionan.',
     },
     { kind: 'exploreConcordancia', item: CONCORDANCIA[0] },
     { kind: 'challengeSujeto', item: SUJETOS[0] },
@@ -104,12 +109,12 @@ const LESSON4: Lesson = {
           caption: 'Ana sabe algo. Lo que sabe es el [cd] del verbo «sabe».',
         },
         {
-          reveal: ['s', 'v1'],
+          reveal: ['s', 'v1', 'cdsub'],
           separated: true,
           caption: 'Pero ese [cd] no es una palabra: es una *oración entera*.',
         },
         {
-          reveal: ['s', 'v1', 'v2', 'cd2'],
+          reveal: ['s', 'v1', 'cdsub', 'v2', 'cd2'],
           separated: true,
           caption:
             'Y dentro tiene su propio [verbo] y su propio [cd]. Una oración cabe dentro de otra: la *subordinación*.',

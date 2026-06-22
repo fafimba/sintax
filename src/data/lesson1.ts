@@ -58,8 +58,15 @@ export const LESSON1: Lesson = {
       kind: 'show',
       groups: [
         { id: 's', text: 'El niño', role: 'sujeto' },
-        { id: 'v', text: 'come', role: 'verbo' },
-        { id: 'o', text: 'pan', role: 'none' },
+        {
+          id: 'pred',
+          text: 'come pan',
+          role: 'predicado',
+          children: [
+            { id: 'v', text: 'come', role: 'verbo' },
+            { id: 'o', text: 'pan', role: 'none' },
+          ],
+        },
       ],
       reveal: ['s', 'v'],
       caption: 'Dentro del predicado manda una palabra: el [verbo], el *motor* de la oración.',

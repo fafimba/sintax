@@ -838,45 +838,47 @@ body {
   white-space: nowrap;
 }
 
-/* Leyenda-árbol (refleja la subordinación). */
-.legend.struct {
-  flex-direction: column;
+/* Palabras dentro de un corchete-constituyente (hoja de cláusula). */
+.bracket-words {
+  font-size: 21px;
+  color: #2c2c2a;
+  padding: 7px 4px;
+  white-space: nowrap;
+}
+
+/* Leyenda-esqueleto: mismas llaves que la frase, abstracta. */
+.legend.skel {
   align-items: flex-start;
-  gap: 3px;
-  max-width: 100%;
+  gap: 18px;
 }
 
-.struct-root {
-  font-size: 12px;
-  font-weight: 600;
-  color: #5f5e5a;
-}
-
-.struct-row {
+.skel-zone {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 3px;
+}
+
+.skel-kids {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
   gap: 6px;
-  font-size: 12px;
-  color: #888780;
+  padding: 0 6px;
 }
 
-.struct-branch {
-  color: #bbb9b0;
+.skel-bracket {
+  align-self: stretch;
+  height: 6px;
+  border: 1.5px solid var(--pred-border);
+  border-top: none;
+  border-radius: 0 0 5px 5px;
 }
 
-.struct-text {
-  color: #5f5e5a;
-}
-
-.struct-nexo {
-  color: #a8a69c;
-  font-style: italic;
-}
-
-.struct-note {
-  color: #a8a69c;
-  font-style: italic;
-  font-size: 11px;
+.skel-label {
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 12px;
 }
 
 /* --- Mapa del camino --- */

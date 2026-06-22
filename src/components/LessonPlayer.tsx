@@ -113,7 +113,7 @@ export function LessonPlayer({
 
       {teachingBeat &&
         (nestedGroups ? (
-          <StructureLegend groups={nestedGroups} />
+          <SkeletonLegend groups={nestedGroups} />
         ) : introduced.size > 0 ? (
           <Legend intro={introduced} />
         ) : null)}
@@ -166,46 +166,44 @@ function Legend({ intro }: { intro: Set<Colored> }) {
   )
 }
 
-// Leyenda-árbol: refleja la estructura anidada de la frase (subordinación).
-function StructureLegend({ groups }: { groups: LGroup[] }) {
+// Leyenda-esqueleto: la MISMA estructura de llaves que la frase, pero abstracta
+// (nombres de función, sin las palabras). Refleja la subordinación con llaves
+// anidadas.
+function SkeletonLegend({ groups }: { groups: LGroup[] }) {
   return (
-    <div className="legend struct">
-      <span className="struct-root">Oración</span>
+    <div className="legend skel">
       {groups.map((g) => (
-        <StructNode key={g.id} group={g} depth={1} />
+        <SkelNode key={g.id} group={g} />
       ))}
     </div>
   )
 }
 
-function StructNode({ group, depth }: { group: LGroup; depth: number }) {
+function SkelNode({ group }: { group: LGroup }) {
+  if (group.role === 'none') return null
   const isContainer = !!group.children?.length
-  const st = group.role !== 'none' ? ROLE_STYLE[group.role as Colored] : null
-  const subord = isContainer && group.role !== 'predicado'
+  const st = ROLE_STYLE[group.role as Colored]
+  const chip = (
+    <span
+      className="legend-chip legend-chip-sm"
+      style={{ background: st.fill, color: st.text, borderColor: st.border }}
+    >
+      {st.label}
+    </span>
+  )
+  if (!isContainer) return chip
   return (
-    <>
-      <div className="struct-row" style={{ paddingLeft: 4 + depth * 14 }}>
-        <span className="struct-branch">↳</span>
-        {st ? (
-          <span
-            className="legend-chip legend-chip-sm"
-            style={{ background: st.fill, color: st.text, borderColor: st.border }}
-          >
-            {st.label}
-          </span>
-        ) : (
-          <span className="struct-nexo">{group.text}</span>
-        )}
-        {subord ? (
-          <span className="struct-note">oración subordinada</span>
-        ) : !isContainer && st ? (
-          <span className="struct-text">{group.text}</span>
-        ) : null}
+    <div className="skel-zone" style={{ ['--pred-border' as string]: st.border }}>
+      <div className="skel-kids">
+        {group.children!.filter((c) => c.role !== 'none').map((c) => (
+          <SkelNode key={c.id} group={c} />
+        ))}
       </div>
-      {group.children?.map((c) => (
-        <StructNode key={c.id} group={c} depth={depth + 1} />
-      ))}
-    </>
+      <div className="skel-bracket" />
+      <span className="skel-label" style={{ color: st.border }}>
+        {st.label}
+      </span>
+    </div>
   )
 }
 
