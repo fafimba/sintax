@@ -760,6 +760,13 @@ body {
   font-size: 21px;
 }
 
+/* El verbo: caja con el lado derecho en pico (acción / "play"). */
+.shape-verb {
+  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 0 100%);
+  padding-right: 22px;
+  border: none;
+}
+
 /* --- Mapa del camino --- */
 .map {
   display: flex;

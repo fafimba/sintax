@@ -15,3 +15,11 @@ export const fn = {
 export const neutral = { fill: '#F1EFE8', text: '#5F5E5A', border: '#C9C7BD' }
 export const errorColor = { fill: '#FCEBEB', text: '#A32D2D', border: '#E24B4A' }
 export const ok = '#3B6D11'
+
+// Elementos estructurales (no "función-hoja"). El predicado y su núcleo, el
+// verbo, comparten familia cálida (coral): el verbo es el corazón del predicado.
+// El verbo además lleva forma propia (pico de "play").
+export const elem = {
+  predicado: { fill: '#F5C4B3', text: '#4A1B0C', border: '#C0552B' },
+  verbo: { fill: '#D85A30', text: '#FFFFFF', border: '#993C1D' },
+} as const

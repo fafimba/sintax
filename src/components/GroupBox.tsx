@@ -1,13 +1,13 @@
 import { motion } from 'framer-motion'
 import type { LGroup, LessonRole } from '../types'
-import { fn } from '../theme'
+import { fn, elem } from '../theme'
 
 type Colored = Exclude<LessonRole, 'none'>
 
 export const ROLE_STYLE: Record<Colored, { fill: string; text: string; border: string; label: string }> = {
   sujeto: { fill: fn.sujeto.fill, text: fn.sujeto.text, border: fn.sujeto.border, label: 'Sujeto' },
-  predicado: { fill: '#ECEAE2', text: '#5f5e5a', border: '#C9C7BD', label: 'Predicado' },
-  verbo: { fill: '#FFFFFF', text: '#2c2c2a', border: '#7A7A74', label: 'Verbo' },
+  predicado: { fill: elem.predicado.fill, text: elem.predicado.text, border: elem.predicado.border, label: 'Predicado' },
+  verbo: { fill: elem.verbo.fill, text: elem.verbo.text, border: elem.verbo.border, label: 'Verbo' },
   cd: { fill: fn.cd.fill, text: fn.cd.text, border: fn.cd.border, label: 'CD' },
 }
 
@@ -26,9 +26,10 @@ export function GroupBox({
 
   const colored = display === 'colored' && group.role !== 'none'
   const st = colored ? ROLE_STYLE[group.role as Colored] : null
+  const verbShape = colored && group.role === 'verbo'
 
   const inner = {
-    className: `box lbox ${onTap ? 'tappable' : ''}`,
+    className: `box lbox ${onTap ? 'tappable' : ''} ${verbShape ? 'shape-verb' : ''}`,
     onClick: onTap,
     animate: {
       backgroundColor: st ? st.fill : '#ffffff',

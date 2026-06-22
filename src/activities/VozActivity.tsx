@@ -5,12 +5,12 @@ import { VOZ } from '../data/voz'
 import { TopBar } from '../components/TopBar'
 import { SegToggle } from '../components/SegToggle'
 import { MorphText } from '../components/MorphText'
-import { fn, neutral } from '../theme'
+import { fn, elem } from '../theme'
 
 type Voz = 'activa' | 'pasiva'
 
-const AGENTE = { fill: '#F5C4B3', text: '#4A1B0C', border: '#993C1D' }
-const VERB = { fill: '#ffffff', text: '#2c2c2a', border: neutral.border }
+const AGENTE = { fill: '#E7D3C3', text: '#5a4632', border: '#9c7a5c' }
+const VERB = { fill: elem.verbo.fill, text: elem.verbo.text, border: elem.verbo.border }
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
@@ -67,7 +67,7 @@ export function VozStage({ item }: { item: VozItem }) {
                 transition={{ type: 'spring', stiffness: 380, damping: 30 }}
               >
                 <motion.div
-                  className="box"
+                  className={`box ${id === 'vrb' ? 'shape-verb' : ''}`}
                   animate={{ backgroundColor: d.color.fill, color: d.color.text, borderColor: d.color.border }}
                   transition={{ duration: 0.3 }}
                 >

@@ -6,7 +6,7 @@ import { TopBar } from '../components/TopBar'
 import { Done } from '../components/Done'
 import { MorphText } from '../components/MorphText'
 import { CheckIcon, SwapIcon } from '../components/icons'
-import { fn, neutral } from '../theme'
+import { fn, neutral, elem } from '../theme'
 
 type Num = 's' | 'p'
 type Phase = 'idle' | 'wrong' | 'done'
@@ -66,10 +66,10 @@ export function SujetoStage({ item, onNext }: { item: SujetoItem; onNext: () => 
             const verbDone = phase === 'done' && isVerb
             const wrong = wrongId === part.id
 
-            const style = subjDone
-              ? { background: fn.sujeto.fill, color: fn.sujeto.text, borderColor: fn.sujeto.border }
-              : verbDone
-                ? { background: '#ffffff', color: fn.sujeto.text, borderColor: fn.sujeto.border }
+            const style = isVerb
+              ? { background: elem.verbo.fill, color: elem.verbo.text, borderColor: elem.verbo.border }
+              : subjDone
+                ? { background: fn.sujeto.fill, color: fn.sujeto.text, borderColor: fn.sujeto.border }
                 : wrong
                   ? { background: '#ffffff', color: neutral.text, borderColor: '#EF9F27' }
                   : { background: '#ffffff', color: '#2c2c2a', borderColor: neutral.border }
@@ -78,7 +78,7 @@ export function SujetoStage({ item, onNext }: { item: SujetoItem; onNext: () => 
               <div className="num-wrap" key={part.id}>
                 <motion.button
                   type="button"
-                  className={`box num-box ${isVerb ? 'is-verb' : ''}`}
+                  className={`box num-box ${isVerb ? 'is-verb shape-verb' : ''}`}
                   onClick={() => tap(part)}
                   disabled={isVerb || phase === 'done'}
                   animate={{ ...style, scale: subjDone || verbDone ? [1, 1.08, 1] : 1 }}

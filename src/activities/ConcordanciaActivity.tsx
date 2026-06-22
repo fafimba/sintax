@@ -4,27 +4,34 @@ import type { ConcItem } from '../types'
 import { CONCORDANCIA } from '../data/concordancia'
 import { TopBar } from '../components/TopBar'
 import { MorphText } from '../components/MorphText'
-import { fn, neutral } from '../theme'
+import { fn, neutral, elem } from '../theme'
 
 type Num = 's' | 'p'
 
 // Palabra que obedece al sujeto: muta su forma y da un pulso (escala)
 // cuando cambia el número, para que veas QUÉ ha obedecido.
-function AgreeWord({ text, pulse, tinted }: { text: string; pulse: number; tinted: boolean }) {
+function AgreeWord({
+  text,
+  pulse,
+  tinted,
+  isVerb,
+}: {
+  text: string
+  pulse: number
+  tinted: boolean
+  isVerb?: boolean
+}) {
   const controls = useAnimationControls()
   useEffect(() => {
     if (pulse > 0) controls.start({ scale: [1, 1.14, 1], transition: { duration: 0.34 } })
   }, [pulse, controls])
+  const style = isVerb
+    ? { background: elem.verbo.fill, color: elem.verbo.text, borderColor: elem.verbo.border }
+    : tinted
+      ? { background: fn.sujeto.fill, color: fn.sujeto.text, borderColor: fn.sujeto.border }
+      : { background: '#ffffff', color: '#2c2c2a', borderColor: neutral.border }
   return (
-    <motion.span
-      className="word"
-      animate={controls}
-      style={
-        tinted
-          ? { background: fn.sujeto.fill, color: fn.sujeto.text, borderColor: fn.sujeto.border }
-          : { background: '#ffffff', color: '#2c2c2a', borderColor: neutral.border }
-      }
-    >
+    <motion.span className={`word ${isVerb ? 'shape-verb' : ''}`} animate={controls} style={style}>
       <MorphText text={text} />
     </motion.span>
   )
@@ -58,7 +65,7 @@ export function ConcordanciaStage({ item }: { item: ConcItem }) {
           {item.art && <AgreeWord text={f(item.art)} pulse={pulse} tinted={nota} />}
           <AgreeWord text={f(item.nucleo)} pulse={pulse} tinted={nota} />
           {item.adj && <AgreeWord text={f(item.adj)} pulse={pulse} tinted={nota} />}
-          <AgreeWord text={f(item.verbo)} pulse={pulse} tinted={false} />
+          <AgreeWord text={f(item.verbo)} pulse={pulse} tinted={false} isVerb />
           <span className="word word-still">{item.cola}</span>
         </div>
       </div>
