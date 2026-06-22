@@ -11,6 +11,19 @@ export const ROLE_STYLE: Record<Colored, { fill: string; text: string; border: s
   cd: { fill: fn.cd.fill, text: fn.cd.text, border: fn.cd.border, label: 'CD' },
 }
 
+// Forma por tipo de elemento (solo al revelarse).
+const SHAPE: Record<Colored, string> = {
+  sujeto: 'shape-sujeto', // píldora: el tema, estable
+  predicado: 'shape-verb', // pico a la derecha: lado de la acción
+  verbo: 'shape-verb', // pico a la derecha: la acción
+  cd: 'shape-cd', // muesca a la izquierda: recibe la acción
+}
+
+// display:
+//   plain   -> texto suelto (sin caja)
+//   flush   -> caja invisible (la frase se lee continua, antes del "corte")
+//   box     -> caja neutra (separada, sin función todavía)
+//   colored -> caja con color + forma + etiqueta de su función
 export function GroupBox({
   group,
   display,
@@ -18,26 +31,26 @@ export function GroupBox({
   shake,
 }: {
   group: LGroup
-  display: 'plain' | 'box' | 'colored'
+  display: 'plain' | 'flush' | 'box' | 'colored'
   onTap?: () => void
   shake?: boolean
 }) {
   if (display === 'plain') return <span className="lplain">{group.text}</span>
 
   const colored = display === 'colored' && group.role !== 'none'
+  const flush = display === 'flush'
   const st = colored ? ROLE_STYLE[group.role as Colored] : null
-  const verbShape = colored && group.role === 'verbo'
+  const shapeClass = colored ? SHAPE[group.role as Colored] : ''
+
+  const bg = st ? st.fill : flush ? 'rgba(255,255,255,0)' : '#ffffff'
+  const fg = st ? st.text : '#2c2c2a'
+  const bd = st ? st.border : flush ? 'rgba(0,0,0,0)' : '#d3d1c7'
 
   const inner = {
-    className: `box lbox ${onTap ? 'tappable' : ''} ${verbShape ? 'shape-verb' : ''}`,
+    className: `box lbox ${onTap ? 'tappable' : ''} ${shapeClass}`,
     onClick: onTap,
-    animate: {
-      backgroundColor: st ? st.fill : '#ffffff',
-      color: st ? st.text : '#2c2c2a',
-      borderColor: st ? st.border : '#D3D1C7',
-      x: shake ? [0, -6, 6, -4, 4, 0] : 0,
-    },
-    transition: { duration: shake ? 0.4 : 0.25 },
+    animate: { backgroundColor: bg, color: fg, borderColor: bd, x: shake ? [0, -6, 6, -4, 4, 0] : 0 },
+    transition: { duration: shake ? 0.4 : 0.3 },
     whileHover: onTap ? { scale: 1.04 } : undefined,
     whileTap: onTap ? { scale: 0.96 } : undefined,
   }

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import type { Lesson, IntroBeat, ShowBeat, TapBeat, SplitBeat, LessonRole } from '../types'
+import type { Lesson, IntroBeat, ShowBeat, TapBeat, SceneBeat, LessonRole } from '../types'
 import { GroupBox, ROLE_STYLE } from './GroupBox'
+import { RichText } from './RichText'
 import { TopBar } from './TopBar'
 import { CheckIcon } from './icons'
 import { SentenceStage } from './SentenceStage'
@@ -12,8 +13,6 @@ import { VozStage } from '../activities/VozActivity'
 
 type Colored = Exclude<LessonRole, 'none'>
 
-// Jerarquía: sujeto y predicado son las dos mitades; verbo y cd viven dentro
-// del predicado.
 const PARENT: Record<Colored, Colored | null> = {
   sujeto: null,
   predicado: null,
@@ -22,6 +21,12 @@ const PARENT: Record<Colored, Colored | null> = {
 }
 const TOP_ORDER: Colored[] = ['sujeto', 'predicado']
 const CHILD_ORDER: Colored[] = ['verbo', 'cd']
+
+function rolesOf(ids: string[], groups: { id: string; role: LessonRole }[]): Colored[] {
+  return ids
+    .map((id) => groups.find((g) => g.id === id)?.role)
+    .filter((r): r is Colored => !!r && r !== 'none')
+}
 
 export function LessonPlayer({
   lesson,
@@ -33,28 +38,26 @@ export function LessonPlayer({
   onComplete: () => void
 }) {
   const [i, setI] = useState(0)
+  const [introduced, setIntroduced] = useState<Set<Colored>>(() => new Set())
   const total = lesson.beats.length
   const finished = i >= total
   const advance = () => setI((n) => n + 1)
-  const beat = finished ? null : lesson.beats[i]
-
-  // Conceptos introducidos (show/tap) hasta ahora, para la leyenda.
-  const intro = new Set<Colored>()
-  const upto = finished ? total : i + 1
-  for (let k = 0; k < upto; k++) {
-    const b = lesson.beats[k]
-    if (b.kind === 'show') {
-      for (const id of b.reveal) {
-        const r = b.groups.find((g) => g.id === id)?.role
-        if (r && r !== 'none') intro.add(r)
-      }
-    } else if (b.kind === 'tap' && k < i) {
-      const r = b.groups.find((g) => g.id === b.target)?.role
-      if (r && r !== 'none') intro.add(r)
-    }
+  const restart = () => {
+    setIntroduced(new Set())
+    setI(0)
   }
+  const introduce = useCallback((roles: Colored[]) => {
+    if (roles.length === 0) return
+    setIntroduced((prev) => {
+      const next = new Set(prev)
+      roles.forEach((r) => next.add(r))
+      return next
+    })
+  }, [])
 
-  const showLegend = !finished && (beat?.kind === 'intro' || beat?.kind === 'show' || beat?.kind === 'tap')
+  const beat = finished ? null : lesson.beats[i]
+  const teachingBeat =
+    beat?.kind === 'intro' || beat?.kind === 'show' || beat?.kind === 'scene' || beat?.kind === 'tap'
 
   return (
     <>
@@ -71,9 +74,9 @@ export function LessonPlayer({
             transition={{ duration: 0.16 }}
           >
             {beat?.kind === 'intro' && <IntroView beat={beat} onNext={advance} />}
-            {beat?.kind === 'show' && <ShowView beat={beat} onNext={advance} />}
-            {beat?.kind === 'split' && <SplitView beat={beat} onNext={advance} />}
-            {beat?.kind === 'tap' && <TapView beat={beat} onSolved={advance} />}
+            {beat?.kind === 'show' && <ShowView beat={beat} onNext={advance} onIntroduce={introduce} />}
+            {beat?.kind === 'scene' && <SceneView beat={beat} onNext={advance} onIntroduce={introduce} />}
+            {beat?.kind === 'tap' && <TapView beat={beat} onSolved={advance} onIntroduce={introduce} />}
 
             {beat?.kind === 'challengeCd' && <SentenceStage sentence={beat.sentence} onNext={advance} />}
             {beat?.kind === 'challengeNucleo' && <NucleoStage item={beat.item} onNext={advance} />}
@@ -90,12 +93,12 @@ export function LessonPlayer({
               </Embed>
             )}
 
-            {finished && <DoneView intro={intro} onComplete={onComplete} onAgain={() => setI(0)} />}
+            {finished && <DoneView intro={introduced} onComplete={onComplete} onAgain={restart} />}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {showLegend && intro.size > 0 && <Legend intro={intro} />}
+      {teachingBeat && introduced.size > 0 && <Legend intro={introduced} />}
     </>
   )
 }
@@ -114,7 +117,6 @@ function Embed({ children, onNext }: { children: React.ReactNode; onNext: () => 
 }
 
 function Legend({ intro }: { intro: Set<Colored> }) {
-  // Muestra el padre como cabecera si alguno de sus hijos está introducido.
   const shownTop = TOP_ORDER.filter(
     (t) => intro.has(t) || CHILD_ORDER.some((c) => PARENT[c] === t && intro.has(c)),
   )
@@ -150,7 +152,9 @@ function IntroView({ beat, onNext }: { beat: IntroBeat; onNext: () => void }) {
   return (
     <motion.div className="lesson-intro" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
       <h1>{beat.title}</h1>
-      <p>{beat.body}</p>
+      <p>
+        <RichText text={beat.body} />
+      </p>
       <button className="btn" onClick={onNext}>
         {beat.cta ?? 'Continuar'}
       </button>
@@ -158,7 +162,18 @@ function IntroView({ beat, onNext }: { beat: IntroBeat; onNext: () => void }) {
   )
 }
 
-function ShowView({ beat, onNext }: { beat: ShowBeat; onNext: () => void }) {
+function ShowView({
+  beat,
+  onNext,
+  onIntroduce,
+}: {
+  beat: ShowBeat
+  onNext: () => void
+  onIntroduce: (r: Colored[]) => void
+}) {
+  useEffect(() => {
+    onIntroduce(rolesOf(beat.reveal, beat.groups))
+  }, [beat, onIntroduce])
   return (
     <motion.div className="lesson-stage" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
       <div className="sentence-area">
@@ -169,7 +184,9 @@ function ShowView({ beat, onNext }: { beat: ShowBeat; onNext: () => void }) {
           })}
         </div>
       </div>
-      <p className="caption">{beat.caption}</p>
+      <p className="caption">
+        <RichText text={beat.caption} />
+      </p>
       <div className="lesson-cta">
         <button className="btn" onClick={onNext}>
           Continuar
@@ -179,47 +196,69 @@ function ShowView({ beat, onNext }: { beat: ShowBeat; onNext: () => void }) {
   )
 }
 
-function SplitView({ beat, onNext }: { beat: SplitBeat; onNext: () => void }) {
-  const [split, setSplit] = useState(false)
+function SceneView({
+  beat,
+  onNext,
+  onIntroduce,
+}: {
+  beat: SceneBeat
+  onNext: () => void
+  onIntroduce: (r: Colored[]) => void
+}) {
+  const [step, setStep] = useState(0)
+  const s = beat.steps[step]
+
   useEffect(() => {
-    const t = window.setTimeout(() => setSplit(true), 550)
-    return () => window.clearTimeout(t)
-  }, [])
+    onIntroduce(rolesOf(s.reveal, beat.groups))
+  }, [step, s, beat, onIntroduce])
+
+  const next = () => {
+    if (step < beat.steps.length - 1) setStep((n) => n + 1)
+    else onNext()
+  }
+
   return (
     <motion.div className="lesson-stage" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
       <div className="sentence-area">
-        <motion.div
-          className="sentence"
-          animate={{ gap: split ? 18 : 8 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-        >
-          {beat.parts.map((p) => (
-            <motion.div
-              key={p.id}
-              layout
-              className="box split-box"
-              animate={{
-                borderColor: split ? '#d3d1c7' : 'rgba(0,0,0,0)',
-                y: split ? [0, -5, 0] : 0,
-              }}
-              transition={{ duration: 0.5 }}
-            >
-              {p.text}
-            </motion.div>
-          ))}
+        <motion.div className="sentence" animate={{ gap: s.separated ? 16 : 7 }} transition={{ duration: 0.45 }}>
+          {beat.groups.map((g) => {
+            const display = s.reveal.includes(g.id) ? 'colored' : s.separated ? 'box' : 'flush'
+            return <GroupBox key={g.id} group={g} display={display} />
+          })}
         </motion.div>
       </div>
-      <p className="caption">{beat.caption}</p>
+      <div className="caption-slot">
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={step}
+            className="caption"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.2 }}
+          >
+            <RichText text={s.caption} />
+          </motion.p>
+        </AnimatePresence>
+      </div>
       <div className="lesson-cta">
-        <motion.button className="btn" onClick={onNext} initial={{ opacity: 0 }} animate={{ opacity: split ? 1 : 0.35 }}>
+        <button className="btn" onClick={next}>
           Continuar
-        </motion.button>
+        </button>
       </div>
     </motion.div>
   )
 }
 
-function TapView({ beat, onSolved }: { beat: TapBeat; onSolved: () => void }) {
+function TapView({
+  beat,
+  onSolved,
+  onIntroduce,
+}: {
+  beat: TapBeat
+  onSolved: () => void
+  onIntroduce: (r: Colored[]) => void
+}) {
   const [solved, setSolved] = useState(false)
   const [wrongId, setWrongId] = useState<string | null>(null)
 
@@ -227,6 +266,7 @@ function TapView({ beat, onSolved }: { beat: TapBeat; onSolved: () => void }) {
     if (solved) return
     if (id === beat.target) {
       setSolved(true)
+      onIntroduce(rolesOf([beat.target], beat.groups))
       window.setTimeout(onSolved, 900)
     } else {
       setWrongId(id)
@@ -236,7 +276,9 @@ function TapView({ beat, onSolved }: { beat: TapBeat; onSolved: () => void }) {
 
   return (
     <motion.div className="lesson-stage" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-      <p className="prompt tap-prompt">{beat.prompt}</p>
+      <p className="prompt tap-prompt">
+        <RichText text={beat.prompt} />
+      </p>
       <div className="sentence-area">
         <div className="sentence wrap">
           {beat.groups.map((g) => {
@@ -251,7 +293,7 @@ function TapView({ beat, onSolved }: { beat: TapBeat; onSolved: () => void }) {
         {solved && (
           <motion.span className="fb-ok" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}>
             <CheckIcon />
-            {beat.teach}
+            <RichText text={beat.teach} />
           </motion.span>
         )}
       </div>

@@ -100,11 +100,17 @@ export interface TapBeat {
   teach: string // se muestra al acertar
 }
 
-// El "corte": la oración se parte en dos cajas con animación.
-export interface SplitBeat {
-  kind: 'split'
-  parts: LGroup[] // las dos mitades (sin colorear todavía)
+// Escena continua: la frase persiste y avanza por pasos (se separa, se
+// colorea pieza a pieza) sin desaparecer entre pasos.
+export interface SceneStep {
+  reveal: string[] // grupos que se colorean en este paso
   caption: string
+  separated?: boolean // si las cajas ya están separadas (el "corte")
+}
+export interface SceneBeat {
+  kind: 'scene'
+  groups: LGroup[]
+  steps: SceneStep[]
 }
 
 // Beats que incrustan las mecánicas ya existentes dentro del camino.
@@ -133,7 +139,7 @@ export type Beat =
   | IntroBeat
   | ShowBeat
   | TapBeat
-  | SplitBeat
+  | SceneBeat
   | ChallengeCdBeat
   | ChallengeNucleoBeat
   | ChallengeSujetoBeat
