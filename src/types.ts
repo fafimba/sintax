@@ -1,0 +1,45 @@
+export type Role = 'sujeto' | 'verbo' | 'cd' | 'ci' | 'cc' | 'atributo'
+
+export type Category = 'SN' | 'SV' | 'SPrep' | 'SAdv' | 'SAdj'
+
+export interface Segment {
+  id: string
+  text: string
+  role: Role
+  category?: Category
+}
+
+export interface Sentence {
+  id: string
+  /** La pregunta/consigna que se muestra arriba. */
+  prompt: string
+  /** El pronombre por el que se sustituye el CD: lo / la / los / las. */
+  pronoun: string
+  /** Segmentos en orden. Exactamente uno con role 'verbo' y uno con role 'cd'. */
+  segments: Segment[]
+}
+
+// --- Mecánica: "Borra hasta el núcleo" ---
+export interface NucleoChip {
+  id: string
+  text: string
+  isNucleus: boolean
+}
+export interface NucleoItem {
+  id: string
+  category: Category
+  chips: NucleoChip[]
+}
+
+// --- Mecánica: "Encuentra el sujeto" (concordancia) ---
+export type PartKind = 'verbo' | 'sujeto' | 'distractor'
+export interface SujetoPart {
+  id: string
+  singular: string
+  plural: string
+  kind: PartKind
+}
+export interface SujetoItem {
+  id: string
+  parts: SujetoPart[]
+}
