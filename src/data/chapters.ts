@@ -22,14 +22,20 @@ const LESSON2: Lesson = {
     {
       kind: 'show',
       groups: [
-        { id: 's', text: 'El niño', role: 'sujeto' },
+        {
+          id: 's',
+          role: 'sujeto',
+          words: [
+            { text: 'El', clase: 'determinante' },
+            { text: 'niño', clase: 'sustantivo' },
+          ],
+        },
         {
           id: 'pred',
-          text: 'come pan',
           role: 'predicado',
           children: [
-            { id: 'v', text: 'come', role: 'verbo' },
-            { id: 'o', text: 'pan', role: 'none' },
+            { id: 'v', role: 'verbo', words: [{ text: 'come', clase: 'verbo' }] },
+            { id: 'o', role: 'none', words: [{ text: 'pan', clase: 'sustantivo' }] },
           ],
         },
       ],
@@ -39,8 +45,15 @@ const LESSON2: Lesson = {
     {
       kind: 'tap',
       groups: [
-        { id: 's', text: 'Los pájaros', role: 'sujeto' },
-        { id: 'v', text: 'vuelan', role: 'verbo' },
+        {
+          id: 's',
+          role: 'sujeto',
+          words: [
+            { text: 'Los', clase: 'determinante' },
+            { text: 'pájaros', clase: 'sustantivo' },
+          ],
+        },
+        { id: 'v', role: 'verbo', words: [{ text: 'vuelan', clase: 'verbo' }] },
       ],
       target: 'v',
       prompt: 'Toca el [verbo].',
@@ -49,12 +62,18 @@ const LESSON2: Lesson = {
     {
       kind: 'show',
       groups: [
-        { id: 's', text: 'El perro', role: 'sujeto' },
+        {
+          id: 's',
+          role: 'sujeto',
+          words: [
+            { text: 'El', clase: 'determinante' },
+            { text: 'perro', clase: 'sustantivo' },
+          ],
+        },
         {
           id: 'pred',
-          text: 'ladra',
           role: 'predicado',
-          children: [{ id: 'v', text: 'ladra', role: 'verbo' }],
+          children: [{ id: 'v', role: 'verbo', words: [{ text: 'ladra', clase: 'verbo' }] }],
         },
       ],
       reveal: ['s', 'v'],
@@ -79,14 +98,20 @@ const LESSON3: Lesson = {
     {
       kind: 'show',
       groups: [
-        { id: 's', text: 'Ana', role: 'sujeto' },
+        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
         {
           id: 'pred',
-          text: 'compró un libro',
           role: 'predicado',
           children: [
-            { id: 'v', text: 'compró', role: 'verbo' },
-            { id: 'c', text: 'un libro', role: 'cd' },
+            { id: 'v', role: 'verbo', words: [{ text: 'compró', clase: 'verbo' }] },
+            {
+              id: 'c',
+              role: 'cd',
+              words: [
+                { text: 'un', clase: 'determinante' },
+                { text: 'libro', clase: 'sustantivo' },
+              ],
+            },
           ],
         },
       ],
