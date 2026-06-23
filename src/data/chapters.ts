@@ -139,21 +139,26 @@ const LESSON4: Lesson = {
     {
       kind: 'scene',
       groups: [
-        { id: 's', text: 'Ana', role: 'sujeto' },
+        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
         {
           id: 'pred',
-          text: 'sabe que vendió el libro',
           role: 'predicado',
           children: [
-            { id: 'v1', text: 'sabe', role: 'verbo' },
+            { id: 'v1', role: 'verbo', words: [{ text: 'sabe', clase: 'verbo' }] },
             {
               id: 'cdsub',
-              text: 'que vendió el libro',
               role: 'cd',
               children: [
-                { id: 'que', text: 'que', role: 'none' },
-                { id: 'v2', text: 'vendió', role: 'verbo' },
-                { id: 'cd2', text: 'el libro', role: 'cd' },
+                { id: 'que', role: 'none', words: [{ text: 'que', clase: 'conjuncion' }] },
+                { id: 'v2', role: 'verbo', words: [{ text: 'vendió', clase: 'verbo' }] },
+                {
+                  id: 'cd2',
+                  role: 'cd',
+                  words: [
+                    { text: 'el', clase: 'determinante' },
+                    { text: 'libro', clase: 'sustantivo' },
+                  ],
+                },
               ],
             },
           ],
@@ -197,15 +202,29 @@ const LESSON5: Lesson = {
     {
       kind: 'show',
       groups: [
-        { id: 's', text: 'Ana', role: 'sujeto' },
+        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
         {
           id: 'pred',
-          text: 'dio un libro a su hermano',
           role: 'predicado',
           children: [
-            { id: 'v', text: 'dio', role: 'verbo' },
-            { id: 'c', text: 'un libro', role: 'cd' },
-            { id: 'i', text: 'a su hermano', role: 'ci' },
+            { id: 'v', role: 'verbo', words: [{ text: 'dio', clase: 'verbo' }] },
+            {
+              id: 'c',
+              role: 'cd',
+              words: [
+                { text: 'un', clase: 'determinante' },
+                { text: 'libro', clase: 'sustantivo' },
+              ],
+            },
+            {
+              id: 'i',
+              role: 'ci',
+              words: [
+                { text: 'a', clase: 'preposicion' },
+                { text: 'su', clase: 'determinante' },
+                { text: 'hermano', clase: 'sustantivo' },
+              ],
+            },
           ],
         },
       ],
@@ -219,10 +238,32 @@ const LESSON5: Lesson = {
     {
       kind: 'tap',
       groups: [
-        { id: 's', text: 'El cartero', role: 'sujeto' },
-        { id: 'v', text: 'entregó', role: 'verbo' },
-        { id: 'c', text: 'una carta', role: 'cd' },
-        { id: 'i', text: 'a la vecina', role: 'ci' },
+        {
+          id: 's',
+          role: 'sujeto',
+          words: [
+            { text: 'El', clase: 'determinante' },
+            { text: 'cartero', clase: 'sustantivo' },
+          ],
+        },
+        { id: 'v', role: 'verbo', words: [{ text: 'entregó', clase: 'verbo' }] },
+        {
+          id: 'c',
+          role: 'cd',
+          words: [
+            { text: 'una', clase: 'determinante' },
+            { text: 'carta', clase: 'sustantivo' },
+          ],
+        },
+        {
+          id: 'i',
+          role: 'ci',
+          words: [
+            { text: 'a', clase: 'preposicion' },
+            { text: 'la', clase: 'determinante' },
+            { text: 'vecina', clase: 'sustantivo' },
+          ],
+        },
       ],
       target: 'i',
       prompt: 'Toca el [ci].',
@@ -231,10 +272,32 @@ const LESSON5: Lesson = {
     {
       kind: 'tap',
       groups: [
-        { id: 's', text: 'El cartero', role: 'sujeto' },
-        { id: 'v', text: 'entregó', role: 'verbo' },
-        { id: 'c', text: 'una carta', role: 'cd' },
-        { id: 'i', text: 'a la vecina', role: 'ci' },
+        {
+          id: 's',
+          role: 'sujeto',
+          words: [
+            { text: 'El', clase: 'determinante' },
+            { text: 'cartero', clase: 'sustantivo' },
+          ],
+        },
+        { id: 'v', role: 'verbo', words: [{ text: 'entregó', clase: 'verbo' }] },
+        {
+          id: 'c',
+          role: 'cd',
+          words: [
+            { text: 'una', clase: 'determinante' },
+            { text: 'carta', clase: 'sustantivo' },
+          ],
+        },
+        {
+          id: 'i',
+          role: 'ci',
+          words: [
+            { text: 'a', clase: 'preposicion' },
+            { text: 'la', clase: 'determinante' },
+            { text: 'vecina', clase: 'sustantivo' },
+          ],
+        },
       ],
       target: 'c',
       prompt: 'En la misma frase: toca el [cd].',
@@ -243,15 +306,21 @@ const LESSON5: Lesson = {
     {
       kind: 'show',
       groups: [
-        { id: 's', text: 'Ana', role: 'sujeto' },
+        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
         {
           id: 'pred',
-          text: 'le dio un libro',
           role: 'predicado',
           children: [
-            { id: 'i', text: 'le', role: 'ci' },
-            { id: 'v', text: 'dio', role: 'verbo' },
-            { id: 'c', text: 'un libro', role: 'cd' },
+            { id: 'i', role: 'ci', words: [{ text: 'le', clase: 'pronombre' }] },
+            { id: 'v', role: 'verbo', words: [{ text: 'dio', clase: 'verbo' }] },
+            {
+              id: 'c',
+              role: 'cd',
+              words: [
+                { text: 'un', clase: 'determinante' },
+                { text: 'libro', clase: 'sustantivo' },
+              ],
+            },
           ],
         },
       ],
@@ -277,14 +346,20 @@ const LESSON6: Lesson = {
     {
       kind: 'show',
       groups: [
-        { id: 's', text: 'El cielo', role: 'sujeto' },
+        {
+          id: 's',
+          role: 'sujeto',
+          words: [
+            { text: 'El', clase: 'determinante' },
+            { text: 'cielo', clase: 'sustantivo' },
+          ],
+        },
         {
           id: 'pred',
-          text: 'es azul',
           role: 'predicado',
           children: [
-            { id: 'v', text: 'es', role: 'verbo', copula: true },
-            { id: 'a', text: 'azul', role: 'atributo' },
+            { id: 'v', role: 'verbo', words: [{ text: 'es', clase: 'verbo' }] },
+            { id: 'a', role: 'atributo', words: [{ text: 'azul', clase: 'adjetivo' }] },
           ],
         },
       ],
@@ -295,9 +370,16 @@ const LESSON6: Lesson = {
     {
       kind: 'tap',
       groups: [
-        { id: 's', text: 'La sopa', role: 'sujeto' },
-        { id: 'v', text: 'está', role: 'verbo', copula: true },
-        { id: 'a', text: 'caliente', role: 'atributo' },
+        {
+          id: 's',
+          role: 'sujeto',
+          words: [
+            { text: 'La', clase: 'determinante' },
+            { text: 'sopa', clase: 'sustantivo' },
+          ],
+        },
+        { id: 'v', role: 'verbo', words: [{ text: 'está', clase: 'verbo' }] },
+        { id: 'a', role: 'atributo', words: [{ text: 'caliente', clase: 'adjetivo' }] },
       ],
       target: 'a',
       prompt: 'Toca el [atributo].',
@@ -306,14 +388,20 @@ const LESSON6: Lesson = {
     {
       kind: 'show',
       groups: [
-        { id: 's', text: 'El cielo', role: 'sujeto' },
+        {
+          id: 's',
+          role: 'sujeto',
+          words: [
+            { text: 'El', clase: 'determinante' },
+            { text: 'cielo', clase: 'sustantivo' },
+          ],
+        },
         {
           id: 'pred',
-          text: 'lo es',
           role: 'predicado',
           children: [
-            { id: 'a', text: 'lo', role: 'atributo' },
-            { id: 'v', text: 'es', role: 'verbo', copula: true },
+            { id: 'a', role: 'atributo', words: [{ text: 'lo', clase: 'pronombre' }] },
+            { id: 'v', role: 'verbo', words: [{ text: 'es', clase: 'verbo' }] },
           ],
         },
       ],
@@ -339,14 +427,21 @@ const LESSON7: Lesson = {
     {
       kind: 'show',
       groups: [
-        { id: 's', text: 'Ana', role: 'sujeto' },
+        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
         {
           id: 'pred',
-          text: 'cantó en el teatro',
           role: 'predicado',
           children: [
-            { id: 'v', text: 'cantó', role: 'verbo' },
-            { id: 'l', text: 'en el teatro', role: 'cc' },
+            { id: 'v', role: 'verbo', words: [{ text: 'cantó', clase: 'verbo' }] },
+            {
+              id: 'l',
+              role: 'cc',
+              words: [
+                { text: 'en', clase: 'preposicion' },
+                { text: 'el', clase: 'determinante' },
+                { text: 'teatro', clase: 'sustantivo' },
+              ],
+            },
           ],
         },
       ],
@@ -357,15 +452,22 @@ const LESSON7: Lesson = {
     {
       kind: 'show',
       groups: [
-        { id: 's', text: 'Ana', role: 'sujeto' },
+        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
         {
           id: 'pred',
-          text: 'cantó ayer en el teatro',
           role: 'predicado',
           children: [
-            { id: 'v', text: 'cantó', role: 'verbo' },
-            { id: 't', text: 'ayer', role: 'cc' },
-            { id: 'l', text: 'en el teatro', role: 'cc' },
+            { id: 'v', role: 'verbo', words: [{ text: 'cantó', clase: 'verbo' }] },
+            { id: 't', role: 'cc', words: [{ text: 'ayer', clase: 'adverbio' }] },
+            {
+              id: 'l',
+              role: 'cc',
+              words: [
+                { text: 'en', clase: 'preposicion' },
+                { text: 'el', clase: 'determinante' },
+                { text: 'teatro', clase: 'sustantivo' },
+              ],
+            },
           ],
         },
       ],
@@ -379,10 +481,10 @@ const LESSON7: Lesson = {
     {
       kind: 'tap',
       groups: [
-        { id: 's', text: 'Ana', role: 'sujeto' },
-        { id: 'v', text: 'compró', role: 'verbo' },
-        { id: 'c', text: 'pan', role: 'cd' },
-        { id: 'cc', text: 'ayer', role: 'cc' },
+        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
+        { id: 'v', role: 'verbo', words: [{ text: 'compró', clase: 'verbo' }] },
+        { id: 'c', role: 'cd', words: [{ text: 'pan', clase: 'sustantivo' }] },
+        { id: 'cc', role: 'cc', words: [{ text: 'ayer', clase: 'adverbio' }] },
       ],
       target: 'cc',
       prompt: 'Toca el [cc].',
@@ -391,10 +493,10 @@ const LESSON7: Lesson = {
     {
       kind: 'tap',
       groups: [
-        { id: 's', text: 'Ana', role: 'sujeto' },
-        { id: 'v', text: 'compró', role: 'verbo' },
-        { id: 'c', text: 'pan', role: 'cd' },
-        { id: 'cc', text: 'ayer', role: 'cc' },
+        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
+        { id: 'v', role: 'verbo', words: [{ text: 'compró', clase: 'verbo' }] },
+        { id: 'c', role: 'cd', words: [{ text: 'pan', clase: 'sustantivo' }] },
+        { id: 'cc', role: 'cc', words: [{ text: 'ayer', clase: 'adverbio' }] },
       ],
       target: 'c',
       prompt: 'En la misma frase: toca el [cd].',
