@@ -1,4 +1,5 @@
 import type { Chapter, Lesson } from '../types'
+import { LESSON0 } from './lesson0'
 import { LESSON1 } from './lesson1'
 import { CONCORDANCIA } from './concordancia'
 import { SUJETOS } from './sujetos'
@@ -378,11 +379,12 @@ const LESSON7: Lesson = {
 }
 
 export const CHAPTERS: Chapter[] = [
-  { id: 'cap1', num: 1, title: 'Las dos mitades', subtitle: 'Sujeto y predicado', lesson: LESSON1 },
-  { id: 'cap2', num: 2, title: 'El verbo y la concordancia', subtitle: 'El motor del predicado; el sujeto manda', lesson: LESSON2 },
-  { id: 'cap3', num: 3, title: 'El complemento directo', subtitle: 'Reconócelo con el pronombre', lesson: LESSON3 },
-  { id: 'cap4', num: 4, title: 'Una oración dentro de otra', subtitle: 'La subordinación: cajas dentro de cajas', lesson: LESSON4 },
-  { id: 'cap5', num: 5, title: 'El complemento indirecto', subtitle: 'A quién llega la acción: le / les', lesson: LESSON5 },
-  { id: 'cap6', num: 6, title: 'El atributo', subtitle: 'Ser, estar, parecer: cómo es el sujeto', lesson: LESSON6 },
-  { id: 'cap7', num: 7, title: 'El complemento circunstancial', subtitle: 'Cuándo, dónde, cómo: las circunstancias', lesson: LESSON7 },
+  { id: 'cap0', num: 1, title: 'Las clases de palabras', subtitle: 'Sustantivo, verbo, adjetivo, adverbio', lesson: LESSON0 },
+  { id: 'cap1', num: 2, title: 'Las dos mitades', subtitle: 'Sujeto y predicado', lesson: LESSON1 },
+  { id: 'cap2', num: 3, title: 'El verbo y la concordancia', subtitle: 'El motor del predicado; el sujeto manda', lesson: LESSON2 },
+  { id: 'cap3', num: 4, title: 'El complemento directo', subtitle: 'Reconócelo con el pronombre', lesson: LESSON3 },
+  { id: 'cap4', num: 5, title: 'Una oración dentro de otra', subtitle: 'La subordinación: cajas dentro de cajas', lesson: LESSON4 },
+  { id: 'cap5', num: 6, title: 'El complemento indirecto', subtitle: 'A quién llega la acción: le / les', lesson: LESSON5 },
+  { id: 'cap6', num: 7, title: 'El atributo', subtitle: 'Ser, estar, parecer: cómo es el sujeto', lesson: LESSON6 },
+  { id: 'cap7', num: 8, title: 'El complemento circunstancial', subtitle: 'Cuándo, dónde, cómo: las circunstancias', lesson: LESSON7 },
 ]

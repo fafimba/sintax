@@ -281,14 +281,35 @@ export function TwoLevelBox({
         </span>
       ))
 
-  // Verbo / pegamento: sin corchete (basta el color de la palabra).
-  if (!bracketed) return <span className="tl-bare">{inner}</span>
+  // Verbo / pegamento: sin corchete (basta el color de la palabra). En modo
+  // "tocar" (p. ej. el primer de clases) la palabra es tocable.
+  if (!bracketed) {
+    if (tapMode)
+      return (
+        <motion.button
+          type="button"
+          className="tl-bare tl-tappable"
+          data-gid={group.id}
+          onClick={solved ? undefined : () => onTap!(group.id)}
+          animate={shake ? { x: [0, -6, 6, -4, 4, 0] } : { x: 0 }}
+          transition={{ duration: shake ? 0.4 : 0.2 }}
+        >
+          {inner}
+        </motion.button>
+      )
+    return (
+      <span className="tl-bare" data-gid={group.id}>
+        {inner}
+      </span>
+    )
+  }
 
   // Función con corchete neutro + rótulo.
   const st = ROLE_STYLE[group.role as Colored]
   const showBracket = tapMode || active
   return (
     <motion.div
+      data-gid={group.id}
       className={`pred-zone ${tapMode && !solved ? 'pred-tappable' : ''}`}
       style={{ ['--pred-border' as string]: active ? fnBrace : '#c9c7bd' }}
       onClick={tapMode && !solved ? () => onTap!(group.id) : undefined}

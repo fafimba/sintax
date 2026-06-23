@@ -1049,6 +1049,17 @@ body {
   gap: 7px;
   align-items: baseline;
 }
+.tl-tappable {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font: inherit;
+  padding: 4px 8px;
+  border-radius: 9px;
+}
+.tl-tappable:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
 
 /* Chip de color dentro de enunciados/explicaciones. */
 .rt-chip {
