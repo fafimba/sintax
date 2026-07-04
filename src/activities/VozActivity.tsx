@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import type { VozItem } from '../types'
-import { VOZ } from '../data/voz'
-import { TopBar } from '../components/TopBar'
 import { SegToggle } from '../components/SegToggle'
 import { MorphText } from '../components/MorphText'
 import { fn, elem } from '../theme'
@@ -114,21 +112,5 @@ export function VozStage({ item }: { item: VozItem }) {
         )}
       </div>
     </motion.div>
-  )
-}
-
-export function VozActivity({ onBack }: { onBack: () => void }) {
-  const [idx, setIdx] = useState(0)
-  const item = VOZ[idx % VOZ.length]
-  return (
-    <>
-      <TopBar onBack={onBack} counter={`${(idx % VOZ.length) + 1} / ${VOZ.length}`} />
-      <VozStage key={item.id} item={item} />
-      <div className="explora-nav">
-        <button className="btn-ghost" onClick={() => setIdx((i) => i + 1)}>
-          Otra frase
-        </button>
-      </div>
-    </>
   )
 }

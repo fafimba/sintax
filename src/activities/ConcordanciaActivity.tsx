@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, useAnimationControls } from 'framer-motion'
 import type { ConcItem } from '../types'
-import { CONCORDANCIA } from '../data/concordancia'
-import { TopBar } from '../components/TopBar'
 import { MorphText } from '../components/MorphText'
 import { fn, neutral, elem } from '../theme'
 
@@ -88,21 +86,5 @@ export function ConcordanciaStage({ item }: { item: ConcItem }) {
         )}
       </div>
     </motion.div>
-  )
-}
-
-export function ConcordanciaActivity({ onBack }: { onBack: () => void }) {
-  const [idx, setIdx] = useState(0)
-  const item = CONCORDANCIA[idx % CONCORDANCIA.length]
-  return (
-    <>
-      <TopBar onBack={onBack} counter={`${(idx % CONCORDANCIA.length) + 1} / ${CONCORDANCIA.length}`} />
-      <ConcordanciaStage key={item.id} item={item} />
-      <div className="explora-nav">
-        <button className="btn-ghost" onClick={() => setIdx((i) => i + 1)}>
-          Otra frase
-        </button>
-      </div>
-    </>
   )
 }

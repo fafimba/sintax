@@ -6,6 +6,8 @@ import { SUJETOS } from './sujetos'
 import { SENTENCES } from './sentences'
 import { VOZ } from './voz'
 import { SWAP } from './swap'
+import { NUCLEOS } from './nucleos'
+import { ANALIZA } from './analiza'
 
 // Cap 2: el verbo (núcleo del predicado) + el explorable de concordancia + el
 // reto de encontrar el sujeto.
@@ -80,6 +82,28 @@ const LESSON2: Lesson = {
       caption: 'El [sujeto] y el [verbo]. ¿Quién manda sobre quién?',
     },
     { kind: 'exploreConcordancia', item: CONCORDANCIA[0] },
+    // El núcleo: dentro del sujeto una palabra es la insuprimible (y es la que
+    // concuerda con el verbo). Puente expositivo + mecánica "borra hasta el núcleo".
+    {
+      kind: 'show',
+      groups: [
+        {
+          id: 's',
+          role: 'sujeto',
+          words: [
+            { text: 'El', clase: 'determinante' },
+            { text: 'perro', clase: 'sustantivo' },
+            { text: 'negro', clase: 'adjetivo' },
+          ],
+        },
+        { id: 'v', role: 'verbo', words: [{ text: 'ladra', clase: 'verbo' }] },
+      ],
+      reveal: ['s', 'v'],
+      caption:
+        'Dentro del [sujeto] también manda una palabra: su *núcleo*. Es la que no se puede quitar… y la que concuerda con el verbo.',
+    },
+    { kind: 'challengeNucleo', item: NUCLEOS[0] },
+    { kind: 'challengeNucleo', item: NUCLEOS[3] },
     { kind: 'challengeSujeto', item: SUJETOS[0] },
   ],
 }
@@ -121,6 +145,9 @@ const LESSON3: Lesson = {
     },
     { kind: 'challengeCd', sentence: SENTENCES[0] },
     { kind: 'exploreSwap', item: SWAP[0] },
+    // Segunda caza, con distractor («ayer» no es el CD): la prueba del
+    // pronombre tiene que sobrevivir al ruido.
+    { kind: 'challengeCd', sentence: SENTENCES[3] },
     { kind: 'exploreVoz', item: VOZ[0] },
   ],
 }
@@ -182,6 +209,48 @@ const LESSON4: Lesson = {
             'Y dentro tiene su propio [verbo] y su propio [cd]. Una oración cabe dentro de otra: la *subordinación*.',
         },
       ],
+    },
+    // Práctica 1: reconocer que el CD es una oración entera.
+    {
+      kind: 'tap',
+      groups: [
+        { id: 's', role: 'sujeto', words: [{ text: 'María', clase: 'sustantivo' }] },
+        { id: 'v', role: 'verbo', words: [{ text: 'cree', clase: 'verbo' }] },
+        {
+          id: 'sub',
+          role: 'cd',
+          words: [
+            { text: 'que', clase: 'conjuncion' },
+            { text: 'los', clase: 'determinante' },
+            { text: 'pájaros', clase: 'sustantivo' },
+            { text: 'cantan', clase: 'verbo' },
+          ],
+        },
+      ],
+      target: 'sub',
+      prompt: '¿Qué cree María? Toca el [cd].',
+      teach: 'Eso: lo que cree es *una oración entera*, con «que» delante.',
+    },
+    // Práctica 2: la subordinada tiene su propio verbo (dos verbos a la vista).
+    {
+      kind: 'tap',
+      groups: [
+        { id: 's', role: 'none', words: [{ text: 'María', clase: 'sustantivo' }] },
+        { id: 'v1', role: 'verbo', words: [{ text: 'cree', clase: 'verbo' }] },
+        { id: 'que', role: 'none', words: [{ text: 'que', clase: 'conjuncion' }] },
+        {
+          id: 's2',
+          role: 'none',
+          words: [
+            { text: 'los', clase: 'determinante' },
+            { text: 'pájaros', clase: 'sustantivo' },
+          ],
+        },
+        { id: 'v2', role: 'verbo', words: [{ text: 'cantan', clase: 'verbo' }] },
+      ],
+      target: 'v2',
+      prompt: 'Hay *dos* verbos. Toca el de la oración *subordinada*.',
+      teach: 'Sí: «cantan» es el verbo que vive *dentro* del CD.',
     },
   ],
 }
@@ -408,6 +477,18 @@ const LESSON6: Lesson = {
       reveal: ['s', 'v', 'a'],
       caption: 'Prueba: el [atributo] se cambia por *lo*. El cielo *lo* es.',
     },
+    // Contraste con el CD: si el verbo es de ACCIÓN, no hay atributo.
+    {
+      kind: 'tap',
+      groups: [
+        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
+        { id: 'v', role: 'verbo', words: [{ text: 'come', clase: 'verbo' }] },
+        { id: 'c', role: 'cd', words: [{ text: 'sopa', clase: 'sustantivo' }] },
+      ],
+      target: 'c',
+      prompt: 'Ojo: «come» es *acción*, no puente. Toca el [cd].',
+      teach: 'Eso: con un verbo de acción lo que la recibe es CD, no atributo.',
+    },
   ],
 }
 
@@ -505,13 +586,33 @@ const LESSON7: Lesson = {
   ],
 }
 
+// Capítulo final: aplicar TODO a frases completas. El alumno analiza; la app
+// solo guía el orden (sujeto -> verbo -> complementos), como sobre papel.
+const LESSON8: Lesson = {
+  id: 'cap8',
+  title: 'El análisis completo',
+  beats: [
+    {
+      kind: 'intro',
+      title: 'El análisis completo',
+      body: 'Ya tienes todas las piezas. Ahora el análisis lo haces *tú*: frases enteras, de principio a fin.',
+      cta: 'Empezar',
+    },
+    { kind: 'challengeAnaliza', items: ANALIZA },
+  ],
+}
+
+// El camino, de lo simple a lo compuesto: piezas (clases) -> las dos mitades ->
+// el verbo manda -> complementos uno a uno (CD, CI, atributo, CC) -> la
+// recursión (subordinación) -> el análisis completo como cierre.
 export const CHAPTERS: Chapter[] = [
   { id: 'cap0', num: 1, title: 'Las clases de palabras', subtitle: 'Sustantivo, verbo, adjetivo, adverbio', lesson: LESSON0 },
   { id: 'cap1', num: 2, title: 'Las dos mitades', subtitle: 'Sujeto y predicado', lesson: LESSON1 },
   { id: 'cap2', num: 3, title: 'El verbo y la concordancia', subtitle: 'El motor del predicado; el sujeto manda', lesson: LESSON2 },
   { id: 'cap3', num: 4, title: 'El complemento directo', subtitle: 'Reconócelo con el pronombre', lesson: LESSON3 },
-  { id: 'cap4', num: 5, title: 'Una oración dentro de otra', subtitle: 'La subordinación: cajas dentro de cajas', lesson: LESSON4 },
-  { id: 'cap5', num: 6, title: 'El complemento indirecto', subtitle: 'A quién llega la acción: le / les', lesson: LESSON5 },
-  { id: 'cap6', num: 7, title: 'El atributo', subtitle: 'Ser, estar, parecer: cómo es el sujeto', lesson: LESSON6 },
-  { id: 'cap7', num: 8, title: 'El complemento circunstancial', subtitle: 'Cuándo, dónde, cómo: las circunstancias', lesson: LESSON7 },
+  { id: 'cap5', num: 5, title: 'El complemento indirecto', subtitle: 'A quién llega la acción: le / les', lesson: LESSON5 },
+  { id: 'cap6', num: 6, title: 'El atributo', subtitle: 'Ser, estar, parecer: cómo es el sujeto', lesson: LESSON6 },
+  { id: 'cap7', num: 7, title: 'El complemento circunstancial', subtitle: 'Cuándo, dónde, cómo: las circunstancias', lesson: LESSON7 },
+  { id: 'cap4', num: 8, title: 'Una oración dentro de otra', subtitle: 'La subordinación: cajas dentro de cajas', lesson: LESSON4 },
+  { id: 'cap8', num: 9, title: 'El análisis completo', subtitle: 'Frases enteras: tú analizas', lesson: LESSON8 },
 ]

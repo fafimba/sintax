@@ -1,9 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import type { SujetoItem, SujetoPart } from '../types'
-import { SUJETOS } from '../data/sujetos'
-import { TopBar } from '../components/TopBar'
-import { Done } from '../components/Done'
 import { MorphText } from '../components/MorphText'
 import { CheckIcon, SwapIcon } from '../components/icons'
 import { fn, neutral, elem } from '../theme'
@@ -128,20 +125,5 @@ export function SujetoStage({ item, onNext }: { item: SujetoItem; onNext: () => 
         )}
       </div>
     </motion.div>
-  )
-}
-
-export function SujetoActivity({ onBack }: { onBack: () => void }) {
-  const [idx, setIdx] = useState(0)
-  const item = SUJETOS[idx]
-  return (
-    <>
-      <TopBar onBack={onBack} progress={idx / SUJETOS.length} />
-      {item ? (
-        <SujetoStage key={item.id} item={item} onNext={() => setIdx((i) => i + 1)} />
-      ) : (
-        <Done total={SUJETOS.length} label="oraciones" onRestart={() => setIdx(0)} onBack={onBack} />
-      )}
-    </>
   )
 }

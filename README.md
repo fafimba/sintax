@@ -2,17 +2,26 @@
 
 App educativa estilo [Brilliant](https://brilliant.org) para aprender **sintaxis castellana**: minimalista, visual y aprender-haciendo. La tesis es que el análisis sintáctico es "matemático" (cajas anidadas, núcleos, funciones, recursividad) y por tanto se puede manipular con el dedo.
 
-## Estado: F0 — el gesto insignia
+## El camino
 
-Primer prototipo, centrado en validar **una** mecánica: la **sustitución pronominal animada** para identificar el complemento directo.
+Nueve capítulos, de lo simple a lo compuesto. Cada concepto se presenta con una escena animada, se manipula en un explorable y se fija con retos, antes de que aparezca el siguiente:
 
-- Arrastra la ficha-pronombre (`lo` / `la`) sobre un grupo de la oración.
-- Si es el CD → el grupo se tiñe de verde (función) con su etiqueta `CD`, colapsa y el pronombre aparece en posición preverbal (`Ana lo compró`). La función conserva el color aunque cambie la forma.
-- Si no lo es → la frase se sacude, marca el error en rojo y se reinicia.
+1. **Las clases de palabras** — las piezas, coloreadas por clase.
+2. **Las dos mitades** — sujeto y predicado; el corte (slider de frontera).
+3. **El verbo y la concordancia** — el motor; el núcleo del sujeto; quién manda sobre quién.
+4. **El complemento directo** — la prueba del pronombre (arrastrar `lo`/`la`).
+5. **El complemento indirecto** — ¿a quién?; `le`/`les`.
+6. **El atributo** — ser/estar/parecer como puente; contraste con el CD.
+7. **El complemento circunstancial** — cuándo, dónde, cómo; puede haber varios.
+8. **Una oración dentro de otra** — la subordinación: cajas dentro de cajas.
+9. **El análisis completo** — capstone: frases enteras que el alumno analiza pieza a pieza.
 
-Sistema de color en **dos ejes**: relleno = función, borde/etiqueta = categoría. Las cajas nacen neutras y se tiñen al descubrir su función (el color es la recompensa, no la pista).
+## Modelo visual (dos niveles)
 
-Lo que F0 deja fuera a propósito: lecciones, progreso real, login, árbol/subordinación. Solo el gesto.
+- El **color** de la palabra es su **clase** (sustantivo, verbo, adjetivo, adverbio; el "pegamento" gramatical va en gris).
+- La **función** (sujeto, CD, CI…) se marca con **corchete neutro + rótulo**. Son canales separados: clase ≠ función.
+- Las **flechas** codifican relaciones (verbo → CD «¿qué?», sujeto → atributo «¿cómo es?»).
+- El color/rótulo se gana al descubrir, no se da como pista.
 
 ## Stack
 
@@ -30,12 +39,19 @@ npm run build    # typecheck + build de producción
 
 ```
 src/
-  data/sentences.ts   Contenido como DATOS (frase = constituyentes + CD + pronombre)
-  theme.ts            Tokens de color por función / categoría
-  types.ts            Modelo Sentence / Segment
+  types.ts              Modelo: Lesson / Beat (intro, show, scene, tap, retos, explorables)
+  theme.ts              Tokens de color (clase de palabra, función, elementos)
+  data/                 TODO el contenido como datos (capítulos, frases, ítems de cada mecánica)
+    chapters.ts         El camino: capítulos y sus beats
   components/
-    Caja.tsx          Primitiva: un constituyente como caja (neutra / CD / error)
-    PronounChip.tsx   Primitiva: la ficha-pronombre arrastrable (la "sonda")
-    SentenceStage.tsx Máquina de estados del gesto (idle → revealing → done / error)
-  App.tsx             Barra de progreso + recorrido por las frases
+    LessonPlayer.tsx    Reproductor de lecciones: recorre los beats de un capítulo
+    GroupBox.tsx        TwoLevelBox: renderizado palabra-por-clase + corchete-por-función
+    MapScreen.tsx       Mapa de capítulos con progreso (localStorage)
+  activities/           Mecánicas interactivas incrustadas como beats:
+    FronteraActivity    Coloca el corte sujeto|predicado (slider)
+    NucleoActivity      Borra hasta el núcleo
+    ConcordanciaActivity / SujetoActivity   Laboratorio y reto de concordancia
+    SentenceStage (components/)             Sustitución pronominal del CD (drag)
+    SwapActivity / VozActivity / CrecimientoActivity   Explorables
+    AnalizaActivity     Capstone: análisis guiado de la frase completa
 ```

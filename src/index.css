@@ -708,6 +708,18 @@ body {
   text-align: center;
 }
 
+/* Reto "analiza": el enunciado cambia en cada paso; altura mínima fija para
+   que la frase no salte al cambiar la pregunta. */
+.analiza-prompt-slot {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.analiza-prompt-slot .prompt {
+  margin: 0;
+}
+
 .tap-feedback {
   min-height: 40px;
   display: flex;

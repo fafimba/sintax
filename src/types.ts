@@ -91,7 +91,6 @@ export interface LWord {
 
 export interface LGroup {
   id: string
-  text?: string // modelo antiguo (ficha por función). Migrando -> usar `words`.
   role: LessonRole
   // Hoja con palabras coloreadas por CLASE (modelo de dos niveles). Si el grupo
   // es una función con cuerpo léxico (sujeto, CD...), va envuelto en corchete.
@@ -99,9 +98,6 @@ export interface LGroup {
   // Si tiene hijos, es un CONSTITUYENTE CONTENEDOR (p. ej. el predicado):
   // no pinta ficha propia, sino sus hijos + un corchete que los abraza.
   children?: LGroup[]
-  // Verbo copulativo (ser/estar/parecer): es un PUENTE, no una acción. Pierde
-  // el pico de "play" y adopta forma neutra de enlace.
-  copula?: boolean
 }
 
 export interface IntroBeat {
@@ -185,6 +181,25 @@ export interface FronteraItem {
   sujetoPro: string // pronombre del sujeto para el feedback (él/ella/ellos/ellas)
 }
 
+// Reto "análisis completo" (capstone): la frase persiste en pantalla y se pide
+// tocar cada función EN ORDEN (sujeto -> verbo -> complementos). Lo acertado
+// queda revelado y etiquetado: el análisis se construye de forma acumulativa,
+// como sobre papel. Se juega en ronda (varias frases, con progreso).
+export interface AnalizaStep {
+  target: string // id del grupo que hay que tocar en este paso
+  prompt: string
+  teach: string // se muestra al acertar
+}
+export interface AnalizaItem {
+  id: string
+  groups: LGroup[]
+  steps: AnalizaStep[]
+}
+export interface ChallengeAnalizaBeat {
+  kind: 'challengeAnaliza'
+  items: AnalizaItem[]
+}
+
 // Beats que incrustan las mecánicas ya existentes dentro del camino.
 // La frontera se juega en RONDA: varias frases seguidas (con progreso).
 export interface ChallengeFronteraBeat {
@@ -229,6 +244,7 @@ export type Beat =
   | ExploreCrecimientoBeat
   | ExploreSwapBeat
   | ChallengeCdBeat
+  | ChallengeAnalizaBeat
   | ChallengeNucleoBeat
   | ChallengeSujetoBeat
   | ExploreConcordanciaBeat

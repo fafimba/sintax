@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { NucleoItem } from '../types'
-import { NUCLEOS } from '../data/nucleos'
-import { TopBar } from '../components/TopBar'
-import { Done } from '../components/Done'
 import { CheckIcon } from '../components/icons'
 import { fn, neutral, errorColor } from '../theme'
 
@@ -119,20 +116,5 @@ export function NucleoStage({ item, onNext }: { item: NucleoItem; onNext: () => 
         )}
       </div>
     </motion.div>
-  )
-}
-
-export function NucleoActivity({ onBack }: { onBack: () => void }) {
-  const [idx, setIdx] = useState(0)
-  const item = NUCLEOS[idx]
-  return (
-    <>
-      <TopBar onBack={onBack} progress={idx / NUCLEOS.length} />
-      {item ? (
-        <NucleoStage key={item.id} item={item} onNext={() => setIdx((i) => i + 1)} />
-      ) : (
-        <Done total={NUCLEOS.length} label="sintagmas" onRestart={() => setIdx(0)} onBack={onBack} />
-      )}
-    </>
   )
 }
