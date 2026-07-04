@@ -1,16 +1,104 @@
 import type { Chapter, Lesson } from '../types'
-import { LESSON0 } from './lesson0'
-import { LESSON1 } from './lesson1'
 import { CONCORDANCIA } from './concordancia'
 import { SUJETOS } from './sujetos'
-import { SENTENCES } from './sentences'
 import { VOZ } from './voz'
 import { SWAP } from './swap'
 import { NUCLEOS } from './nucleos'
 import { ANALIZA } from './analiza'
+import { CLASES, SUSTITUIR, CIRCUNSTANCIAS, ZOOM } from './explorables'
+import { FRONTERA } from './frontera'
+import { CRECIMIENTO } from './crecimiento'
 
-// Cap 2: el verbo (núcleo del predicado) + el explorable de concordancia + el
-// reto de encontrar el sujeto.
+// Filosofía del camino: cada capítulo EXPLICA con una escena animada y deja
+// JUGAR con uno o más explorables (reversibles, sin fallo). Nada de exámenes
+// por el medio; el único sitio donde el alumno "hace el análisis" es el
+// capítulo de cierre.
+
+// Cap 1 — las piezas: de qué CLASE es cada palabra. Escena que colorea una
+// frase palabra a palabra + explorable de tocar-y-descubrir con otra frase.
+const LESSON0: Lesson = {
+  id: 'cap0',
+  title: 'Las clases de palabras',
+  beats: [
+    {
+      kind: 'intro',
+      title: 'Las clases de palabras',
+      body: 'Antes de las funciones, las *piezas*. Cada palabra es de una clase, y la reconocerás por su *color*.',
+      cta: 'Empezar',
+    },
+    {
+      kind: 'scene',
+      groups: [
+        { id: 'w1', role: 'none', words: [{ text: 'El', clase: 'determinante' }] },
+        { id: 'w2', role: 'none', words: [{ text: 'perro', clase: 'sustantivo' }] },
+        { id: 'w3', role: 'none', words: [{ text: 'negro', clase: 'adjetivo' }] },
+        { id: 'w4', role: 'none', words: [{ text: 'ladra', clase: 'verbo' }] },
+        { id: 'w5', role: 'none', words: [{ text: 'mucho', clase: 'adverbio' }] },
+      ],
+      steps: [
+        { reveal: [], caption: 'Cinco palabras. Cada una es de una *clase*.' },
+        { reveal: ['w2'], caption: '«perro» es un *sustantivo*: nombra seres o cosas.' },
+        { reveal: ['w2', 'w3'], caption: '«negro» es un *adjetivo*: dice *cómo* es algo.' },
+        { reveal: ['w2', 'w3', 'w4'], caption: '«ladra» es un *verbo*: una acción o un estado.' },
+        {
+          reveal: ['w2', 'w3', 'w4', 'w5'],
+          caption: '«mucho» es un *adverbio*: dice *cuánto*, *cómo* o *cuándo*.',
+        },
+      ],
+    },
+    { kind: 'exploreClases', item: CLASES[1] },
+  ],
+}
+
+// Cap 2 — las dos mitades. Escena del corte + el explorable de crecimiento
+// (el favorito: cada palabra cae en su mitad) + colocar la frontera.
+const LESSON1: Lesson = {
+  id: 'cap1',
+  title: 'Las dos mitades',
+  beats: [
+    {
+      kind: 'intro',
+      title: 'Las dos mitades',
+      body: 'Toda oración se parte en *dos mitades*: el sujeto y el predicado. Vamos a verlas.',
+      cta: 'Empezar',
+    },
+    {
+      kind: 'scene',
+      groups: [
+        {
+          id: 's',
+          role: 'sujeto',
+          words: [
+            { text: 'El', clase: 'determinante' },
+            { text: 'gato', clase: 'sustantivo' },
+          ],
+        },
+        { id: 'p', role: 'predicado', words: [{ text: 'duerme', clase: 'verbo' }] },
+      ],
+      steps: [
+        { reveal: [], caption: 'Esta es una oración. Por dentro tiene una estructura.' },
+        { reveal: [], separated: true, caption: 'Toda oración se parte en *dos mitades*.' },
+        {
+          reveal: ['s'],
+          separated: true,
+          caption: '«El gato» es el [sujeto]: de *quién* o de *qué* se habla.',
+        },
+        {
+          reveal: ['s', 'p'],
+          separated: true,
+          caption: '«duerme» es el [predicado]: lo que se *dice* del sujeto.',
+        },
+      ],
+    },
+    { kind: 'exploreCrecimiento', item: CRECIMIENTO[0] },
+    // El corte con las manos: mueve el divisor y ve pintarse cada mitad.
+    { kind: 'challengeFrontera', items: FRONTERA.slice(0, 2) },
+  ],
+}
+
+// Cap 3 — el verbo manda (y dentro del sujeto, su núcleo). Exposición breve +
+// laboratorio de concordancia + dos experimentos: borrar hasta el núcleo y
+// encontrar el sujeto moviendo el número.
 const LESSON2: Lesson = {
   id: 'cap2',
   title: 'El verbo y la concordancia',
@@ -44,46 +132,7 @@ const LESSON2: Lesson = {
       reveal: ['s', 'v'],
       caption: 'Dentro del predicado manda una palabra: el [verbo], el *motor* de la oración.',
     },
-    {
-      kind: 'tap',
-      groups: [
-        {
-          id: 's',
-          role: 'sujeto',
-          words: [
-            { text: 'Los', clase: 'determinante' },
-            { text: 'pájaros', clase: 'sustantivo' },
-          ],
-        },
-        { id: 'v', role: 'verbo', words: [{ text: 'vuelan', clase: 'verbo' }] },
-      ],
-      target: 'v',
-      prompt: 'Toca el [verbo].',
-      teach: 'Justo: el *motor* de la oración.',
-    },
-    {
-      kind: 'show',
-      groups: [
-        {
-          id: 's',
-          role: 'sujeto',
-          words: [
-            { text: 'El', clase: 'determinante' },
-            { text: 'perro', clase: 'sustantivo' },
-          ],
-        },
-        {
-          id: 'pred',
-          role: 'predicado',
-          children: [{ id: 'v', role: 'verbo', words: [{ text: 'ladra', clase: 'verbo' }] }],
-        },
-      ],
-      reveal: ['s', 'v'],
-      caption: 'El [sujeto] y el [verbo]. ¿Quién manda sobre quién?',
-    },
     { kind: 'exploreConcordancia', item: CONCORDANCIA[0] },
-    // El núcleo: dentro del sujeto una palabra es la insuprimible (y es la que
-    // concuerda con el verbo). Puente expositivo + mecánica "borra hasta el núcleo".
     {
       kind: 'show',
       groups: [
@@ -103,12 +152,12 @@ const LESSON2: Lesson = {
         'Dentro del [sujeto] también manda una palabra: su *núcleo*. Es la que no se puede quitar… y la que concuerda con el verbo.',
     },
     { kind: 'challengeNucleo', item: NUCLEOS[0] },
-    { kind: 'challengeNucleo', item: NUCLEOS[3] },
     { kind: 'challengeSujeto', item: SUJETOS[0] },
   ],
 }
 
-// Cap 3: integra el reto del CD (sustitución) + el explorable de voz.
+// Cap 4 — el CD. La flecha «¿qué?» + el interruptor de sustitución (la prueba
+// del pronombre, reversible) + swap + el giro de voz.
 const LESSON3: Lesson = {
   id: 'cap3',
   title: 'El complemento directo',
@@ -116,7 +165,7 @@ const LESSON3: Lesson = {
     {
       kind: 'intro',
       title: 'El complemento directo',
-      body: 'Una pieza recibe la acción del verbo. Vamos a cazarla.',
+      body: 'Una pieza recibe la acción del verbo. Vamos a verla de cerca.',
       cta: 'Empezar',
     },
     {
@@ -140,19 +189,148 @@ const LESSON3: Lesson = {
         },
       ],
       reveal: ['s', 'v', 'c'],
-      caption: '¿Cómo reconocemos el [cd] sin dudar?',
+      caption: 'El [cd] responde a *¿qué?*. ¿Cómo reconocerlo sin dudar?',
       arrow: { from: 'v', to: 'c', label: '¿qué?' },
     },
-    { kind: 'challengeCd', sentence: SENTENCES[0] },
+    { kind: 'exploreSustituir', item: SUSTITUIR.cd },
     { kind: 'exploreSwap', item: SWAP[0] },
-    // Segunda caza, con distractor («ayer» no es el CD): la prueba del
-    // pronombre tiene que sobrevivir al ruido.
-    { kind: 'challengeCd', sentence: SENTENCES[3] },
     { kind: 'exploreVoz', item: VOZ[0] },
   ],
 }
 
-// Cap 4: subordinación — una oración dentro de otra (corchetes anidados).
+// Cap 5 — el CI. Dos flechas contrastadas + el interruptor con «le».
+const LESSON5: Lesson = {
+  id: 'cap5',
+  title: 'El complemento indirecto',
+  beats: [
+    {
+      kind: 'intro',
+      title: 'El complemento indirecto',
+      body: 'La acción produce algo… y va a parar a *alguien*. ¿A quién?',
+      cta: 'Empezar',
+    },
+    {
+      kind: 'show',
+      groups: [
+        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
+        {
+          id: 'pred',
+          role: 'predicado',
+          children: [
+            { id: 'v', role: 'verbo', words: [{ text: 'dio', clase: 'verbo' }] },
+            {
+              id: 'c',
+              role: 'cd',
+              words: [
+                { text: 'un', clase: 'determinante' },
+                { text: 'libro', clase: 'sustantivo' },
+              ],
+            },
+            {
+              id: 'i',
+              role: 'ci',
+              words: [
+                { text: 'a', clase: 'preposicion' },
+                { text: 'su', clase: 'determinante' },
+                { text: 'hermano', clase: 'sustantivo' },
+              ],
+            },
+          ],
+        },
+      ],
+      reveal: ['s', 'v', 'c', 'i'],
+      caption: 'Lo que se da es el [cd]. A quién llega, el [ci].',
+      arrow: [
+        { from: 'v', to: 'c', label: '¿qué?' },
+        { from: 'v', to: 'i', label: '¿a quién?' },
+      ],
+    },
+    { kind: 'exploreSustituir', item: SUSTITUIR.ci },
+  ],
+}
+
+// Cap 6 — el atributo. El verbo-puente + swap de cópulas + el pliegue en «lo».
+const LESSON6: Lesson = {
+  id: 'cap6',
+  title: 'El atributo',
+  beats: [
+    {
+      kind: 'intro',
+      title: 'El atributo',
+      body: 'Con *ser*, *estar* o *parecer* el verbo no es acción: es un *puente*. ¿Qué hay al otro lado?',
+      cta: 'Empezar',
+    },
+    {
+      kind: 'show',
+      groups: [
+        {
+          id: 's',
+          role: 'sujeto',
+          words: [
+            { text: 'El', clase: 'determinante' },
+            { text: 'cielo', clase: 'sustantivo' },
+          ],
+        },
+        {
+          id: 'pred',
+          role: 'predicado',
+          children: [
+            { id: 'v', role: 'verbo', words: [{ text: 'es', clase: 'verbo' }] },
+            { id: 'a', role: 'atributo', words: [{ text: 'azul', clase: 'adjetivo' }] },
+          ],
+        },
+      ],
+      reveal: ['s', 'v', 'a'],
+      caption: '«azul» es el [atributo]: dice *cómo es* el sujeto.',
+      arrow: { from: 's', to: 'a', label: '¿cómo es?' },
+    },
+    { kind: 'exploreSwap', item: SWAP[1] },
+    { kind: 'exploreSustituir', item: SUSTITUIR.atributo },
+  ],
+}
+
+// Cap 7 — el CC. Una flecha de muestra y, sobre todo, el panel de encender,
+// apagar y mover circunstancias.
+const LESSON7: Lesson = {
+  id: 'cap7',
+  title: 'El complemento circunstancial',
+  beats: [
+    {
+      kind: 'intro',
+      title: 'El complemento circunstancial',
+      body: 'Cuándo, dónde, cómo, por qué… las *circunstancias* que rodean a la acción.',
+      cta: 'Empezar',
+    },
+    {
+      kind: 'show',
+      groups: [
+        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
+        {
+          id: 'pred',
+          role: 'predicado',
+          children: [
+            { id: 'v', role: 'verbo', words: [{ text: 'cantó', clase: 'verbo' }] },
+            {
+              id: 'l',
+              role: 'cc',
+              words: [
+                { text: 'en', clase: 'preposicion' },
+                { text: 'el', clase: 'determinante' },
+                { text: 'teatro', clase: 'sustantivo' },
+              ],
+            },
+          ],
+        },
+      ],
+      reveal: ['s', 'v', 'l'],
+      caption: '«en el teatro» es un [cc]: dice *dónde*.',
+      arrow: { from: 'v', to: 'l', label: '¿dónde?' },
+    },
+    { kind: 'exploreCircunstancias', item: CIRCUNSTANCIAS[0] },
+  ],
+}
+
+// Cap 8 — subordinación. La escena de apertura + la caja que se abre (zoom).
 const LESSON4: Lesson = {
   id: 'cap4',
   title: 'Una oración dentro de otra',
@@ -210,384 +388,12 @@ const LESSON4: Lesson = {
         },
       ],
     },
-    // Práctica 1: reconocer que el CD es una oración entera.
-    {
-      kind: 'tap',
-      groups: [
-        { id: 's', role: 'sujeto', words: [{ text: 'María', clase: 'sustantivo' }] },
-        { id: 'v', role: 'verbo', words: [{ text: 'cree', clase: 'verbo' }] },
-        {
-          id: 'sub',
-          role: 'cd',
-          words: [
-            { text: 'que', clase: 'conjuncion' },
-            { text: 'los', clase: 'determinante' },
-            { text: 'pájaros', clase: 'sustantivo' },
-            { text: 'cantan', clase: 'verbo' },
-          ],
-        },
-      ],
-      target: 'sub',
-      prompt: '¿Qué cree María? Toca el [cd].',
-      teach: 'Eso: lo que cree es *una oración entera*, con «que» delante.',
-    },
-    // Práctica 2: la subordinada tiene su propio verbo (dos verbos a la vista).
-    {
-      kind: 'tap',
-      groups: [
-        { id: 's', role: 'none', words: [{ text: 'María', clase: 'sustantivo' }] },
-        { id: 'v1', role: 'verbo', words: [{ text: 'cree', clase: 'verbo' }] },
-        { id: 'que', role: 'none', words: [{ text: 'que', clase: 'conjuncion' }] },
-        {
-          id: 's2',
-          role: 'none',
-          words: [
-            { text: 'los', clase: 'determinante' },
-            { text: 'pájaros', clase: 'sustantivo' },
-          ],
-        },
-        { id: 'v2', role: 'verbo', words: [{ text: 'cantan', clase: 'verbo' }] },
-      ],
-      target: 'v2',
-      prompt: 'Hay *dos* verbos. Toca el de la oración *subordinada*.',
-      teach: 'Sí: «cantan» es el verbo que vive *dentro* del CD.',
-    },
+    { kind: 'exploreZoom', item: ZOOM[0] },
   ],
 }
 
-// Cap 5: el complemento indirecto. Dos flechas contrastadas (verbo->CD "¿qué?"
-// y verbo->CI "¿a quién?") hacen el trabajo que haría un párrafo. La regla
-// le/les va al final como prueba (distingue del CD = lo/la).
-const LESSON5: Lesson = {
-  id: 'cap5',
-  title: 'El complemento indirecto',
-  beats: [
-    {
-      kind: 'intro',
-      title: 'El complemento indirecto',
-      body: 'La acción produce algo… y va a parar a *alguien*. ¿A quién?',
-      cta: 'Empezar',
-    },
-    {
-      kind: 'show',
-      groups: [
-        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
-        {
-          id: 'pred',
-          role: 'predicado',
-          children: [
-            { id: 'v', role: 'verbo', words: [{ text: 'dio', clase: 'verbo' }] },
-            {
-              id: 'c',
-              role: 'cd',
-              words: [
-                { text: 'un', clase: 'determinante' },
-                { text: 'libro', clase: 'sustantivo' },
-              ],
-            },
-            {
-              id: 'i',
-              role: 'ci',
-              words: [
-                { text: 'a', clase: 'preposicion' },
-                { text: 'su', clase: 'determinante' },
-                { text: 'hermano', clase: 'sustantivo' },
-              ],
-            },
-          ],
-        },
-      ],
-      reveal: ['s', 'v', 'c', 'i'],
-      caption: 'Lo que se da es el [cd]. A quién llega, el [ci].',
-      arrow: [
-        { from: 'v', to: 'c', label: '¿qué?' },
-        { from: 'v', to: 'i', label: '¿a quién?' },
-      ],
-    },
-    {
-      kind: 'tap',
-      groups: [
-        {
-          id: 's',
-          role: 'sujeto',
-          words: [
-            { text: 'El', clase: 'determinante' },
-            { text: 'cartero', clase: 'sustantivo' },
-          ],
-        },
-        { id: 'v', role: 'verbo', words: [{ text: 'entregó', clase: 'verbo' }] },
-        {
-          id: 'c',
-          role: 'cd',
-          words: [
-            { text: 'una', clase: 'determinante' },
-            { text: 'carta', clase: 'sustantivo' },
-          ],
-        },
-        {
-          id: 'i',
-          role: 'ci',
-          words: [
-            { text: 'a', clase: 'preposicion' },
-            { text: 'la', clase: 'determinante' },
-            { text: 'vecina', clase: 'sustantivo' },
-          ],
-        },
-      ],
-      target: 'i',
-      prompt: 'Toca el [ci].',
-      teach: 'Sí: «a la vecina» es a *quién* llega la carta.',
-    },
-    {
-      kind: 'tap',
-      groups: [
-        {
-          id: 's',
-          role: 'sujeto',
-          words: [
-            { text: 'El', clase: 'determinante' },
-            { text: 'cartero', clase: 'sustantivo' },
-          ],
-        },
-        { id: 'v', role: 'verbo', words: [{ text: 'entregó', clase: 'verbo' }] },
-        {
-          id: 'c',
-          role: 'cd',
-          words: [
-            { text: 'una', clase: 'determinante' },
-            { text: 'carta', clase: 'sustantivo' },
-          ],
-        },
-        {
-          id: 'i',
-          role: 'ci',
-          words: [
-            { text: 'a', clase: 'preposicion' },
-            { text: 'la', clase: 'determinante' },
-            { text: 'vecina', clase: 'sustantivo' },
-          ],
-        },
-      ],
-      target: 'c',
-      prompt: 'En la misma frase: toca el [cd].',
-      teach: 'Eso es: *qué* entregó.',
-    },
-    {
-      kind: 'show',
-      groups: [
-        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
-        {
-          id: 'pred',
-          role: 'predicado',
-          children: [
-            { id: 'i', role: 'ci', words: [{ text: 'le', clase: 'pronombre' }] },
-            { id: 'v', role: 'verbo', words: [{ text: 'dio', clase: 'verbo' }] },
-            {
-              id: 'c',
-              role: 'cd',
-              words: [
-                { text: 'un', clase: 'determinante' },
-                { text: 'libro', clase: 'sustantivo' },
-              ],
-            },
-          ],
-        },
-      ],
-      reveal: ['s', 'v', 'c', 'i'],
-      caption: 'Prueba: el [ci] se cambia por *le* / *les*.',
-    },
-  ],
-}
-
-// Cap 6: el atributo. Con ser/estar/parecer el verbo es un PUENTE; el atributo
-// describe al sujeto. Por eso la flecha va sujeto->atributo "¿cómo es?" (no
-// verbo->X como en CD/CI). Regla: se sustituye por "lo".
-const LESSON6: Lesson = {
-  id: 'cap6',
-  title: 'El atributo',
-  beats: [
-    {
-      kind: 'intro',
-      title: 'El atributo',
-      body: 'Con *ser*, *estar* o *parecer* el verbo no es acción: es un *puente*. ¿Qué hay al otro lado?',
-      cta: 'Empezar',
-    },
-    {
-      kind: 'show',
-      groups: [
-        {
-          id: 's',
-          role: 'sujeto',
-          words: [
-            { text: 'El', clase: 'determinante' },
-            { text: 'cielo', clase: 'sustantivo' },
-          ],
-        },
-        {
-          id: 'pred',
-          role: 'predicado',
-          children: [
-            { id: 'v', role: 'verbo', words: [{ text: 'es', clase: 'verbo' }] },
-            { id: 'a', role: 'atributo', words: [{ text: 'azul', clase: 'adjetivo' }] },
-          ],
-        },
-      ],
-      reveal: ['s', 'v', 'a'],
-      caption: '«azul» es el [atributo]: dice *cómo es* el sujeto.',
-      arrow: { from: 's', to: 'a', label: '¿cómo es?' },
-    },
-    {
-      kind: 'tap',
-      groups: [
-        {
-          id: 's',
-          role: 'sujeto',
-          words: [
-            { text: 'La', clase: 'determinante' },
-            { text: 'sopa', clase: 'sustantivo' },
-          ],
-        },
-        { id: 'v', role: 'verbo', words: [{ text: 'está', clase: 'verbo' }] },
-        { id: 'a', role: 'atributo', words: [{ text: 'caliente', clase: 'adjetivo' }] },
-      ],
-      target: 'a',
-      prompt: 'Toca el [atributo].',
-      teach: 'Sí: «caliente» dice *cómo está* la sopa.',
-    },
-    {
-      kind: 'show',
-      groups: [
-        {
-          id: 's',
-          role: 'sujeto',
-          words: [
-            { text: 'El', clase: 'determinante' },
-            { text: 'cielo', clase: 'sustantivo' },
-          ],
-        },
-        {
-          id: 'pred',
-          role: 'predicado',
-          children: [
-            { id: 'a', role: 'atributo', words: [{ text: 'lo', clase: 'pronombre' }] },
-            { id: 'v', role: 'verbo', words: [{ text: 'es', clase: 'verbo' }] },
-          ],
-        },
-      ],
-      reveal: ['s', 'v', 'a'],
-      caption: 'Prueba: el [atributo] se cambia por *lo*. El cielo *lo* es.',
-    },
-    // Contraste con el CD: si el verbo es de ACCIÓN, no hay atributo.
-    {
-      kind: 'tap',
-      groups: [
-        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
-        { id: 'v', role: 'verbo', words: [{ text: 'come', clase: 'verbo' }] },
-        { id: 'c', role: 'cd', words: [{ text: 'sopa', clase: 'sustantivo' }] },
-      ],
-      target: 'c',
-      prompt: 'Ojo: «come» es *acción*, no puente. Toca el [cd].',
-      teach: 'Eso: con un verbo de acción lo que la recibe es CD, no atributo.',
-    },
-  ],
-}
-
-// Cap 7: el complemento circunstancial. No tiene pronombre fijo; lo que lo
-// define es la VARIEDAD de circunstancias (cuándo/dónde/cómo). Periférico, no
-// "opcional": mismo peso visual. Puede haber varios -> dos flechas.
-const LESSON7: Lesson = {
-  id: 'cap7',
-  title: 'El complemento circunstancial',
-  beats: [
-    {
-      kind: 'intro',
-      title: 'El complemento circunstancial',
-      body: 'Cuándo, dónde, cómo, por qué… las *circunstancias* que rodean a la acción.',
-      cta: 'Empezar',
-    },
-    {
-      kind: 'show',
-      groups: [
-        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
-        {
-          id: 'pred',
-          role: 'predicado',
-          children: [
-            { id: 'v', role: 'verbo', words: [{ text: 'cantó', clase: 'verbo' }] },
-            {
-              id: 'l',
-              role: 'cc',
-              words: [
-                { text: 'en', clase: 'preposicion' },
-                { text: 'el', clase: 'determinante' },
-                { text: 'teatro', clase: 'sustantivo' },
-              ],
-            },
-          ],
-        },
-      ],
-      reveal: ['s', 'v', 'l'],
-      caption: '«en el teatro» es un [cc]: dice *dónde*.',
-      arrow: { from: 'v', to: 'l', label: '¿dónde?' },
-    },
-    {
-      kind: 'show',
-      groups: [
-        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
-        {
-          id: 'pred',
-          role: 'predicado',
-          children: [
-            { id: 'v', role: 'verbo', words: [{ text: 'cantó', clase: 'verbo' }] },
-            { id: 't', role: 'cc', words: [{ text: 'ayer', clase: 'adverbio' }] },
-            {
-              id: 'l',
-              role: 'cc',
-              words: [
-                { text: 'en', clase: 'preposicion' },
-                { text: 'el', clase: 'determinante' },
-                { text: 'teatro', clase: 'sustantivo' },
-              ],
-            },
-          ],
-        },
-      ],
-      reveal: ['s', 'v', 't', 'l'],
-      caption: 'Puede haber *varios*: cada uno, una circunstancia.',
-      arrow: [
-        { from: 'v', to: 't', label: '¿cuándo?' },
-        { from: 'v', to: 'l', label: '¿dónde?' },
-      ],
-    },
-    {
-      kind: 'tap',
-      groups: [
-        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
-        { id: 'v', role: 'verbo', words: [{ text: 'compró', clase: 'verbo' }] },
-        { id: 'c', role: 'cd', words: [{ text: 'pan', clase: 'sustantivo' }] },
-        { id: 'cc', role: 'cc', words: [{ text: 'ayer', clase: 'adverbio' }] },
-      ],
-      target: 'cc',
-      prompt: 'Toca el [cc].',
-      teach: 'Eso: «ayer» dice *cuándo*.',
-    },
-    {
-      kind: 'tap',
-      groups: [
-        { id: 's', role: 'sujeto', words: [{ text: 'Ana', clase: 'sustantivo' }] },
-        { id: 'v', role: 'verbo', words: [{ text: 'compró', clase: 'verbo' }] },
-        { id: 'c', role: 'cd', words: [{ text: 'pan', clase: 'sustantivo' }] },
-        { id: 'cc', role: 'cc', words: [{ text: 'ayer', clase: 'adverbio' }] },
-      ],
-      target: 'c',
-      prompt: 'En la misma frase: toca el [cd].',
-      teach: 'Eso: *qué* compró.',
-    },
-  ],
-}
-
-// Capítulo final: aplicar TODO a frases completas. El alumno analiza; la app
-// solo guía el orden (sujeto -> verbo -> complementos), como sobre papel.
+// Cap 9 — cierre: el análisis completo, guiado y acumulativo. El único sitio
+// del camino donde se pide "hacerlo tú"; todo lo demás es jugar.
 const LESSON8: Lesson = {
   id: 'cap8',
   title: 'El análisis completo',
@@ -595,8 +401,8 @@ const LESSON8: Lesson = {
     {
       kind: 'intro',
       title: 'El análisis completo',
-      body: 'Ya tienes todas las piezas. Ahora el análisis lo haces *tú*: frases enteras, de principio a fin.',
-      cta: 'Empezar',
+      body: 'Ya has jugado con todas las piezas. Para cerrar, monta *tú* el análisis de unas frases enteras.',
+      cta: 'Vamos',
     },
     { kind: 'challengeAnaliza', items: ANALIZA },
   ],
@@ -609,10 +415,10 @@ export const CHAPTERS: Chapter[] = [
   { id: 'cap0', num: 1, title: 'Las clases de palabras', subtitle: 'Sustantivo, verbo, adjetivo, adverbio', lesson: LESSON0 },
   { id: 'cap1', num: 2, title: 'Las dos mitades', subtitle: 'Sujeto y predicado', lesson: LESSON1 },
   { id: 'cap2', num: 3, title: 'El verbo y la concordancia', subtitle: 'El motor del predicado; el sujeto manda', lesson: LESSON2 },
-  { id: 'cap3', num: 4, title: 'El complemento directo', subtitle: 'Reconócelo con el pronombre', lesson: LESSON3 },
+  { id: 'cap3', num: 4, title: 'El complemento directo', subtitle: 'La prueba del pronombre: lo / la', lesson: LESSON3 },
   { id: 'cap5', num: 5, title: 'El complemento indirecto', subtitle: 'A quién llega la acción: le / les', lesson: LESSON5 },
   { id: 'cap6', num: 6, title: 'El atributo', subtitle: 'Ser, estar, parecer: cómo es el sujeto', lesson: LESSON6 },
   { id: 'cap7', num: 7, title: 'El complemento circunstancial', subtitle: 'Cuándo, dónde, cómo: las circunstancias', lesson: LESSON7 },
   { id: 'cap4', num: 8, title: 'Una oración dentro de otra', subtitle: 'La subordinación: cajas dentro de cajas', lesson: LESSON4 },
-  { id: 'cap8', num: 9, title: 'El análisis completo', subtitle: 'Frases enteras: tú analizas', lesson: LESSON8 },
+  { id: 'cap8', num: 9, title: 'El análisis completo', subtitle: 'Frases enteras: tú montas el análisis', lesson: LESSON8 },
 ]

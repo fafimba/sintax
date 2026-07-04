@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { CrecimientoItem } from '../types'
+import { Explora } from '../components/Explora'
 import { fn, elem } from '../theme'
 
 // Explorable libre: añade/quita palabras a cada mitad y mira crecer o encoger
@@ -10,14 +11,20 @@ export function CrecimientoStage({ item }: { item: CrecimientoItem }) {
   const { sujeto, predicado } = item
   const [sCount, setSCount] = useState(0)
   const [pCount, setPCount] = useState(0)
+  const [touched, setTouched] = useState(false)
 
   const sWords = [sujeto.base, ...sujeto.adjuncts.slice(0, sCount)]
   const pWords = [predicado.base, ...predicado.adjuncts.slice(0, pCount)]
 
   return (
-    <div className="creci">
-      <p className="prompt tap-prompt">Añade o quita palabras a cada mitad.</p>
-
+    <Explora
+      title="Añade o quita palabras a cada mitad."
+      note={
+        touched
+          ? 'Crezca lo que crezca, cada palabra cae en su mitad y el rótulo no cambia: la función *no depende del tamaño*.'
+          : null
+      }
+    >
       <div className="creci-sentence">
         <Half
           words={sWords}
@@ -42,21 +49,31 @@ export function CrecimientoStage({ item }: { item: CrecimientoItem }) {
           label="Sujeto"
           count={sCount}
           max={sujeto.adjuncts.length}
-          onLess={() => setSCount((c) => Math.max(0, c - 1))}
-          onMore={() => setSCount((c) => Math.min(sujeto.adjuncts.length, c + 1))}
+          onLess={() => {
+            setSCount((c) => Math.max(0, c - 1))
+            setTouched(true)
+          }}
+          onMore={() => {
+            setSCount((c) => Math.min(sujeto.adjuncts.length, c + 1))
+            setTouched(true)
+          }}
         />
         <Stepper
           color={elem.predicado.border}
           label="Predicado"
           count={pCount}
           max={predicado.adjuncts.length}
-          onLess={() => setPCount((c) => Math.max(0, c - 1))}
-          onMore={() => setPCount((c) => Math.min(predicado.adjuncts.length, c + 1))}
+          onLess={() => {
+            setPCount((c) => Math.max(0, c - 1))
+            setTouched(true)
+          }}
+          onMore={() => {
+            setPCount((c) => Math.min(predicado.adjuncts.length, c + 1))
+            setTouched(true)
+          }}
         />
       </div>
-
-      <p className="creci-note">Cambia el tamaño, no la función.</p>
-    </div>
+    </Explora>
   )
 }
 

@@ -1,5 +1,14 @@
 :root {
   color-scheme: light;
+  /* Tokens del sistema: tinta sobre papel, un solo acento verde. */
+  --bg: #f3f2ec;
+  --card: #ffffff;
+  --ink: #26251f;
+  --ink-soft: #5f5e56;
+  --ink-faint: #98968a;
+  --line: rgba(38, 37, 31, 0.08);
+  --panel: #f7f6f1;
+  --accent: #639922;
 }
 
 * {
@@ -15,8 +24,9 @@ body,
 
 body {
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #f4f2ec;
-  color: #2c2c2a;
+  background: radial-gradient(120% 90% at 50% -20%, #faf9f5 0%, var(--bg) 62%);
+  color: var(--ink);
+  letter-spacing: -0.006em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -32,12 +42,14 @@ body {
 .screen {
   width: 100%;
   max-width: 460px;
-  min-height: 540px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 28px;
+  min-height: 560px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 32px;
   padding: 22px 22px 26px;
-  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.07);
+  box-shadow:
+    0 1px 2px rgba(28, 27, 21, 0.04),
+    0 24px 60px -18px rgba(28, 27, 21, 0.16);
   display: flex;
   flex-direction: column;
 }
@@ -51,7 +63,7 @@ body {
 
 .progress {
   flex: 1;
-  height: 8px;
+  height: 6px;
   background: #eceae2;
   border-radius: 999px;
   overflow: hidden;
@@ -166,33 +178,6 @@ body {
   margin-top: 2px;
 }
 
-.tray {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 64px;
-}
-
-.pronoun {
-  font-size: 20px;
-  padding: 10px 20px;
-  border-radius: 12px;
-  background: #2c2c2a;
-  color: #f4f2ec;
-  border: none;
-  cursor: grab;
-  font-family: inherit;
-  font-weight: 500;
-  touch-action: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
-}
-
-.tray-hint {
-  font-size: 14px;
-  color: #3b6d11;
-  font-weight: 500;
-}
-
 .feedback {
   min-height: 76px;
   display: flex;
@@ -226,17 +211,28 @@ body {
   font-family: inherit;
   font-size: 16px;
   font-weight: 500;
-  padding: 12px 30px;
-  border-radius: 14px;
+  letter-spacing: -0.006em;
+  padding: 13px 32px;
+  border-radius: 999px;
   border: none;
-  background: #173404;
-  color: #eaf3de;
+  background: #23221c;
+  color: #f6f5ef;
   cursor: pointer;
-  transition: transform 0.1s ease;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.12s ease;
+}
+
+.btn:hover {
+  background: #33322a;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px -8px rgba(28, 27, 21, 0.4);
 }
 
 .btn:active {
   transform: scale(0.97);
+  box-shadow: none;
 }
 
 .done-screen {
@@ -260,9 +256,10 @@ body {
 }
 
 .done-screen h1 {
-  font-size: 24px;
+  font-size: 26px;
   margin: 0;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.022em;
 }
 
 .done-screen p {
@@ -283,12 +280,17 @@ body {
   font-family: inherit;
   font-size: 15px;
   font-weight: 500;
-  padding: 11px 22px;
-  border-radius: 14px;
+  padding: 12px 24px;
+  border-radius: 999px;
   border: 1px solid rgba(0, 0, 0, 0.12);
   background: #ffffff;
-  color: #5f5e5a;
+  color: var(--ink-soft);
   cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.btn-ghost:hover {
+  background: var(--panel);
 }
 
 /* --- Barra superior con botón de volver --- */
@@ -309,91 +311,6 @@ body {
 
 .back:hover {
   background: #f7f6f1;
-}
-
-/* --- Menú de mecánicas --- */
-.home {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding: 4px 2px;
-}
-
-.home-head h1 {
-  font-size: 26px;
-  margin: 0;
-  font-weight: 600;
-}
-
-.home-head p {
-  font-size: 15px;
-  color: #888780;
-  margin: 6px 0 0;
-  line-height: 1.5;
-}
-
-.home-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.home-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  text-align: left;
-  padding: 14px 16px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 16px;
-  background: #ffffff;
-  cursor: pointer;
-  font-family: inherit;
-  width: 100%;
-}
-
-.home-card-soon {
-  opacity: 0.5;
-  cursor: default;
-}
-
-.home-dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 5px;
-  flex-shrink: 0;
-}
-
-.home-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  flex: 1;
-}
-
-.home-name {
-  font-size: 16px;
-  font-weight: 500;
-  color: #2c2c2a;
-}
-
-.home-teaches {
-  font-size: 13px;
-  color: #888780;
-}
-
-.home-tag {
-  font-size: 11px;
-  font-weight: 500;
-  color: #5f5e5a;
-  background: #f1efe8;
-  padding: 4px 10px;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-
-.home-tag-soon {
-  color: #a8a69c;
 }
 
 /* --- Mecánica: borra hasta el núcleo --- */
@@ -492,31 +409,6 @@ body {
   flex-shrink: 0;
 }
 
-/* --- Secciones del menú --- */
-.home-section {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.home-section-head {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  padding-left: 2px;
-}
-
-.home-section-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: #5f5e5a;
-}
-
-.home-section-sub {
-  font-size: 12px;
-  color: #a8a69c;
-}
-
 /* --- Explorables: palabras que mutan --- */
 .word {
   font-size: 21px;
@@ -543,8 +435,11 @@ body {
 }
 
 .knob-label {
-  font-size: 12px;
-  color: #a8a69c;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
 }
 
 .knob-value {
@@ -557,16 +452,16 @@ body {
   display: flex;
   gap: 6px;
   padding: 5px;
-  border-radius: 12px;
-  background: #f1efe8;
-  border: none;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--line);
   cursor: pointer;
 }
 
 .num-dot {
   min-width: 44px;
   padding: 7px 12px;
-  border-radius: 9px;
+  border-radius: 999px;
   font-size: 15px;
   color: #a8a69c;
   letter-spacing: 2px;
@@ -583,8 +478,9 @@ body {
 .seg {
   display: inline-flex;
   padding: 4px;
-  background: #f1efe8;
-  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
   gap: 2px;
 }
 
@@ -593,17 +489,18 @@ body {
   border: none;
   background: transparent;
   padding: 9px 20px;
-  border-radius: 9px;
+  border-radius: 999px;
   cursor: pointer;
   font-family: inherit;
   font-size: 15px;
   font-weight: 500;
+  letter-spacing: -0.006em;
 }
 
 .seg-thumb {
   position: absolute;
   inset: 0;
-  border-radius: 9px;
+  border-radius: 999px;
   z-index: 0;
 }
 
@@ -620,34 +517,207 @@ body {
   gap: 5px;
 }
 
-/* --- Nota (microformalización) y navegación de explorables --- */
+/* --- Marco común de los explorables: distintivo + consigna + juego + nota --- */
+.explora-frame {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.explora-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 6px 0;
+}
+
+.explora-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  background: var(--panel);
+  padding: 6px 13px;
+  border-radius: 999px;
+}
+
+.explora-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--accent);
+  display: inline-block;
+}
+
+.explora-title {
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--ink);
+  max-width: 360px;
+  margin: 0;
+}
+
+.explora-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* La nota: la observación que aparece cuando juegas. Panel suave, no alerta. */
 .nota-slot {
-  min-height: 76px;
+  min-height: 92px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 6px;
-  margin-top: 8px;
+  padding: 0 4px;
+  margin-top: 10px;
 }
 
 .nota {
   font-size: 14px;
-  line-height: 1.55;
-  color: #5f5e5a;
+  line-height: 1.6;
+  color: var(--ink-soft);
   text-align: center;
-  max-width: 366px;
+  max-width: 380px;
   margin: 0;
+  background: var(--panel);
+  border-radius: 16px;
+  padding: 12px 18px;
 }
 
 .nota b {
-  color: #2c2c2a;
-  font-weight: 500;
+  color: var(--ink);
+  font-weight: 600;
 }
 
-.explora-nav {
+/* --- Explorable "clases": toca cada palabra --- */
+.clases-row {
   display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
   justify-content: center;
-  padding-top: 4px;
+}
+
+.clases-word {
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.006em;
+  background: none;
+  border: none;
+  padding: 9px 11px;
+  border-radius: 13px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.clases-word:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.clases-progress {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.clases-tick {
+  width: 16px;
+  height: 5px;
+  border-radius: 999px;
+}
+
+/* --- Explorable "circunstancias": enciende, apaga, mueve --- */
+.circ-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+  min-height: 96px;
+}
+
+.circ-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.circ-chip {
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.006em;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px 8px 8px;
+  border-radius: 999px;
+  border: 1.5px solid;
+  cursor: pointer;
+}
+
+.circ-chip-q {
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(38, 37, 31, 0.06);
+  padding: 4px 9px;
+  border-radius: 999px;
+}
+
+.circ-move {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #534ab7;
+  background: #eeecfa;
+  border: none;
+  padding: 9px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.circ-move:hover {
+  background: #e4e1f7;
+}
+
+/* --- Explorable "zoom": la subordinada que se abre --- */
+.zoom-target {
+  position: relative;
+  cursor: pointer;
+  border-radius: 14px;
+}
+
+.zoom-target.zoom-closed:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.zoom-hint {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 /* --- Camino guiado (lección) --- */
@@ -669,8 +739,9 @@ body {
 }
 
 .lesson-intro h1 {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.022em;
   margin: 0;
 }
 
@@ -784,10 +855,6 @@ body {
   flex-direction: column;
 }
 
-.split-box {
-  font-size: 21px;
-}
-
 /* Formas por tipo de elemento (asociación rápida, además del color). */
 /* Verbo / lado del predicado: caja con el lado derecho en pico ("play" = acción). */
 .shape-verb {
@@ -831,13 +898,6 @@ body {
   clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
   padding-left: 18px;
   padding-right: 18px;
-  border: none;
-}
-
-/* Verbo copulativo (ser/estar/parecer): sin el pico de acción. Caja redondeada
-   = puente/enlace, no motor. El significado lo lleva el arco sujeto->atributo. */
-.shape-copula {
-  border-radius: 13px;
   border: none;
 }
 
@@ -936,12 +996,19 @@ body {
   width: 44px;
   height: 44px;
   border-radius: 999px;
-  border: 1.5px solid #d3d1c7;
+  border: 1.5px solid #d9d7cd;
   background: #ffffff;
   font-size: 26px;
   line-height: 1;
-  color: #5f5e5a;
+  color: var(--ink-soft);
   cursor: pointer;
+  transition:
+    background-color 0.12s ease,
+    transform 0.12s ease;
+}
+
+.nudge-btn:not(:disabled):active {
+  transform: scale(0.94);
 }
 .nudge-btn:hover {
   background: #f6f5f0;
@@ -1001,13 +1068,6 @@ body {
   opacity: 0.4;
   cursor: default;
 }
-.creci-note {
-  text-align: center;
-  color: #84827a;
-  font-size: 13px;
-  margin-top: 12px;
-}
-
 /* Explorable "swap": cambia la palabra, no la función. */
 .swap-sentence {
   display: flex;
@@ -1139,49 +1199,6 @@ body {
   background: rgba(0, 0, 0, 0.02);
 }
 
-/* Palabras dentro de un corchete-constituyente (hoja de cláusula). */
-.bracket-words {
-  font-size: 21px;
-  color: #2c2c2a;
-  padding: 7px 4px;
-  white-space: nowrap;
-}
-
-/* Leyenda-esqueleto: mismas llaves que la frase, abstracta. */
-.legend.skel {
-  align-items: flex-start;
-  gap: 18px;
-}
-
-.skel-zone {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-}
-
-.skel-kids {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 6px;
-  padding: 0 6px;
-}
-
-.skel-bracket {
-  align-self: stretch;
-  height: 6px;
-  border: 1.5px solid var(--pred-border);
-  border-top: none;
-  border-radius: 0 0 5px 5px;
-}
-
-.skel-label {
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 12px;
-}
-
 /* --- Mapa del camino --- */
 .map {
   display: flex;
@@ -1192,8 +1209,9 @@ body {
 }
 
 .map-head h1 {
-  font-size: 26px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.022em;
   margin: 0;
 }
 
@@ -1335,27 +1353,6 @@ body {
   font-size: 14px;
   cursor: pointer;
   padding: 8px;
-}
-
-.lplain {
-  font-size: 21px;
-  color: #2c2c2a;
-  padding: 7px 4px;
-}
-
-.lgroup {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-}
-
-.lbox {
-  font-size: 21px;
-}
-
-.tappable {
-  cursor: pointer;
 }
 
 /* Accesibilidad: "Reducir movimiento" del sistema. Framer Motion ya desactiva

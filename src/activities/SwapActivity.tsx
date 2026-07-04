@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import type { SwapItem, SwapSlot, LessonRole } from '../types'
 import { ROLE_STYLE } from '../components/GroupBox'
 import { MorphText } from '../components/MorphText'
+import { Explora } from '../components/Explora'
 import { SwapIcon } from '../components/icons'
 
 type Colored = Exclude<LessonRole, 'none'>
@@ -22,19 +23,27 @@ const SHAPE: Record<Colored, string> = {
 // palabra, no la estructura. La mutación se anima con MorphText.
 export function SwapStage({ item }: { item: SwapItem }) {
   const [idxs, setIdxs] = useState<number[]>(() => item.slots.map(() => 0))
-  const cycle = (i: number) =>
+  const [touched, setTouched] = useState(false)
+  const cycle = (i: number) => {
     setIdxs((prev) => prev.map((v, j) => (j === i ? (v + 1) % item.slots[i].alts.length : v)))
+    setTouched(true)
+  }
 
   return (
-    <div className="swap">
-      <p className="prompt tap-prompt">Cambia las palabras. ¿Cambia la estructura?</p>
+    <Explora
+      title="Cambia las palabras. ¿Cambia la estructura?"
+      note={
+        touched
+          ? 'Cambia la *palabra*, no la función: la estructura es el molde y las palabras son intercambiables.'
+          : null
+      }
+    >
       <div className="swap-sentence">
         {item.slots.map((slot, i) => (
           <SwapChip key={i} slot={slot} text={slot.alts[idxs[i]]} onCycle={() => cycle(i)} />
         ))}
       </div>
-      <p className="creci-note">Cambia la palabra, no la función.</p>
-    </div>
+    </Explora>
   )
 }
 

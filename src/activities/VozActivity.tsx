@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import type { VozItem } from '../types'
 import { SegToggle } from '../components/SegToggle'
 import { MorphText } from '../components/MorphText'
+import { Explora } from '../components/Explora'
 import { fn, elem } from '../theme'
 
 type Voz = 'activa' | 'pasiva'
@@ -43,15 +44,14 @@ export function VozStage({ item }: { item: VozItem }) {
   const order = voz === 'activa' ? ['agt', 'vrb', 'obj'] : ['obj', 'vrb', 'agt']
 
   return (
-    <motion.div
-      className="stage explora"
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
+    <Explora
+      title={`Gira la voz y no pierdas de vista a «${item.cd}».`}
+      note={
+        seen
+          ? `«${item.cd}» dice lo mismo, pero cambia de papel: era *complemento directo* y ahora es *sujeto*. La función es un papel que se reparte, no una etiqueta pegada a la palabra.`
+          : null
+      }
     >
-      <p className="prompt">Gira la voz y mira a «{item.cd}».</p>
-      <p className="subprompt">Las mismas palabras; cambia quién hace de sujeto.</p>
-
       <div className="sentence-area">
         <motion.div className="sentence" layout>
           {order.map((id, i) => {
@@ -102,15 +102,6 @@ export function VozStage({ item }: { item: VozItem }) {
           accent="#534AB7"
         />
       </div>
-
-      <div className="nota-slot">
-        {seen && (
-          <motion.p className="nota" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
-            «{item.cd}» dice lo mismo, pero cambia de papel: era <b>complemento directo</b> y ahora es{' '}
-            <b>sujeto</b>. La función es un papel que se reparte, no una etiqueta pegada a la palabra.
-          </motion.p>
-        )}
-      </div>
-    </motion.div>
+    </Explora>
   )
 }

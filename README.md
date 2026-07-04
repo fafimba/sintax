@@ -4,17 +4,17 @@ App educativa estilo [Brilliant](https://brilliant.org) para aprender **sintaxis
 
 ## El camino
 
-Nueve capítulos, de lo simple a lo compuesto. Cada concepto se presenta con una escena animada, se manipula en un explorable y se fija con retos, antes de que aparezca el siguiente:
+Nueve capítulos, de lo simple a lo compuesto. La filosofía es **explicar visualmente y dejar jugar**: cada concepto se presenta con una escena animada y se manipula en explorables reversibles, sin fallo posible (interruptores, chips, steppers, cajas que se abren). No hay exámenes por el camino; el único capítulo donde "lo haces tú" es el cierre:
 
-1. **Las clases de palabras** — las piezas, coloreadas por clase.
-2. **Las dos mitades** — sujeto y predicado; el corte (slider de frontera).
-3. **El verbo y la concordancia** — el motor; el núcleo del sujeto; quién manda sobre quién.
-4. **El complemento directo** — la prueba del pronombre (arrastrar `lo`/`la`).
-5. **El complemento indirecto** — ¿a quién?; `le`/`les`.
-6. **El atributo** — ser/estar/parecer como puente; contraste con el CD.
-7. **El complemento circunstancial** — cuándo, dónde, cómo; puede haber varios.
-8. **Una oración dentro de otra** — la subordinación: cajas dentro de cajas.
-9. **El análisis completo** — capstone: frases enteras que el alumno analiza pieza a pieza.
+1. **Las clases de palabras** — toca cada palabra y descubre su clase (color).
+2. **Las dos mitades** — crecimiento: añade/quita palabras y cada una cae en su mitad; coloca el corte.
+3. **El verbo y la concordancia** — laboratorio de número; borra hasta el núcleo; encuentra el sujeto experimentando.
+4. **El complemento directo** — el interruptor `un libro ↔ lo`; swap de palabras; giro de voz.
+5. **El complemento indirecto** — el interruptor `a su hermano ↔ le`.
+6. **El atributo** — swap de cópulas (ser/estar/parecer); el pliegue en `lo`.
+7. **El complemento circunstancial** — enciende, apaga y **mueve** circunstancias.
+8. **Una oración dentro de otra** — la subordinada como caja que se abre y se cierra (zoom).
+9. **El análisis completo** — cierre: frases enteras que el alumno monta pieza a pieza.
 
 ## Modelo visual (dos niveles)
 
@@ -46,12 +46,16 @@ src/
   components/
     LessonPlayer.tsx    Reproductor de lecciones: recorre los beats de un capítulo
     GroupBox.tsx        TwoLevelBox: renderizado palabra-por-clase + corchete-por-función
+    Explora.tsx         Marco común de los explorables (distintivo + consigna + nota)
     MapScreen.tsx       Mapa de capítulos con progreso (localStorage)
-  activities/           Mecánicas interactivas incrustadas como beats:
+  activities/           Explorables y experimentos incrustados como beats:
+    ClasesActivity      Toca cada palabra y descubre su clase
+    CrecimientoActivity Añade/quita palabras a cada mitad
     FronteraActivity    Coloca el corte sujeto|predicado (slider)
-    NucleoActivity      Borra hasta el núcleo
-    ConcordanciaActivity / SujetoActivity   Laboratorio y reto de concordancia
-    SentenceStage (components/)             Sustitución pronominal del CD (drag)
-    SwapActivity / VozActivity / CrecimientoActivity   Explorables
-    AnalizaActivity     Capstone: análisis guiado de la frase completa
+    ConcordanciaActivity / NucleoActivity / SujetoActivity   Experimentos del cap. 3
+    SustituirActivity   Interruptor constituyente ↔ pronombre (CD, CI, atributo)
+    SwapActivity / VozActivity   Cambia palabras / gira la voz
+    CircunstanciasActivity       Enciende, apaga y mueve CCs
+    ZoomActivity        La subordinada que se abre y se cierra
+    AnalizaActivity     Cierre: análisis guiado de la frase completa
 ```

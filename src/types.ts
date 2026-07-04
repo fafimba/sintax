@@ -1,23 +1,4 @@
-export type Role = 'sujeto' | 'verbo' | 'cd' | 'ci' | 'cc' | 'atributo'
-
 export type Category = 'SN' | 'SV' | 'SPrep' | 'SAdv' | 'SAdj'
-
-export interface Segment {
-  id: string
-  text: string
-  role: Role
-  category?: Category
-}
-
-export interface Sentence {
-  id: string
-  /** La pregunta/consigna que se muestra arriba. */
-  prompt: string
-  /** El pronombre por el que se sustituye el CD: lo / la / los / las. */
-  pronoun: string
-  /** Segmentos en orden. Exactamente uno con role 'verbo' y uno con role 'cd'. */
-  segments: Segment[]
-}
 
 // --- Mecánica: "Borra hasta el núcleo" ---
 export interface NucleoChip {
@@ -126,13 +107,77 @@ export interface ShowBeat {
   arrow?: ArrowSpec | ArrowSpec[]
 }
 
-// Mini-puzle: toca el grupo correcto.
-export interface TapBeat {
-  kind: 'tap'
-  groups: LGroup[]
-  target: string // id del grupo que hay que tocar
-  prompt: string
-  teach: string // se muestra al acertar
+// Explorable "clases": toca cada palabra y descubre su clase. Sin fallo
+// posible: todas las palabras son respuesta. La recompensa es el color + una
+// mini-definición de la clase.
+export interface ClasesWord {
+  text: string
+  clase: Clase
+  /** Nombre y mini-definición que aparecen al tocar («sustantivo — nombra…»). */
+  name: string
+  desc: string
+}
+export interface ClasesItem {
+  words: ClasesWord[]
+}
+export interface ExploreClasesBeat {
+  kind: 'exploreClases'
+  item: ClasesItem
+}
+
+// Explorable "sustituir": un constituyente <-> su pronombre, con un interruptor
+// reversible. El corchete y el rótulo de la función NO cambian: la función
+// sobrevive al cambio de forma (esa es la prueba del CD/CI/atributo).
+export interface SustituirItem {
+  id: string
+  /** Frase completa; el grupo `targetId` es el que se sustituye. */
+  groups: { id: string; role: LessonRole; words: LWord[] }[]
+  targetId: string
+  /** Id del verbo: el pronombre aparece justo delante de él. */
+  verbId: string
+  pronoun: string // lo / la / le / los...
+  clasePronombre?: Clase // por defecto 'pronombre'
+  note: string // qué observar (se muestra al activar el pronombre)
+}
+export interface ExploreSustituirBeat {
+  kind: 'exploreSustituir'
+  item: SustituirItem
+}
+
+// Explorable "circunstancias": enciende y apaga circunstancias (cuándo, dónde,
+// cómo) y muévelas de sitio. La frase sigue funcionando: los CC son piezas
+// opcionales y móviles, y puede haber varios a la vez.
+export interface CircExtra {
+  id: string
+  q: string // la pregunta que responde: ¿cuándo? ¿dónde? ¿cómo?
+  words: LWord[]
+}
+export interface CircItem {
+  id: string
+  /** El corazón fijo de la frase (sujeto + verbo). */
+  core: { id: string; role: LessonRole; words: LWord[] }[]
+  extras: CircExtra[]
+}
+export interface ExploreCircunstanciasBeat {
+  kind: 'exploreCircunstancias'
+  item: CircItem
+}
+
+// Explorable "zoom": la subordinación como caja que se abre. El CD empieza
+// plegado («eso»); al tocarlo se despliega la oración entera que lleva dentro,
+// con su propio verbo y su propio CD. Tocar de nuevo lo pliega. Reversible.
+export interface ZoomItem {
+  id: string
+  s: LWord[] // sujeto
+  v: LWord[] // verbo principal
+  collapsed: LWord[] // la forma plegada del CD («eso»)
+  /** La forma desplegada: los grupos internos de la subordinada. */
+  expanded: { id: string; role: LessonRole; words: LWord[] }[]
+  note: string
+}
+export interface ExploreZoomBeat {
+  kind: 'exploreZoom'
+  item: ZoomItem
 }
 
 // Escena continua: la frase persiste y avanza por pasos (se separa, se
@@ -206,10 +251,6 @@ export interface ChallengeFronteraBeat {
   kind: 'challengeFrontera'
   items: FronteraItem[]
 }
-export interface ChallengeCdBeat {
-  kind: 'challengeCd'
-  sentence: Sentence
-}
 export interface ChallengeNucleoBeat {
   kind: 'challengeNucleo'
   item: NucleoItem
@@ -238,12 +279,14 @@ export interface ExploreVozBeat {
 export type Beat =
   | IntroBeat
   | ShowBeat
-  | TapBeat
   | SceneBeat
   | ChallengeFronteraBeat
+  | ExploreClasesBeat
   | ExploreCrecimientoBeat
   | ExploreSwapBeat
-  | ChallengeCdBeat
+  | ExploreSustituirBeat
+  | ExploreCircunstanciasBeat
+  | ExploreZoomBeat
   | ChallengeAnalizaBeat
   | ChallengeNucleoBeat
   | ChallengeSujetoBeat

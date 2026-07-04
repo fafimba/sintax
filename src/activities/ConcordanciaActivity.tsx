@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, useAnimationControls } from 'framer-motion'
 import type { ConcItem } from '../types'
 import { MorphText } from '../components/MorphText'
+import { Explora } from '../components/Explora'
 import { fn, neutral, elem } from '../theme'
 
 type Num = 's' | 'p'
@@ -49,15 +50,14 @@ export function ConcordanciaStage({ item }: { item: ConcItem }) {
   const f = (form: { s: string; p: string }) => (num === 'p' ? form.p : form.s)
 
   return (
-    <motion.div
-      className="stage explora"
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
+    <Explora
+      title="Cambia el *número* del sujeto y mira quién le obedece."
+      note={
+        nota
+          ? `Lo que cambia contigo es tu territorio: el artículo, el adjetivo… y el *verbo*. Eso es la concordancia. «${item.cola}» no depende del sujeto.`
+          : null
+      }
     >
-      <p className="prompt">¿Qué pasa si cambias el número del sujeto?</p>
-      <p className="subprompt">Mueve el interruptor y observa quién le obedece… y quién no.</p>
-
       <div className="sentence-area">
         <div className="sentence wrap">
           {item.art && <AgreeWord text={f(item.art)} pulse={pulse} tinted={nota} />}
@@ -76,15 +76,6 @@ export function ConcordanciaStage({ item }: { item: ConcItem }) {
         </button>
         <span className="knob-value">{num === 'p' ? 'plural' : 'singular'}</span>
       </div>
-
-      <div className="nota-slot">
-        {nota && (
-          <motion.p className="nota" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}>
-            Lo que cambia contigo es tu territorio: el artículo, el adjetivo… y el verbo. Eso es la{' '}
-            <b>concordancia</b>. El complemento «{item.cola}» no depende del sujeto.
-          </motion.p>
-        )}
-      </div>
-    </motion.div>
+    </Explora>
   )
 }

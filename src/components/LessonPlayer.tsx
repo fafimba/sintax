@@ -1,12 +1,11 @@
 import { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import type { Lesson, IntroBeat, ShowBeat, TapBeat, SceneBeat, LessonRole, LGroup } from '../types'
+import type { Lesson, IntroBeat, ShowBeat, SceneBeat, LessonRole, LGroup } from '../types'
 import { TwoLevelBox, ROLE_STYLE } from './GroupBox'
 import { RelArrow } from './RelArrow'
 import { RichText } from './RichText'
 import { TopBar } from './TopBar'
 import { CheckIcon } from './icons'
-import { SentenceStage } from './SentenceStage'
 import { FronteraStage } from '../activities/FronteraActivity'
 import { NucleoStage } from '../activities/NucleoActivity'
 import { SujetoStage } from '../activities/SujetoActivity'
@@ -15,6 +14,10 @@ import { CrecimientoStage } from '../activities/CrecimientoActivity'
 import { SwapStage } from '../activities/SwapActivity'
 import { VozStage } from '../activities/VozActivity'
 import { AnalizaStage } from '../activities/AnalizaActivity'
+import { ClasesStage } from '../activities/ClasesActivity'
+import { SustituirStage } from '../activities/SustituirActivity'
+import { CircunstanciasStage } from '../activities/CircunstanciasActivity'
+import { ZoomStage } from '../activities/ZoomActivity'
 
 type Colored = Exclude<LessonRole, 'none'>
 
@@ -88,10 +91,10 @@ export function LessonPlayer({
       <TopBar onBack={onBack} progress={i / total} />
 
       <div className="lesson-body">
-        {/* Sin AnimatePresence aquí: envolver beats con AnimatePresence mode="wait"
-            colgaba la salida cuando el beat era SentenceStage (AnimatePresence
-            anidado) y dejaba el siguiente paso en blanco. Fundido de entrada
-            con motion keyed, sin animación de salida. */}
+        {/* Sin AnimatePresence aquí: envolver beats que llevan su propio
+            AnimatePresence anidado colgaba la salida y dejaba el siguiente
+            paso en blanco. Fundido de entrada con motion keyed, sin animación
+            de salida. */}
         <motion.div
           key={finished ? 'done' : `b${i}`}
           className="beat-wrap"
@@ -102,14 +105,17 @@ export function LessonPlayer({
             {beat?.kind === 'intro' && <IntroView beat={beat} onNext={advance} />}
             {beat?.kind === 'show' && <ShowView beat={beat} onNext={advance} onIntroduce={introduce} />}
             {beat?.kind === 'scene' && <SceneView beat={beat} onNext={advance} onIntroduce={introduce} />}
-            {beat?.kind === 'tap' && <TapView beat={beat} onSolved={advance} onIntroduce={introduce} />}
 
             {beat?.kind === 'challengeFrontera' && <FronteraStage items={beat.items} onNext={advance} />}
-            {beat?.kind === 'challengeCd' && <SentenceStage sentence={beat.sentence} onNext={advance} />}
             {beat?.kind === 'challengeNucleo' && <NucleoStage item={beat.item} onNext={advance} />}
             {beat?.kind === 'challengeSujeto' && <SujetoStage item={beat.item} onNext={advance} />}
             {beat?.kind === 'challengeAnaliza' && <AnalizaStage items={beat.items} onNext={advance} />}
 
+            {beat?.kind === 'exploreClases' && (
+              <Embed onNext={advance}>
+                <ClasesStage item={beat.item} />
+              </Embed>
+            )}
             {beat?.kind === 'exploreCrecimiento' && (
               <Embed onNext={advance}>
                 <CrecimientoStage item={beat.item} />
@@ -118,6 +124,21 @@ export function LessonPlayer({
             {beat?.kind === 'exploreSwap' && (
               <Embed onNext={advance}>
                 <SwapStage item={beat.item} />
+              </Embed>
+            )}
+            {beat?.kind === 'exploreSustituir' && (
+              <Embed onNext={advance}>
+                <SustituirStage item={beat.item} />
+              </Embed>
+            )}
+            {beat?.kind === 'exploreCircunstancias' && (
+              <Embed onNext={advance}>
+                <CircunstanciasStage item={beat.item} />
+              </Embed>
+            )}
+            {beat?.kind === 'exploreZoom' && (
+              <Embed onNext={advance}>
+                <ZoomStage item={beat.item} />
               </Embed>
             )}
             {beat?.kind === 'exploreConcordancia' && (
@@ -336,62 +357,6 @@ function SceneView({
         <button className="btn" onClick={next}>
           Continuar
         </button>
-      </div>
-    </motion.div>
-  )
-}
-
-function TapView({
-  beat,
-  onSolved,
-  onIntroduce,
-}: {
-  beat: TapBeat
-  onSolved: () => void
-  onIntroduce: (r: Colored[]) => void
-}) {
-  const [solved, setSolved] = useState(false)
-  const [wrongId, setWrongId] = useState<string | null>(null)
-
-  const tap = (id: string) => {
-    if (solved) return
-    if (id === beat.target) {
-      setSolved(true)
-      onIntroduce(rolesOf([beat.target], beat.groups))
-      window.setTimeout(onSolved, 900)
-    } else {
-      setWrongId(id)
-      window.setTimeout(() => setWrongId(null), 450)
-    }
-  }
-
-  return (
-    <motion.div className="lesson-stage" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-      <p className="prompt tap-prompt">
-        <RichText text={beat.prompt} />
-      </p>
-      <div className="sentence-area">
-        <div className="sentence wrap topalign">
-          {beat.groups.map((g) => (
-            <TwoLevelBox
-              key={g.id}
-              group={g}
-              reveal={[]}
-              separated
-              onTap={tap}
-              solvedId={solved ? beat.target : null}
-              wrongId={wrongId}
-            />
-          ))}
-        </div>
-      </div>
-      <div className="tap-feedback">
-        {solved && (
-          <motion.span className="fb-ok" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}>
-            <CheckIcon />
-            <RichText text={beat.teach} />
-          </motion.span>
-        )}
       </div>
     </motion.div>
   )

@@ -13,4 +13,13 @@ export const SWAP: SwapItem[] = [
       { role: 'cd', alts: ['al ratón', 'a la gallina', 'al cartero'] },
     ],
   },
+  // Atributo: los tres verbos-puente son intercambiables (y solo ellos); el
+  // atributo cambia de palabra pero sigue diciendo cómo es/está el sujeto.
+  {
+    slots: [
+      { role: 'sujeto', alts: ['La sopa', 'La casa', 'Mi calle'] },
+      { role: 'verbo', alts: ['está', 'es', 'parece'] },
+      { role: 'atributo', alts: ['caliente', 'enorme', 'tranquila'] },
+    ],
+  },
 ]
