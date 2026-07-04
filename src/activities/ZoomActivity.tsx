@@ -7,7 +7,7 @@ import { Explora } from '../components/Explora'
 // Explorable "zoom": la subordinación como caja que se abre y se cierra.
 // El CD empieza plegado («eso»); al tocarlo se despliega la oración entera
 // que lleva dentro —con su propio verbo y su propio CD—. Reversible.
-export function ZoomStage({ item }: { item: ZoomItem }) {
+export function ZoomStage({ item, onTouch }: { item: ZoomItem; onTouch?: () => void }) {
   const [open, setOpen] = useState(false)
   const [touched, setTouched] = useState(false)
 
@@ -20,6 +20,7 @@ export function ZoomStage({ item }: { item: ZoomItem }) {
   const toggle = () => {
     setOpen((o) => !o)
     setTouched(true)
+    onTouch?.()
   }
 
   return (

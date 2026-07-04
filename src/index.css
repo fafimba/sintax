@@ -270,12 +270,6 @@ body {
   line-height: 1.55;
 }
 
-.done-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 6px;
-}
-
 .btn-ghost {
   font-family: inherit;
   font-size: 15px;
@@ -772,7 +766,17 @@ body {
 .lesson-cta {
   display: flex;
   justify-content: center;
-  padding: 18px 0 6px;
+  align-items: center;
+  min-height: 74px;
+  padding: 12px 0 6px;
+}
+
+/* Mientras no se ha experimentado, en vez del botón: una pista suave. */
+.cta-hint {
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ink-faint);
 }
 
 .tap-prompt {
@@ -797,50 +801,6 @@ body {
   align-items: center;
   justify-content: center;
   padding-top: 10px;
-}
-
-.legend {
-  display: flex;
-  gap: 22px;
-  justify-content: center;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  padding: 12px 0 2px;
-  margin-top: 10px;
-  border-top: 0.5px solid rgba(0, 0, 0, 0.06);
-}
-
-.legend-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: flex-start;
-}
-
-.legend-childrow {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding-left: 8px;
-}
-
-.legend-branch {
-  color: #bbb9b0;
-  font-size: 13px;
-  line-height: 1;
-}
-
-.legend-chip {
-  font-size: 12px;
-  font-weight: 500;
-  padding: 4px 11px;
-  border-radius: 999px;
-  border: 1px solid;
-}
-
-.legend-chip-sm {
-  font-size: 11px;
-  padding: 3px 9px;
 }
 
 .lesson-embed {
@@ -1258,6 +1218,19 @@ body {
   background: #c0dd97;
 }
 
+/* Tramo que se "pinta" al completar un capítulo (overlay animado del rail). */
+.map-rail-fill {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 34px;
+  bottom: -16px;
+  width: 3px;
+  background: #639922;
+  transform-origin: top;
+  z-index: 0;
+}
+
 .map-dot {
   width: 48px;
   height: 48px;
@@ -1343,21 +1316,6 @@ body {
   font-weight: 500;
 }
 
-.map-free {
-  margin-top: auto;
-  align-self: center;
-  background: none;
-  border: none;
-  color: #888780;
-  font-family: inherit;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 8px;
-}
-
-/* Accesibilidad: "Reducir movimiento" del sistema. Framer Motion ya desactiva
-   sus animaciones de transform/layout (ver MotionConfig en main.tsx); aquí
-   apagamos las animaciones puramente CSS. */
 @media (prefers-reduced-motion: reduce) {
   /* El punto del capítulo actual deja de latir, pero conserva un halo fijo
      para seguir señalando "estás aquí". */

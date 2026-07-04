@@ -7,11 +7,15 @@ import { fn, elem } from '../theme'
 // Explorable libre: añade/quita palabras a cada mitad y mira crecer o encoger
 // el sujeto y el predicado. El color, la etiqueta y el pronombre del sujeto NO
 // cambian con el tamaño: la FUNCIÓN no depende de la LONGITUD (el invariante).
-export function CrecimientoStage({ item }: { item: CrecimientoItem }) {
+export function CrecimientoStage({ item, onTouch }: { item: CrecimientoItem; onTouch?: () => void }) {
   const { sujeto, predicado } = item
   const [sCount, setSCount] = useState(0)
   const [pCount, setPCount] = useState(0)
-  const [touched, setTouched] = useState(false)
+  const [touched, setTouchedRaw] = useState(false)
+  const setTouched = (v: boolean) => {
+    setTouchedRaw(v)
+    if (v) onTouch?.()
+  }
 
   const sWords = [sujeto.base, ...sujeto.adjuncts.slice(0, sCount)]
   const pWords = [predicado.base, ...predicado.adjuncts.slice(0, pCount)]

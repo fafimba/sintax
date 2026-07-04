@@ -21,18 +21,6 @@ import { ZoomStage } from '../activities/ZoomActivity'
 
 type Colored = Exclude<LessonRole, 'none'>
 
-const PARENT: Record<Colored, Colored | null> = {
-  sujeto: null,
-  predicado: null,
-  verbo: 'predicado',
-  cd: 'predicado',
-  ci: 'predicado',
-  atributo: 'predicado',
-  cc: 'predicado',
-}
-const TOP_ORDER: Colored[] = ['sujeto', 'predicado']
-const CHILD_ORDER: Colored[] = ['verbo', 'cd', 'ci', 'atributo', 'cc']
-
 function flattenGroups(groups: LGroup[]): LGroup[] {
   const out: LGroup[] = []
   for (const g of groups) {
@@ -40,12 +28,6 @@ function flattenGroups(groups: LGroup[]): LGroup[] {
     if (g.children) out.push(...flattenGroups(g.children))
   }
   return out
-}
-
-function rolesOf(ids: string[], groups: { id: string; role: LessonRole }[]): Colored[] {
-  return ids
-    .map((id) => groups.find((g) => g.id === id)?.role)
-    .filter((r): r is Colored => !!r && r !== 'none')
 }
 
 export function LessonPlayer({
@@ -62,7 +44,6 @@ export function LessonPlayer({
   onBeat?: (i: number) => void
 }) {
   const [i, setI] = useState(initialBeat)
-  const [introduced, setIntroduced] = useState<Set<Colored>>(() => new Set())
 
   // Reporta el paso actual para poder reanudar al volver a abrir la app.
   useEffect(() => {
@@ -71,18 +52,6 @@ export function LessonPlayer({
   const total = lesson.beats.length
   const finished = i >= total
   const advance = () => setI((n) => n + 1)
-  const restart = () => {
-    setIntroduced(new Set())
-    setI(0)
-  }
-  const introduce = useCallback((roles: Colored[]) => {
-    if (roles.length === 0) return
-    setIntroduced((prev) => {
-      const next = new Set(prev)
-      roles.forEach((r) => next.add(r))
-      return next
-    })
-  }, [])
 
   const beat = finished ? null : lesson.beats[i]
 
@@ -103,8 +72,8 @@ export function LessonPlayer({
           transition={{ duration: 0.2 }}
         >
             {beat?.kind === 'intro' && <IntroView beat={beat} onNext={advance} />}
-            {beat?.kind === 'show' && <ShowView beat={beat} onNext={advance} onIntroduce={introduce} />}
-            {beat?.kind === 'scene' && <SceneView beat={beat} onNext={advance} onIntroduce={introduce} />}
+            {beat?.kind === 'show' && <ShowView beat={beat} onNext={advance} />}
+            {beat?.kind === 'scene' && <SceneView beat={beat} onNext={advance} />}
 
             {beat?.kind === 'challengeFrontera' && <FronteraStage items={beat.items} onNext={advance} />}
             {beat?.kind === 'challengeNucleo' && <NucleoStage item={beat.item} onNext={advance} />}
@@ -112,61 +81,82 @@ export function LessonPlayer({
             {beat?.kind === 'challengeAnaliza' && <AnalizaStage items={beat.items} onNext={advance} />}
 
             {beat?.kind === 'exploreClases' && (
-              <Embed onNext={advance}>
-                <ClasesStage item={beat.item} />
-              </Embed>
+              <Embed onNext={advance}>{(touch) => <ClasesStage item={beat.item} onTouch={touch} />}</Embed>
             )}
             {beat?.kind === 'exploreCrecimiento' && (
-              <Embed onNext={advance}>
-                <CrecimientoStage item={beat.item} />
-              </Embed>
+              <Embed onNext={advance}>{(touch) => <CrecimientoStage item={beat.item} onTouch={touch} />}</Embed>
             )}
             {beat?.kind === 'exploreSwap' && (
-              <Embed onNext={advance}>
-                <SwapStage item={beat.item} />
-              </Embed>
+              <Embed onNext={advance}>{(touch) => <SwapStage item={beat.item} onTouch={touch} />}</Embed>
             )}
             {beat?.kind === 'exploreSustituir' && (
-              <Embed onNext={advance}>
-                <SustituirStage item={beat.item} />
-              </Embed>
+              <Embed onNext={advance}>{(touch) => <SustituirStage item={beat.item} onTouch={touch} />}</Embed>
             )}
             {beat?.kind === 'exploreCircunstancias' && (
               <Embed onNext={advance}>
-                <CircunstanciasStage item={beat.item} />
+                {(touch) => <CircunstanciasStage item={beat.item} onTouch={touch} />}
               </Embed>
             )}
             {beat?.kind === 'exploreZoom' && (
-              <Embed onNext={advance}>
-                <ZoomStage item={beat.item} />
-              </Embed>
+              <Embed onNext={advance}>{(touch) => <ZoomStage item={beat.item} onTouch={touch} />}</Embed>
             )}
             {beat?.kind === 'exploreConcordancia' && (
               <Embed onNext={advance}>
-                <ConcordanciaStage item={beat.item} />
+                {(touch) => <ConcordanciaStage item={beat.item} onTouch={touch} />}
               </Embed>
             )}
             {beat?.kind === 'exploreVoz' && (
-              <Embed onNext={advance}>
-                <VozStage item={beat.item} />
-              </Embed>
+              <Embed onNext={advance}>{(touch) => <VozStage item={beat.item} onTouch={touch} />}</Embed>
             )}
 
-            {finished && <DoneView intro={introduced} onComplete={onComplete} onAgain={restart} />}
+            {finished && <DoneView onComplete={onComplete} />}
         </motion.div>
       </div>
     </>
   )
 }
 
-function Embed({ children, onNext }: { children: React.ReactNode; onNext: () => void }) {
+// Envuelve un explorable. El botón de continuar NO está de entrada: aparece
+// cuando el explorable avisa (onTouch) de que ya se ha experimentado. Así
+// nadie pasa de largo sin jugar; mientras tanto, una pista suave lo dice.
+function Embed({
+  children,
+  onNext,
+}: {
+  children: (touch: () => void) => React.ReactNode
+  onNext: () => void
+}) {
+  const [ready, setReady] = useState(false)
+  const touch = useCallback(() => setReady(true), [])
   return (
     <div className="lesson-embed">
-      {children}
+      {children(touch)}
       <div className="lesson-cta">
-        <button className="btn" onClick={onNext}>
-          Continuar
-        </button>
+        <AnimatePresence mode="wait" initial={false}>
+          {ready ? (
+            <motion.button
+              key="btn"
+              className="btn"
+              onClick={onNext}
+              initial={{ opacity: 0, y: 10, scale: 0.94 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ type: 'spring', stiffness: 420, damping: 28 }}
+            >
+              Continuar
+            </motion.button>
+          ) : (
+            <motion.span
+              key="hint"
+              className="cta-hint"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              pruébalo para seguir
+            </motion.span>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   )
@@ -201,38 +191,6 @@ function FitRow({ className, children }: { className?: string; children: React.R
   )
 }
 
-function Legend({ intro }: { intro: Set<Colored> }) {
-  const shownTop = TOP_ORDER.filter(
-    (t) => intro.has(t) || CHILD_ORDER.some((c) => PARENT[c] === t && intro.has(c)),
-  )
-  const chip = (r: Colored, small?: boolean) => (
-    <span
-      className={`legend-chip ${small ? 'legend-chip-sm' : ''}`}
-      style={{ background: ROLE_STYLE[r].fill, color: ROLE_STYLE[r].text, borderColor: ROLE_STYLE[r].border }}
-    >
-      {ROLE_STYLE[r].label}
-    </span>
-  )
-  return (
-    <div className="legend">
-      {shownTop.map((top) => {
-        const kids = CHILD_ORDER.filter((c) => PARENT[c] === top && intro.has(c))
-        return (
-          <div className="legend-group" key={top}>
-            {chip(top)}
-            {kids.map((c) => (
-              <div className="legend-childrow" key={c}>
-                <span className="legend-branch">↳</span>
-                {chip(c, true)}
-              </div>
-            ))}
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
 function IntroView({ beat, onNext }: { beat: IntroBeat; onNext: () => void }) {
   return (
     <motion.div className="lesson-intro" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
@@ -247,25 +205,9 @@ function IntroView({ beat, onNext }: { beat: IntroBeat; onNext: () => void }) {
   )
 }
 
-function ShowView({
-  beat,
-  onNext,
-  onIntroduce,
-}: {
-  beat: ShowBeat
-  onNext: () => void
-  onIntroduce: (r: Colored[]) => void
-}) {
+function ShowView({ beat, onNext }: { beat: ShowBeat; onNext: () => void }) {
   const areaRef = useRef<HTMLDivElement>(null)
   const flat = flattenGroups(beat.groups)
-  useEffect(() => {
-    const containerRoles = beat.groups
-      .filter((g) => g.children?.length)
-      .map((g) => g.role)
-      .filter((r): r is Colored => r !== 'none')
-    onIntroduce([...rolesOf(beat.reveal, flat), ...containerRoles])
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [beat, onIntroduce])
   // Una o varias flechas. Cada una se tiñe con la función de su destino.
   const arrows = beat.arrow ? (Array.isArray(beat.arrow) ? beat.arrow : [beat.arrow]) : []
   const arrowColor = (a: { to: string; color?: string }) => {
@@ -305,21 +247,9 @@ function ShowView({
   )
 }
 
-function SceneView({
-  beat,
-  onNext,
-  onIntroduce,
-}: {
-  beat: SceneBeat
-  onNext: () => void
-  onIntroduce: (r: Colored[]) => void
-}) {
+function SceneView({ beat, onNext }: { beat: SceneBeat; onNext: () => void }) {
   const [step, setStep] = useState(0)
   const s = beat.steps[step]
-
-  useEffect(() => {
-    onIntroduce(rolesOf(s.reveal, beat.groups))
-  }, [step, s, beat, onIntroduce])
 
   const next = () => {
     if (step < beat.steps.length - 1) setStep((n) => n + 1)
@@ -362,35 +292,24 @@ function SceneView({
   )
 }
 
-function DoneView({
-  intro,
-  onComplete,
-  onAgain,
-}: {
-  intro: Set<Colored>
-  onComplete: () => void
-  onAgain: () => void
-}) {
+// Momento de cierre, breve y sin botones: el check celebra y la app sigue sola
+// hacia el mapa (donde el camino avanza al siguiente capítulo).
+function DoneView({ onComplete }: { onComplete: () => void }) {
+  useEffect(() => {
+    const t = window.setTimeout(onComplete, 1500)
+    return () => window.clearTimeout(t)
+  }, [onComplete])
   return (
     <motion.div className="lesson-intro" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-      <div className="done-check">
+      <motion.div
+        className="done-check"
+        initial={{ scale: 0 }}
+        animate={{ scale: [0, 1.15, 1] }}
+        transition={{ type: 'spring', stiffness: 380, damping: 18 }}
+      >
         <CheckIcon size={32} />
-      </div>
+      </motion.div>
       <h1>¡Capítulo completado!</h1>
-      {intro.size > 0 && (
-        <>
-          <p>Ya manejas estas piezas:</p>
-          <Legend intro={intro} />
-        </>
-      )}
-      <div className="done-actions">
-        <button className="btn-ghost" onClick={onAgain}>
-          Repetir
-        </button>
-        <button className="btn" onClick={onComplete}>
-          Seguir el camino
-        </button>
-      </div>
     </motion.div>
   )
 }

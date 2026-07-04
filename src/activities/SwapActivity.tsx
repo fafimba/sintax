@@ -21,12 +21,13 @@ const SHAPE: Record<Colored, string> = {
 // Explorable libre: cada hueco cambia su palabra por otra que ENCAJA (curada a
 // mano). El color, la forma y la etiqueta de la función NO cambian: cambia la
 // palabra, no la estructura. La mutación se anima con MorphText.
-export function SwapStage({ item }: { item: SwapItem }) {
+export function SwapStage({ item, onTouch }: { item: SwapItem; onTouch?: () => void }) {
   const [idxs, setIdxs] = useState<number[]>(() => item.slots.map(() => 0))
   const [touched, setTouched] = useState(false)
   const cycle = (i: number) => {
     setIdxs((prev) => prev.map((v, j) => (j === i ? (v + 1) % item.slots[i].alts.length : v)))
     setTouched(true)
+    onTouch?.()
   }
 
   return (

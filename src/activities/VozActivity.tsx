@@ -37,7 +37,7 @@ function pieceData(id: string, item: VozItem, voz: Voz): PieceData {
   }
 }
 
-export function VozStage({ item }: { item: VozItem }) {
+export function VozStage({ item, onTouch }: { item: VozItem; onTouch?: () => void }) {
   const [voz, setVoz] = useState<Voz>('activa')
   const [seen, setSeen] = useState(false)
 
@@ -97,7 +97,10 @@ export function VozStage({ item }: { item: VozItem }) {
           value={voz}
           onChange={(v) => {
             setVoz(v as Voz)
-            if (v === 'pasiva') setSeen(true)
+            if (v === 'pasiva') {
+              setSeen(true)
+              onTouch?.()
+            }
           }}
           accent="#534AB7"
         />

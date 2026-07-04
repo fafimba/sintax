@@ -7,12 +7,17 @@ import { clase as claseColor } from '../theme'
 // Explorable "clases": toca cada palabra y descubre de qué clase es. No hay
 // respuesta incorrecta: todas las palabras cuentan algo. El color es la
 // recompensa; la nota, la explicación.
-export function ClasesStage({ item }: { item: ClasesItem }) {
+export function ClasesStage({ item, onTouch }: { item: ClasesItem; onTouch?: () => void }) {
   const [found, setFound] = useState<Set<number>>(() => new Set())
   const [last, setLast] = useState<number | null>(null)
 
   const tap = (i: number) => {
-    setFound((prev) => new Set(prev).add(i))
+    setFound((prev) => {
+      const next = new Set(prev).add(i)
+      // Experimentado = todas las palabras descubiertas (son pocas y rápidas).
+      if (next.size === item.words.length) onTouch?.()
+      return next
+    })
     setLast(i)
   }
 

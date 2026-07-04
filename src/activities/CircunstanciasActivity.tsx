@@ -8,12 +8,14 @@ import { fn } from '../theme'
 // Explorable "circunstancias": enciende y apaga circunstancias y muévelas de
 // sitio. Lo que enseña jugando: los CC son opcionales (la frase funciona sin
 // ellos), acumulables (puede haber varios) y móviles (delante o detrás).
-export function CircunstanciasStage({ item }: { item: CircItem }) {
+export function CircunstanciasStage({ item, onTouch }: { item: CircItem; onTouch?: () => void }) {
   const [active, setActive] = useState<string[]>([])
   const [front, setFront] = useState(false)
 
-  const toggle = (id: string) =>
+  const toggle = (id: string) => {
     setActive((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
+    onTouch?.()
+  }
 
   const extras: LGroup[] = active.map((id) => {
     const e = item.extras.find((x) => x.id === id)!

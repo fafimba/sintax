@@ -36,7 +36,7 @@ function AgreeWord({
   )
 }
 
-export function ConcordanciaStage({ item }: { item: ConcItem }) {
+export function ConcordanciaStage({ item, onTouch }: { item: ConcItem; onTouch?: () => void }) {
   const [num, setNum] = useState<Num>('s')
   const [pulse, setPulse] = useState(0)
   const toggles = pulse
@@ -44,7 +44,11 @@ export function ConcordanciaStage({ item }: { item: ConcItem }) {
 
   const flip = () => {
     setNum((n) => (n === 's' ? 'p' : 's'))
-    setPulse((p) => p + 1)
+    setPulse((p) => {
+      // Experimentado = ida y vuelta (con la vuelta se ve QUIÉN obedece).
+      if (p + 1 >= 2) onTouch?.()
+      return p + 1
+    })
   }
 
   const f = (form: { s: string; p: string }) => (num === 'p' ? form.p : form.s)

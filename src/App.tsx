@@ -66,6 +66,15 @@ export default function App() {
     setView('map')
   }
 
+  // Tras completar un capítulo, el mapa avanza SOLO al siguiente (camino
+  // natural, sin tener que elegirlo).
+  const autoNext = (() => {
+    if (!justCompleted) return null
+    const idx = CHAPTERS.findIndex((c) => c.id === justCompleted)
+    const next = CHAPTERS[idx + 1]
+    return next && !completed.includes(next.id) ? next.id : null
+  })()
+
   return (
     <div className="screen">
       {view === 'chapter' && (
@@ -83,6 +92,7 @@ export default function App() {
           chapters={CHAPTERS}
           completed={completed}
           justCompleted={justCompleted}
+          autoNext={autoNext}
           onPlay={playChapter}
         />
       )}

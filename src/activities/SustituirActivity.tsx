@@ -11,7 +11,7 @@ type Colored = Exclude<LGroup['role'], 'none'>
 // interruptor reversible. Al activar el pronombre, la pieza colapsa y el
 // pronombre aparece DELANTE del verbo, pero conserva corchete y rótulo:
 // cambia la forma, no la función. Se puede ir y volver cuantas veces quieras.
-export function SustituirStage({ item }: { item: SustituirItem }) {
+export function SustituirStage({ item, onTouch }: { item: SustituirItem; onTouch?: () => void }) {
   const [sub, setSub] = useState(false)
   const [touched, setTouched] = useState(false)
 
@@ -76,6 +76,7 @@ export function SustituirStage({ item }: { item: SustituirItem }) {
           onChange={(v) => {
             setSub(v === 'pro')
             setTouched(true)
+            onTouch?.()
           }}
         />
       </div>
