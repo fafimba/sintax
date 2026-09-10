@@ -499,6 +499,9 @@
   min-height: 52px;
   font-size: 0.9375rem;
 }
+.lesson-advance {
+  min-height: 52px;
+}
 @media (max-width: 800px) {
   .lesson-mode .top-header {
     height: 74px;

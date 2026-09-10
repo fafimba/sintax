@@ -16,8 +16,12 @@ test("the first example is immediately usable, reversible and keyboard accessibl
 }) => {
   await open(page, "palabras");
   const chip = page.getByRole("button", { name: /Cambiar protagonista/ });
+  const next = page.getByRole("link", { name: "Siguiente idea", exact: true });
+  await expect(next).toHaveCount(0);
   await chip.focus();
   await page.keyboard.press("Enter");
+  await expect(next).toBeVisible();
+  await expect(chip).toBeFocused();
   await expect(sentence(page)).toHaveAttribute(
     "aria-label",
     "El perro duerme.",
@@ -30,8 +34,37 @@ test("the first example is immediately usable, reversible and keyboard accessibl
   await page.getByRole("button", { name: "Reiniciar este ejemplo" }).click();
   await expect(sentence(page)).toHaveAttribute("aria-label", "El gato duerme.");
   await expect(chip).toBeFocused();
+  await expect(next).toHaveCount(0);
   await page.getByText("Ver explicación", { exact: true }).click();
   await expect(page.locator(".concept-note h2")).toHaveText("Sustantivo");
+  await expect(next).toHaveCount(0);
+});
+
+test("advancing needs one actual change and remembers explored steps", async ({
+  page,
+}) => {
+  const next = page.getByRole("link", { name: "Siguiente idea", exact: true });
+  await open(page, "palabras", 2);
+  await expect(next).toHaveCount(0);
+  await choose(page, "Cuántos gatos", "Uno");
+  await expect(next).toHaveCount(0);
+  await choose(page, "Cuántos gatos", "Varios");
+  await expect(next).toBeVisible();
+  await choose(page, "Cuántos gatos", "Uno");
+  await expect(next).toBeVisible();
+  await page.reload();
+  await expect(next).toBeVisible();
+  await next.click();
+  await expect(
+    page.getByRole("button", { name: "Cerrar lección" }),
+  ).toHaveCount(0);
+  await page.getByRole("link", { name: "Anterior", exact: true }).click();
+  await expect(next).toBeVisible();
+  await open(page, "grupos");
+  await expect(next).toHaveCount(0);
+  await page.getByRole("slider").focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(next).toBeVisible();
 });
 
 test("navigation and reload retain the precise exploration without forcing an answer", async ({
@@ -51,6 +84,10 @@ test("navigation and reload retain the precise exploration without forcing an an
     "Los gatos curiosos",
   );
   await page.getByRole("link", { name: "Siguiente idea", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Cerrar lección" }),
+  ).toHaveCount(0);
+  await page.getByRole("button", { name: /Cambiar matiz/ }).click();
   await page.getByRole("button", { name: "Cerrar lección" }).click();
   await expect(
     page.getByRole("heading", { name: "Las piezas van encajando." }),

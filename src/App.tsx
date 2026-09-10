@@ -124,6 +124,8 @@ export default function App() {
     requestAnimationFrame(() => menuButton.current?.focus());
   };
   const updateScene = (control: string, value: number) => {
+    if (sceneState(progress, lesson.id, scene.id).values[control] === value)
+      return;
     const key = `${lesson.id}/${scene.id}`;
     setProgress((p) => ({
       ...p,
@@ -391,20 +393,30 @@ export default function App() {
                     >
                       <Icon name="back" size={18} />
                     </a>
-                    {step < lesson.scenes.length - 1 ? (
-                      <a
-                        className="primary-button"
-                        href={lessonUrl(lesson.id, step + 1)}
-                      >
-                        Siguiente idea
-                        <Icon name="arrow" size={19} />
-                      </a>
-                    ) : (
-                      <button className="primary-button" onClick={finish}>
-                        Cerrar lección
-                        <Icon name="check" size={19} />
-                      </button>
-                    )}
+                    <div className="lesson-advance">
+                      {sceneState(progress, lesson.id, scene.id).touched && (
+                        <motion.div
+                          initial={reduced ? false : { opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.22 }}
+                        >
+                          {step < lesson.scenes.length - 1 ? (
+                            <a
+                              className="primary-button"
+                              href={lessonUrl(lesson.id, step + 1)}
+                            >
+                              Siguiente idea
+                              <Icon name="arrow" size={19} />
+                            </a>
+                          ) : (
+                            <button className="primary-button" onClick={finish}>
+                              Cerrar lección
+                              <Icon name="check" size={19} />
+                            </button>
+                          )}
+                        </motion.div>
+                      )}
+                    </div>
                   </footer>
                 </motion.div>
               ) : (

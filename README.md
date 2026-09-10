@@ -17,6 +17,8 @@ La aplicación abre directamente un ejemplo manipulable. Se puede cambiar una pa
 
 Cada paso muestra un título, una indicación y la frase. Al interactuar aparece una observación breve; «Ver explicación» despliega la definición y sus matices. La navegación del curso se abre desde el menú para mantener el foco en el ejemplo. La introducción cubre las bases y algunos contrastes importantes, no toda la gramática española. Consulta [las decisiones pedagógicas](docs/PEDAGOGIA.md).
 
+El botón de avance aparece al cambiar una palabra o un control. Basta con experimentar una vez; no hay que acertar ni probar todas las opciones. Al volver a un paso ya explorado, el botón sigue disponible. Reiniciar el ejemplo vuelve a ocultarlo hasta el siguiente cambio.
+
 ## Desarrollo
 
 Requiere **Node.js 22.12 o superior**. Se recomienda una versión LTS vigente.
