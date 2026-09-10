@@ -15,8 +15,7 @@ export const foundations: Lesson[] = [
         title: "Una palabra cambia todo.",
         description:
           "La frase es pequeña. Las posibilidades, muchas. Empieza cambiando de protagonista.",
-        instruction:
-          "Toca la pieza verde. Puedes cambiarla tantas veces como quieras.",
+        instruction: "Toca la palabra verde. Cambia quién duerme.",
         controls: [
           choice(
             "noun",
@@ -43,7 +42,7 @@ export const foundations: Lesson[] = [
             word("dot", "."),
           ],
           observation: touched
-            ? "Ahora duerme otro animal. Has cambiado de quién hablamos; la forma de construir la frase sigue siendo la misma."
+            ? "Cambia el animal. La frase sigue funcionando igual."
             : "«Gato» nombra al animal del que hablamos. ¿Qué ocurre si ponemos otra palabra en su lugar?",
         }),
       },
@@ -52,7 +51,7 @@ export const foundations: Lesson[] = [
         title: "El mismo gato. Otro matiz.",
         description:
           "Algunas palabras nombran; otras añaden una característica a lo que nombramos.",
-        instruction: "Cambia la característica y después cambia el número.",
+        instruction: "Toca la palabra verde. Después prueba con varios gatos.",
         controls: [
           choice(
             "adj",
@@ -79,8 +78,8 @@ export const foundations: Lesson[] = [
             ),
           ],
           observation: number
-            ? `«Los gatos ${["curiosos", "tranquilos", "pequeños"][adj]}»: al pasar a varios, también se ajustan el determinante y el adjetivo.`
-            : "El animal sigue siendo un gato. La pieza verde cambia cómo lo describimos.",
+            ? `«Los gatos ${["curiosos", "tranquilos", "pequeños"][adj]}»: las tres palabras pasan a plural.`
+            : "El adjetivo cambia cómo es el gato.",
           note: "Esto es un grupo de palabras, todavía no una oración con verbo.",
         }),
       },
@@ -88,8 +87,7 @@ export const foundations: Lesson[] = [
         id: "matizar",
         title: "¿Cómo? ¿Cuándo? ¿Cuánto?",
         description: "También podemos añadir información sobre lo que sucede.",
-        instruction:
-          "Prueba las tres palabras y observa qué información añade cada una.",
+        instruction: "Toca la palabra verde. ¿Qué cambia en el sueño?",
         controls: [
           choice(
             "adverb",
@@ -118,7 +116,7 @@ export const foundations: Lesson[] = [
           ],
           observation: [
             "«Tranquilamente» añade cómo duerme. La palabra modifica al verbo «duerme».",
-            "«Hoy» sitúa el sueño en el tiempo. También es un adverbio, aunque aporta información distinta.",
+            "«Hoy» dice cuándo duerme. Es un adverbio de tiempo.",
             "«Mucho» indica cuánto duerme. No describe al gato: modifica «duerme».",
           ][adverb],
         }),
@@ -170,8 +168,8 @@ export const foundations: Lesson[] = [
           ],
           observation: [
             "«El gato» funciona como una unidad dentro de la frase. «Gato» es su centro.",
-            "«Curioso» añade un detalle al gato. El grupo crece, pero su núcleo sigue siendo «gato».",
-            "«De mi vecina» también habla del gato. Todo el conjunto sigue siendo una sola pieza de la oración.",
+            "El grupo crece. «Gato» sigue siendo su núcleo.",
+            "Más palabras, una sola pieza: todo el grupo habla del gato.",
           ][size],
         }),
       },
@@ -214,7 +212,7 @@ export const foundations: Lesson[] = [
             ),
           ],
           observation: [
-            "El núcleo «libro» es un sustantivo. Por eso el grupo es nominal, aunque incluya un adjetivo.",
+            "El núcleo es un sustantivo: «libro». Por eso el grupo es nominal.",
             "El núcleo «interesante» es un adjetivo. «Muy» modifica su intensidad.",
             "El núcleo «lejos» es un adverbio. «Bastante» modifica la distancia que expresa.",
           ][type],
@@ -335,7 +333,7 @@ export const foundations: Lesson[] = [
             "1.ª persona · plural",
           ][person],
           observation:
-            "Las dos piezas comparten persona y número. Esta relación será nuestra pista para encontrar el sujeto.",
+            "Cambias quién lee y el verbo se ajusta. Las dos piezas concuerdan.",
         }),
       },
       {
@@ -372,7 +370,7 @@ export const foundations: Lesson[] = [
               "Una palabra: «lee».",
               "Dos palabras: el auxiliar «ha» y el participio «leído».",
               "Dos palabras: «está» y el gerundio «leyendo».",
-            ][form] + " En este ejemplo seguimos teniendo una oración simple.",
+            ][form] + " Un solo núcleo verbal.",
         }),
       },
     ],

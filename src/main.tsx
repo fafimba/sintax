@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
+import "./ui/lesson.css";
 
 // Si algo lanza, mostramos un mensaje en vez de dejar la pantalla en blanco.
 class ErrorBoundary extends React.Component<

@@ -30,8 +30,8 @@ export const complements: Lesson[] = [
             word("dot", "."),
           ],
           observation: replace
-            ? "«Un libro» se convierte en «lo», que va delante del verbo conjugado. Cambia la forma y la posición; se conserva la función."
-            : "La pieza verde completa «compró». Prueba a sustituirla por «lo».",
+            ? "«Un libro» → «lo». Cambian la forma y el sitio; sigue siendo CD."
+            : "«Un libro» es el complemento directo de «compró».",
         }),
       },
       {
@@ -83,7 +83,7 @@ export const complements: Lesson[] = [
             word("dot", "."),
           ],
           connection: `${["el libro", "la carta", "los libros", "las cartas"][object]} ↔ ${["lo", "la", "los", "las"][object]}`,
-          observation: `El pronombre «${["lo", "la", "los", "las"][object]}» corresponde a «${["el libro", "la carta", "los libros", "las cartas"][object]}». El sujeto y el verbo no cambian al sustituir el CD.`,
+          observation: `«${["lo", "la", "los", "las"][object]}» sustituye a «${["el libro", "la carta", "los libros", "las cartas"][object]}». Conserva su género y número.`,
         }),
       },
       {
@@ -106,8 +106,8 @@ export const complements: Lesson[] = [
             word("dot", "."),
           ],
           observation: replace
-            ? "«Ana la vio». La persona representada por «la» es complemento directo, aunque antes apareciera con «a»."
-            : "«A Marta» es la persona vista. Observa su sustitución antes de decidir su función.",
+            ? "«A Marta» → «la». Esa «a» también puede introducir un CD."
+            : "Marta es la persona vista. Aquí «a Marta» es CD.",
         }),
       },
     ],
@@ -154,12 +154,12 @@ export const complements: Lesson[] = [
           ],
           observation:
             direct && indirect
-              ? "«Ana se la dio». «Se» representa a Marta y «la», a la carta. Aquí «le» se transforma en «se» delante de «la»."
+              ? "«Se» es Marta; «la» es la carta. Delante de «la», «le» cambia a «se»."
               : indirect
-                ? "«Ana le dio la carta». «Le» representa a Marta. La carta sigue siendo el CD."
+                ? "«Le» representa a Marta: CI. La carta sigue siendo CD."
                 : direct
-                  ? "«Ana la dio a Marta». «La» representa a la carta. «A Marta» sigue siendo el CI."
-                  : "La carta es lo que Ana dio: CD. Marta es su destinataria: CI. Compara las sustituciones.",
+                  ? "«La» representa a la carta: CD. Marta sigue siendo CI."
+                  : "La carta es lo entregado: CD. Marta es la destinataria: CI.",
         }),
       },
       {
@@ -198,7 +198,7 @@ export const complements: Lesson[] = [
           ],
           observation:
             who === 2
-              ? "Marta y Pablo son dos destinatarios: «les». «Ana» sigue en singular y el verbo no cambia."
+              ? "Dos destinatarios: «les». El sujeto y el verbo no cambian."
               : `Para ${["Marta", "Pablo"][who]} usamos «le». El pronombre no cambia según el género del destinatario.`,
         }),
       },
@@ -230,7 +230,7 @@ export const complements: Lesson[] = [
           ],
           connection: number ? "gustan ↔ los libros" : "gusta ↔ el libro",
           observation:
-            "El número del verbo depende de los libros, no de quien siente el gusto. Cambiar «me» por «te» no cambia «gusta» o «gustan».",
+            "Los libros determinan el número de «gustar». «Me» y «te» indican quién siente el gusto.",
         }),
       },
     ],
@@ -281,7 +281,7 @@ export const complements: Lesson[] = [
           ],
           connection: "La propiedad se refiere al sujeto",
           observation: number
-            ? "También se ajusta el adjetivo: «contentas», «cansadas» o «tranquilas». Describe a Ana y Eva, en plural."
+            ? "El adjetivo también pasa a plural: describe a Ana y Eva."
             : "La pieza rosa describe a Ana. «Está» enlaza el sujeto con esa propiedad.",
         }),
       },
@@ -324,8 +324,8 @@ export const complements: Lesson[] = [
             word("dot", "."),
           ],
           observation: replace
-            ? "El pronombre sigue siendo «lo», tanto para «blanca» como para «blancas». Representa una propiedad del sujeto."
-            : "«Blanca» o «blancas» concuerda con la casa o las casas. Observa qué ocurre al sustituir el atributo.",
+            ? "Una casa o varias: siempre «lo». Sustituye una propiedad del sujeto."
+            : "El atributo concuerda: «casa blanca», «casas blancas».",
         }),
       },
       {
@@ -366,8 +366,8 @@ export const complements: Lesson[] = [
             word("dot", "."),
           ],
           observation: verb
-            ? "«Cansada» describe al sujeto durante la llegada. El verbo «llegar» conserva su significado; el adjetivo es un predicativo."
-            : "Con «estar», el adjetivo funciona como atributo. Ahora cambia el verbo a «llegar».",
+            ? "Llegar conserva su significado. El adjetivo describe cómo llega el sujeto: es un predicativo."
+            : "Con «estar», el adjetivo funciona como atributo.",
         }),
       },
     ],
@@ -411,12 +411,12 @@ export const complements: Lesson[] = [
           ],
           observation:
             time && place
-              ? "Dos circunstancias pueden convivir: una sitúa la lectura en el tiempo y otra, en el espacio."
+              ? "Puedes decir cuándo y dónde ocurre la lectura."
               : time
                 ? "«Por la tarde» añade cuándo lee Ana."
                 : place
                   ? "«En el parque» añade dónde lee Ana."
-                  : "La oración «Ana lee» ya funciona. Añade detalles para situar la escena.",
+                  : "«Ana lee» funciona sin esos detalles de tiempo y lugar.",
         }),
       },
       {
@@ -446,7 +446,7 @@ export const complements: Lesson[] = [
             ),
             word("dot", "."),
           ],
-          observation: `«${verb ? "Depende de" : "Confía en"} ${replace ? "ella" : "Marta"}»: la preposición pertenece a la construcción del verbo. Al sustituir a Marta, conservamos «${verb ? "de" : "en"}».`,
+          observation: `«${verb ? "Depender de" : "Confiar en"}»: el verbo pide esa preposición. Con «${replace ? "ella" : "Marta"}», se mantiene.`,
         }),
       },
       {

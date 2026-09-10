@@ -37,8 +37,8 @@ export const connections: Lesson[] = [
                 word("dot", "."),
               ],
           observation: voice
-            ? "La puerta pasa de CD a sujeto. Sigue siendo lo pintado. Eva sigue pintando, ahora como complemento agente."
-            : "Eva es sujeto y realiza la acción. La puerta es el CD. Cambia la voz y sigue sus colores y etiquetas.",
+            ? "La puerta pasa de CD a sujeto. Cambia su función, no lo ocurrido."
+            : "Eva pinta: es el sujeto. La puerta es el CD.",
         }),
       },
       {
@@ -74,8 +74,8 @@ export const connections: Lesson[] = [
             word("dot", "."),
           ],
           observation: number
-            ? "«Las puertas fueron pintadas»: sujeto, auxiliar y participio se ajustan. El sujeto sigue siendo quien recibe la acción."
-            : "«La puerta fue pintada». El grupo azul concuerda con el verbo, aunque no realice la acción.",
+            ? "El sujeto, el auxiliar y el participio pasan a plural."
+            : "La puerta es el sujeto, aunque recibe la acción de pintar.",
           note: agent
             ? "Podemos contar lo ocurrido sin decir quién pintó."
             : undefined,
@@ -121,9 +121,9 @@ export const connections: Lesson[] = [
                 ],
           observation:
             example && voice
-              ? "En el sentido de poseer, «tener» no da aquí una pasiva natural. Mantenemos la activa. «Un libro» sigue siendo CD: «Ana lo tiene»."
+              ? "Con «tener», esta pasiva no es natural. «Un libro» sigue siendo CD: «Ana lo tiene»."
               : example
-                ? "«Tiene» expresa posesión. «Un libro» es CD; vamos a ver por qué la pasiva no es una prueba universal."
+                ? "«Tiene» expresa posesión. «Un libro» es su CD."
                 : voice
                   ? "Aquí la transformación es natural: la puerta pasa de CD a sujeto."
                   : "«Pintar» permite ver con claridad el cambio de activa a pasiva.",
@@ -291,10 +291,10 @@ export const connections: Lesson[] = [
           ],
           observation:
             shape === 1
-              ? "El conjunto «que Eva llegó» es CD de «sabe». Dentro hay otra relación sujeto-verbo. Son dos niveles de análisis."
+              ? "«Que Eva llegó» es CD de «sabe» y tiene su propio sujeto y verbo."
               : shape === 2
                 ? "«Ana lo sabe»: el pronombre representa todo lo sabido, incluida una oración entera."
-                : "«Eso» ocupa la función de CD. Ábrelo para ver qué es lo que Ana sabe.",
+                : "«Eso» es el CD: lo que Ana sabe.",
         }),
       },
       {
@@ -339,8 +339,8 @@ export const connections: Lesson[] = [
             word("dot", "."),
           ],
           observation: detail
-            ? "La oración de dentro nos ayuda a identificar al gato. No es CD: está dentro del grupo que funciona como sujeto de «duerme»."
-            : "«Negro» caracteriza al gato. Sustitúyelo por una descripción con su propio verbo.",
+            ? "La oración describe al gato. Está dentro del sujeto de «duerme»."
+            : "«Negro» describe al gato con una sola palabra.",
         }),
       },
       {
@@ -376,8 +376,8 @@ export const connections: Lesson[] = [
             word("dot", "."),
           ],
           observation: time
-            ? "«Cuando llueve» sitúa el momento de «lee». La oración interior no tiene sujeto: «llueve» es impersonal. Ahora puedes conectar varias ideas del recorrido."
-            : "«Por la tarde» indica cuándo lee Ana. Cambia la pieza para expresar el tiempo con una oración.",
+            ? "«Cuando llueve» dice cuándo lee Ana. Dentro, «llueve» es impersonal."
+            : "«Por la tarde» sitúa la lectura en el tiempo.",
         }),
       },
     ],

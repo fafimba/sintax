@@ -15,7 +15,7 @@ La aplicación abre directamente un ejemplo manipulable. Se puede cambiar una pa
 
 **Aprender** sigue el recorrido; **Tu recorrido** permite saltar a cualquier lección; **Explorar** abre cualquier ejemplo; **Conceptos** permite consultar y buscar las explicaciones. Los enlaces a lecciones y pasos se pueden copiar y funcionan en un alojamiento estático.
 
-El apartado «Ponle nombre a la idea» ofrece la terminología después de la observación. La introducción cubre las bases y algunos contrastes importantes, no toda la gramática española. Consulta [las decisiones pedagógicas](docs/PEDAGOGIA.md).
+Cada paso muestra un título, una indicación y la frase. Al interactuar aparece una observación breve; «Ver explicación» despliega la definición y sus matices. La navegación del curso se abre desde el menú para mantener el foco en el ejemplo. La introducción cubre las bases y algunos contrastes importantes, no toda la gramática española. Consulta [las decisiones pedagógicas](docs/PEDAGOGIA.md).
 
 ## Desarrollo
 
@@ -52,6 +52,7 @@ src/
     progress.ts       Progreso local validado
   ui/
     Explorer.tsx      Un motor para todos los ejemplos
+    lesson.css        Lecciones, piezas y movimiento adaptable
     Library.tsx       Explorador e índice de conceptos
     Icon.tsx          Iconos de interfaz
   App.tsx             Navegación, recorrido y cierre de lecciones
@@ -74,6 +75,6 @@ Una escena declara controles finitos y una función pura que produce las piezas,
 
 Se mantiene la configuración existente de GitHub Pages: la compilación de producción usa `/sintax/` como ruta base. `npm run preview` permite revisar el resultado en `/sintax/`. Para otro subdirectorio, hay que ajustar `base` en `vite.config.ts`.
 
-Se conserva `npm run deploy` como operación manual. La revisión y reconstrucción no publican ni modifican el alojamiento existente.
+El sitio público está en [fafimba.github.io/sintax](https://fafimba.github.io/sintax/). `npm run deploy` compila y actualiza la rama `gh-pages`; GitHub Pages publica ese resultado.
 
 [Revisión del prototipo y cambios](docs/REVISION.md).

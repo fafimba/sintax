@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MotionConfig } from "framer-motion";
+import { MotionConfig, motion, useReducedMotion } from "framer-motion";
 import { lessons, UNITS } from "./learning/curriculum";
 import { initialValues } from "./learning/model";
 import { readProgress, sceneState, STORE_KEY } from "./learning/progress";
@@ -31,6 +31,7 @@ function readRoute(fallback: { lesson: string; step: number }): Route {
   };
 }
 export default function App() {
+  const reduced = useReducedMotion();
   const [progress, setProgress] = useState(readProgress),
     [route, setRoute] = useState<Route>(() => readRoute(progress));
   const [menu, setMenu] = useState(false),
@@ -172,7 +173,7 @@ export default function App() {
       </a>
       {menu && <div className="nav-backdrop" onClick={closeMenu} />}
       <aside
-        className={`sidebar ${menu ? "is-open" : ""}`}
+        className={`sidebar ${route.view === "lesson" ? "lesson-drawer" : ""} ${menu ? "is-open" : ""}`}
         ref={navRef}
         aria-label="Navegación del curso"
         {...(menu ? { role: "dialog", "aria-modal": true } : {})}
@@ -288,7 +289,10 @@ export default function App() {
           </p>
         </div>
       </aside>
-      <div className="app-body" {...(menu ? { inert: "" } : {})}>
+      <div
+        className={`app-body ${route.view === "lesson" ? "lesson-mode" : ""}`}
+        {...(menu ? { inert: "" } : {})}
+      >
         <header className="top-header">
           <button
             className="icon-button menu-button"
@@ -299,40 +303,15 @@ export default function App() {
           >
             <Icon name="menu" />
           </button>
-          <div className="breadcrumb">
-            <span>Sintaxis española</span>
-            <Icon name="chevron" size={14} />
-            <span>
-              {route.view === "lesson"
-                ? UNITS[lesson.unit].title
-                : route.view === "map"
-                  ? "Tu recorrido"
-                  : route.view === "explore"
-                    ? "Explorar"
-                    : "Conceptos"}
-            </span>
-          </div>
-          <span className="pace-label">
-            <Icon name="sun" size={18} /> A tu ritmo
-          </span>
-        </header>
-        <main id="main-content" ref={contentRef} tabIndex={-1}>
-          {(route.view === "explore" || route.view === "glossary") && (
-            <Library key={route.view} mode={route.view} />
-          )}
-          {route.view === "lesson" && (
-            <article className="lesson-content">
-              <div className="lesson-eyebrow">
-                <span>
-                  LECCIÓN {String(index + 1).padStart(2, "0")}
-                  <span className="eyebrow-divider">/</span>
-                  {UNITS[lesson.unit].title.toUpperCase()}
-                </span>
-                <span>
-                  {Math.min(step + 1, lesson.scenes.length)} de{" "}
-                  {lesson.scenes.length} ideas
-                </span>
-              </div>
+          {route.view === "lesson" ? (
+            <>
+              <a
+                className="player-brand"
+                href="#/recorrido"
+                aria-label="Sintax, ver recorrido"
+              >
+                sintax<span>.</span>
+              </a>
               <nav className="step-track" aria-label="Ideas de esta lección">
                 {lesson.scenes.map((s, i) => (
                   <a
@@ -345,11 +324,53 @@ export default function App() {
                   />
                 ))}
               </nav>
+              <span
+                className="step-count"
+                aria-label={`Idea ${Math.min(step + 1, lesson.scenes.length)} de ${lesson.scenes.length}`}
+              >
+                {Math.min(step + 1, lesson.scenes.length)} /{" "}
+                {lesson.scenes.length}
+              </span>
+              <a
+                className="icon-button leave-lesson"
+                href="#/recorrido"
+                aria-label="Volver al recorrido"
+                title="Volver al recorrido"
+              >
+                <Icon name="close" size={21} />
+              </a>
+            </>
+          ) : (
+            <div className="breadcrumb">
+              <span>Sintaxis española</span>
+              <Icon name="chevron" size={14} />
+              <span>
+                {route.view === "map"
+                  ? "Tu recorrido"
+                  : route.view === "explore"
+                    ? "Explorar"
+                    : "Conceptos"}
+              </span>
+            </div>
+          )}
+        </header>
+        <main id="main-content" ref={contentRef} tabIndex={-1}>
+          {(route.view === "explore" || route.view === "glossary") && (
+            <Library key={route.view} mode={route.view} />
+          )}
+          {route.view === "lesson" && (
+            <article className="lesson-content">
               {scene ? (
-                <div key={`${lesson.id}/${scene.id}`} className="scene-content">
+                <motion.div
+                  key={`${lesson.id}/${scene.id}`}
+                  className="scene-content"
+                  initial={reduced ? false : { opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                >
                   <div className="lesson-heading">
                     <h1>{scene.title}</h1>
-                    <p>{scene.description}</p>
+                    <p>{scene.instruction}</p>
                   </div>
                   <Explorer
                     scene={scene}
@@ -359,7 +380,9 @@ export default function App() {
                   />
                   <footer className="lesson-footer">
                     <a
-                      className="text-button previous-idea"
+                      className="icon-button previous-idea"
+                      aria-label={step > 0 ? "Anterior" : "Ver recorrido"}
+                      title={step > 0 ? "Anterior" : "Ver recorrido"}
                       href={
                         step > 0
                           ? lessonUrl(lesson.id, step - 1)
@@ -367,11 +390,7 @@ export default function App() {
                       }
                     >
                       <Icon name="back" size={18} />
-                      {step > 0 ? "Anterior" : "Ver recorrido"}
                     </a>
-                    <span className="footer-aside">
-                      La curiosidad lleva el ritmo.
-                    </span>
                     {step < lesson.scenes.length - 1 ? (
                       <a
                         className="primary-button"
@@ -387,7 +406,7 @@ export default function App() {
                       </button>
                     )}
                   </footer>
-                </div>
+                </motion.div>
               ) : (
                 <section className="lesson-complete">
                   <div className="complete-symbol">
@@ -486,9 +505,6 @@ export default function App() {
             </section>
           )}
         </main>
-        <div className="page-bottom">
-          <span>sintax.</span> Aprender es empezar a ver conexiones.
-        </div>
       </div>
     </MotionConfig>
   );

@@ -36,7 +36,7 @@ export const structure: Lesson[] = [
           connection: number ? "plural ↔ plural" : "singular ↔ singular",
           observation: number
             ? "«Los gatos» pide «duermen». El verbo cambia junto al sujeto: eso es concordar."
-            : "«El gato» y «duerme» están en singular. Cambia el grupo azul para ver su conexión con el verbo.",
+            : "«El gato» y «duerme»: las dos piezas están en singular.",
         }),
       },
       {
@@ -71,8 +71,8 @@ export const structure: Lesson[] = [
             word("dot", "."),
           ],
           observation: object
-            ? `Ahora hay varios pájaros, pero el verbo sigue en ${subject ? "plural por «los gatos»" : "singular por «el gato»"}. El grupo de los pájaros no controla esa concordancia.`
-            : `El verbo «${subject ? "miran" : "mira"}» concuerda con el grupo azul. Prueba a cambiar solo los pájaros.`,
+            ? `Cambian los pájaros; el verbo sigue en ${subject ? "plural por «los gatos»" : "singular por «el gato»"}.`
+            : `«${subject ? "Miran" : "Mira"}» concuerda con los gatos, no con los pájaros.`,
         }),
       },
       {
@@ -110,8 +110,8 @@ export const structure: Lesson[] = [
             word("dot", "."),
           ],
           observation: detail
-            ? "Todo lo que queda bajo el corchete forma el predicado. El verbo es su núcleo, pero el predicado no se limita al verbo."
-            : "Aquí el predicado contiene solo «duerme». Añade detalles para ver cómo crece.",
+            ? "El predicado incluye el verbo y los detalles que lo acompañan."
+            : "Aquí, el verbo «duerme» forma todo el predicado.",
         }),
       },
     ],
@@ -162,8 +162,8 @@ export const structure: Lesson[] = [
           return {
             pieces: [...(order ? [v, s] : [s, v]), word("dot", ".")],
             observation: order
-              ? "El grupo azul está detrás y sigue siendo el sujeto. Compruébalo cambiando el número: el verbo también se ajusta."
-              : "En este orden el sujeto aparece primero. Ahora muévelo detrás del verbo.",
+              ? "El sujeto cambia de sitio. Su conexión con el verbo se mantiene."
+              : "El sujeto está delante. El verbo concuerda con él.",
           };
         },
       },
@@ -205,8 +205,8 @@ export const structure: Lesson[] = [
             ? `Sujeto tácito: ${person ? "nosotros / nosotras" : "yo"}`
             : undefined,
           observation: visible
-            ? `La terminación de «${person ? "leemos" : "leo"}» permite recuperar el sujeto. No lo vemos escrito, pero la concordancia sigue ahí.`
-            : "El pronombre hace explícito el sujeto. Puedes quitarlo sin que cambie quién lee.",
+            ? `«${person ? "Leemos" : "Leo"}» permite recuperar ${person ? "«nosotros»" : "«yo»"}. El sujeto sigue ahí, sin escribirse.`
+            : "El pronombre hace visible quién lee.",
         }),
       },
       {
@@ -290,7 +290,7 @@ export const structure: Lesson[] = [
                 ]
               : [book, word("verb", "cae", "verb", "Verbo"), word("dot", ".")],
             observation: example
-              ? "«El libro» sigue siendo un grupo nominal. Pero quien concuerda con «lee» es «Ana». El libro cumple otra función."
+              ? "El libro sigue siendo un grupo nominal. Ahora el sujeto es Ana."
               : "«El libro» es un grupo nominal y aquí funciona como sujeto: «los libros caen».",
           };
         },
@@ -329,8 +329,8 @@ export const structure: Lesson[] = [
             word("dot", "."),
           ],
           observation: zoom
-            ? "Las tres palabras pertenecen al mismo sujeto. Ser sustantivo y funcionar como núcleo son dos datos diferentes sobre «gata»."
-            : "Ves dos grupos: sujeto y predicado. Puedes abrir el sujeto sin que deje de ser una unidad.",
+            ? "«Gata» es un sustantivo y funciona como núcleo. Las tres palabras forman el sujeto."
+            : "Sujeto y predicado: dos grupos con sus propias piezas dentro.",
         }),
       },
     ],

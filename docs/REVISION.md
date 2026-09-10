@@ -21,10 +21,13 @@ El progreso de esta versión es local, validado y recuperable ante datos erróne
 
 ## Comprobaciones reproducibles
 
+La revisión visual posterior concentra cada lección en un ejemplo: navegación en un menú, una sola indicación inicial, observación breve después de interactuar y definiciones desplegables. Las piezas tienen respuesta al pulsarlas, sus textos cambian con una transición breve y conservan su identidad al moverse. El movimiento respeta la preferencia del dispositivo. Los controles múltiples se compactan en filas en móviles con espacio suficiente.
+
 - `npm run build`: tipos y compilación de producción, con la base `/sintax/` existente.
 - `npm test`: integridad de todas las combinaciones; casos concretos de concordancia, pronombres, pasiva y subordinación; navegación; persistencia; recuperación; teclado; menú móvil; búsqueda y acceso a todas las lecciones.
 - Las pruebas recorren todas las escenas y sus estados amplios en Chromium a 320, 768 y 1440 píxeles, y en WebKit móvil a 390 píxeles. Comprueban ausencia de desbordamiento horizontal y errores de ejecución.
 - Revisión visual de la primera lección en escritorio y móvil y de una relativa anidada en móvil.
+- Comprobación de explicaciones desplegables, reinicio sin pérdida de foco, cambios rápidos con animación y menú en escritorio y móvil. Las piezas de la relativa se verifican también con texto al 200 %.
 - `npm audit`: comprobación del árbol de dependencias.
 
 La revisión automática comprueba coherencia estructural y regresiones concretas; no reemplaza una revisión lingüística especializada ni sesiones de uso con alumnos. La compatibilidad móvil se ha comprobado con emulación de navegador, no en hardware físico.

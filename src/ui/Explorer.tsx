@@ -1,4 +1,9 @@
-import { motion, useReducedMotion } from "framer-motion";
+import {
+  AnimatePresence,
+  LayoutGroup,
+  motion,
+  useReducedMotion,
+} from "framer-motion";
 import { useId } from "react";
 import {
   type Piece,
@@ -8,6 +13,9 @@ import {
   sentenceText,
 } from "../learning/model";
 import { Icon } from "./Icon";
+
+const settle = { type: "spring", stiffness: 400, damping: 30 } as const;
+
 function PieceView({
   piece,
   change,
@@ -21,40 +29,65 @@ function PieceView({
 }) {
   const reduced = useReducedMotion();
   const tone = `tone-${piece.tone ?? "neutral"}`;
+  const movement = {
+    layout: reduced ? (false as const) : ("position" as const),
+    initial: reduced ? (false as const) : { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0 },
+    exit: reduced ? undefined : { opacity: 0, scale: 0.94 },
+    transition: reduced ? { duration: 0 } : settle,
+  };
   if (piece.children)
     return (
       <motion.div
-        layout={!reduced}
+        {...movement}
+        layoutId={reduced ? undefined : piece.id}
         className={`syntax-group ${tone}`}
         data-piece={piece.id}
       >
         <div className="group-pieces">
-          {piece.children.map((p) => (
-            <PieceView
-              key={p.id}
-              piece={p}
-              change={change}
-              scene={scene}
-              values={values}
-            />
-          ))}
+          <AnimatePresence initial={false}>
+            {piece.children.map((p) => (
+              <PieceView
+                key={p.id}
+                piece={p}
+                change={change}
+                scene={scene}
+                values={values}
+              />
+            ))}
+          </AnimatePresence>
         </div>
-        <span className="group-brace" />
+        <span className="group-brace" aria-hidden="true" />
         <span className="group-label">{piece.label}</span>
       </motion.div>
     );
   const control = scene.controls.find((c) => c.id === piece.control);
+  const text = (
+    <motion.span
+      className="word-text"
+      key={piece.text}
+      initial={reduced ? false : { opacity: 0.3, y: 7 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={reduced ? { duration: 0 } : settle}
+    >
+      {piece.text}
+    </motion.span>
+  );
   return (
     <motion.div
-      layout={!reduced}
+      {...movement}
+      layoutId={reduced ? undefined : piece.id}
       className={`piece ${tone} ${piece.ghost ? "ghost-piece" : ""} ${/^[.,;!?]$/.test(piece.text ?? "") ? "punctuation" : ""}`}
       data-piece={piece.id}
     >
       {piece.badge && <span className="piece-badge">{piece.badge}</span>}
       {control ? (
-        <button
+        <motion.button
           type="button"
           className="word interactive-word"
+          whileHover={reduced ? undefined : { y: -2 }}
+          whileTap={reduced ? undefined : { y: 3, scale: 0.97 }}
+          transition={settle}
           onClick={() =>
             change(
               control.id,
@@ -63,16 +96,23 @@ function PieceView({
           }
           aria-label={`${control.label}: ${piece.text}. Cambiar`}
         >
-          <span>{piece.text}</span>
-          <Icon name="refresh" size={16} />
-        </button>
+          {text}
+          <motion.span
+            className="word-cycle"
+            animate={{ rotate: reduced ? 0 : values[control.id] * 120 }}
+            transition={settle}
+          >
+            <Icon name="refresh" size={17} />
+          </motion.span>
+        </motion.button>
       ) : (
-        <span className="word">{piece.text}</span>
+        <span className="word">{text}</span>
       )}
       {piece.label && <span className="piece-label">{piece.label}</span>}
     </motion.div>
   );
 }
+
 export function Explorer({
   scene,
   state,
@@ -84,55 +124,61 @@ export function Explorer({
   onChange: (id: string, value: number) => void;
   onReset: () => void;
 }) {
-  const view = scene.view(state.values, state.touched),
-    id = useId();
+  const view = scene.view(state.values, state.touched);
+  const id = useId();
+  const reduced = useReducedMotion();
+  const controls = scene.controls.filter((c) => c.kind !== "word");
   return (
-    <>
-      <section className="experiment" aria-label="Ejemplo interactivo">
-        <div className="experiment-top">
-          <span>
-            <span className="live-mark" /> TU ESPACIO PARA PROBAR
-          </span>
-          <button
-            className="reset-button"
-            onClick={onReset}
-            aria-label="Reiniciar este ejemplo"
-          >
-            <Icon name="refresh" size={16} />
-            <span>Reiniciar</span>
-          </button>
-        </div>
+    <LayoutGroup id={id}>
+      <section
+        className={`experiment ${controls.length > 1 ? "multiple-controls" : ""} ${state.touched ? "has-discovery" : "is-fresh"}`}
+        aria-label="Ejemplo interactivo"
+      >
+        <button
+          className="reset-button icon-button"
+          onClick={(event) => {
+            const experiment = event.currentTarget.closest(".experiment");
+            onReset();
+            requestAnimationFrame(() =>
+              experiment
+                ?.querySelector<HTMLElement>(
+                  '.interactive-word, .segmented button[aria-pressed="true"], input[type="range"]',
+                )
+                ?.focus({ preventScroll: true }),
+            );
+          }}
+          aria-label="Reiniciar este ejemplo"
+          title="Reiniciar este ejemplo"
+          disabled={!state.touched}
+        >
+          <Icon name="refresh" size={18} />
+        </button>
         <div className="sentence-stage">
-          {view.connection && (
-            <div className="connection">
-              <span />
-              {view.connection}
-              <span />
-            </div>
-          )}
+          {view.connection && <p className="connection">{view.connection}</p>}
           <div
             className="syntax-sentence"
             role="group"
             aria-label={sentenceText(view.pieces)}
           >
-            {view.pieces.map((p) => (
-              <PieceView
-                key={p.id}
-                piece={p}
-                change={onChange}
-                values={state.values}
-                scene={scene}
-              />
-            ))}
+            <AnimatePresence initial={false}>
+              {view.pieces.map((p) => (
+                <PieceView
+                  key={p.id}
+                  piece={p}
+                  change={onChange}
+                  values={state.values}
+                  scene={scene}
+                />
+              ))}
+            </AnimatePresence>
           </div>
-          {view.note && <p className="stage-note">{view.note}</p>}
         </div>
-        <div className="experiment-controls">
-          {scene.controls
-            .filter((c) => c.kind !== "word")
-            .map((c) => (
+        {controls.length > 0 && (
+          <div className="experiment-controls">
+            {controls.map((c) => (
               <div className="control-block" key={c.id}>
                 <label
+                  className={controls.length === 1 ? "sr-only" : undefined}
                   id={`${id}-${c.id}-label`}
                   htmlFor={c.kind === "range" ? `${id}-${c.id}` : undefined}
                 >
@@ -169,46 +215,55 @@ export function Explorer({
                     aria-labelledby={`${id}-${c.id}-label`}
                   >
                     {c.options.map((o, i) => (
-                      <button
+                      <motion.button
                         type="button"
                         key={o}
                         aria-pressed={state.values[c.id] === i}
                         onClick={() => onChange(c.id, i)}
+                        whileTap={reduced ? undefined : { scale: 0.96 }}
                       >
-                        {o}
-                      </button>
+                        {state.values[c.id] === i && (
+                          <motion.span
+                            className="selected-option"
+                            layoutId={reduced ? undefined : `control-${c.id}`}
+                            transition={reduced ? { duration: 0 } : settle}
+                            aria-hidden="true"
+                          />
+                        )}
+                        <span>{o}</span>
+                      </motion.button>
                     ))}
                   </div>
                 )}
               </div>
             ))}
-          <p className="interaction-hint">
-            <Icon name="spark" size={16} />
-            {scene.instruction}
-          </p>
+          </div>
+        )}
+        <div className="discovery" aria-live="polite" aria-atomic="true">
+          {state.touched && (
+            <motion.p
+              key={view.observation}
+              initial={reduced ? false : { opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reduced ? 0 : 0.22 }}
+            >
+              {view.observation}
+            </motion.p>
+          )}
         </div>
       </section>
-      <div className="observation" aria-live="polite" aria-atomic="true">
-        <div className="observation-icon">
-          <Icon name="sun" size={22} />
-        </div>
-        <div>
-          <h2>Fíjate en esto</h2>
-          <p>{view.observation}</p>
-        </div>
-      </div>
       <details className="concept-note">
         <summary>
-          <span>
-            <Icon name="book" size={17} /> Ponle nombre a la idea
-          </span>
-          <Icon name="chevron" size={16} />
+          <Icon name="book" size={18} />
+          Ver explicación
+          <Icon name="chevron" size={14} />
         </summary>
-        <div>
-          <h3>{scene.concept.title}</h3>
+        <div className="concept-body">
+          <h2>{scene.concept.title}</h2>
           <p>{scene.concept.text}</p>
+          {view.note && <p className="concept-context">{view.note}</p>}
         </div>
       </details>
-    </>
+    </LayoutGroup>
   );
 }

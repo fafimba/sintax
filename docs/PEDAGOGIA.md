@@ -4,6 +4,8 @@
 
 Cada escena parte de un ejemplo completo. Una persona puede cambiar una variable, observar sus efectos y volver al estado anterior. La observación contextual explica lo que está viendo; el apartado desplegable introduce o precisa el término. «Siguiente idea» siempre está disponible. No se obliga a demostrar un acierto para acceder a la explicación.
 
+Al entrar se muestra una sola indicación. La observación aparece tras manipular el ejemplo y ocupa una o dos frases breves. «Ver explicación» siempre permite consultar el concepto, incluso antes de tocar las piezas. Las etiquetas de función permanecen junto a las palabras; se eliminan los rótulos y lemas que no ayudan a interpretar la transformación.
+
 El orden sugerido tiene dependencias concretas:
 
 | Etapa                    | Lo que se experimenta                                 | Lo que permite entender después                             |

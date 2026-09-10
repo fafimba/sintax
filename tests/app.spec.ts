@@ -29,8 +29,9 @@ test("the first example is immediately usable, reversible and keyboard accessibl
   );
   await page.getByRole("button", { name: "Reiniciar este ejemplo" }).click();
   await expect(sentence(page)).toHaveAttribute("aria-label", "El gato duerme.");
-  await page.getByText("Ponle nombre a la idea").click();
-  await expect(page.locator(".concept-note h3")).toHaveText("Sustantivo");
+  await expect(chip).toBeFocused();
+  await page.getByText("Ver explicación", { exact: true }).click();
+  await expect(page.locator(".concept-note h2")).toHaveText("Sustantivo");
 });
 
 test("navigation and reload retain the precise exploration without forcing an answer", async ({
@@ -228,7 +229,8 @@ test("every scene and its largest control states fit narrow screens without runt
           bounds.content,
           `${lesson.id}/${scene.id} at ${width}px`,
         ).toBeLessThanOrEqual(bounds.viewport + 1);
-        await expect(page.locator(".observation p")).not.toBeEmpty();
+        if (scene.controls.some((c) => c.kind !== "word"))
+          await expect(page.locator(".discovery p")).not.toBeEmpty();
         await expect(page.locator(".syntax-sentence")).not.toContainText(
           "undefined",
         );
@@ -244,4 +246,78 @@ test("every scene and its largest control states fit narrow screens without runt
     await page.evaluate(() => document.documentElement.scrollWidth),
   ).toBeLessThanOrEqual(391);
   expect(errors).toEqual([]);
+});
+
+test("the lesson starts quietly and reveals explanations without interrupting exploration", async ({
+  page,
+}) => {
+  await open(page, "palabras");
+  await expect(page.locator(".discovery")).toBeEmpty();
+  await expect(page.locator(".concept-body")).not.toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Reiniciar este ejemplo" }),
+  ).toBeDisabled();
+  await page.getByRole("button", { name: /Cambiar protagonista/ }).click();
+  await expect(page.locator(".discovery p")).toHaveText(
+    "Cambia el animal. La frase sigue funcionando igual.",
+  );
+  const height = await page
+    .locator(".experiment")
+    .evaluate((el) => el.getBoundingClientRect().height);
+  await page.getByText("Ver explicación", { exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Sustantivo", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: /Cambiar protagonista/ }).click();
+  await expect(sentence(page)).toHaveAttribute(
+    "aria-label",
+    "El pájaro duerme.",
+  );
+  await page.getByRole("button", { name: "Reiniciar este ejemplo" }).click();
+  await expect(page.locator(".discovery")).toBeEmpty();
+  expect(
+    await page
+      .locator(".experiment")
+      .evaluate((el) => el.getBoundingClientRect().height),
+  ).toBe(height);
+});
+
+test("motion preserves keyboard focus and settles correctly after quick changes", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await open(page, "palabras");
+  const word = page.getByRole("button", { name: /Cambiar protagonista/ });
+  await word.focus();
+  for (let i = 0; i < 8; i++) await page.keyboard.press("Enter");
+  await expect(word).toBeFocused();
+  await expect(sentence(page)).toHaveAttribute(
+    "aria-label",
+    "El pájaro duerme.",
+  );
+  await page.getByRole("button", { name: "Abrir menú" }).click();
+  await expect(
+    page.getByRole("link", { name: "Sintax, continuar aprendiendo" }),
+  ).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("button", { name: "Abrir menú" })).toBeFocused();
+  await open(page, "sujeto");
+  await choose(page, "Orden", "Sujeto detrás");
+  await choose(page, "Trenes", "Varios");
+  await expect(sentence(page)).toHaveAttribute(
+    "aria-label",
+    "Llegan los trenes.",
+  );
+  await expect(page.locator('[data-piece="subject"]')).toHaveCount(1);
+  await expect
+    .poll(async () => {
+      const subject = await page
+        .locator('[data-piece="subject"]')
+        .boundingBox();
+      const verb = await page.locator('[data-piece="verb"]').boundingBox();
+      return (
+        !!subject && !!verb && (subject.y > verb.y + 10 || subject.x > verb.x)
+      );
+    })
+    .toBe(true);
 });
